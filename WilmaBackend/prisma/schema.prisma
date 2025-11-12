@@ -1,0 +1,177 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Organisation {
+  id         String      @id @default(uuid())
+  name       String
+  rootUrl    String      @unique
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  documents  Document[]
+  faqs       FAQ[]
+  jobs       Job[]
+  jobSources JobSource[]
+}
+
+model Document {
+  id             String             @id @default(uuid())
+  organisationId String
+  sourceType     DocumentSourceType
+  sourceUrl      String?
+  mimeType       String?
+  textContent    String
+  metadata       Json?
+  createdAt      DateTime           @default(now())
+  organisation   Organisation       @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+  chunks         DocumentChunk[]
+  jobAttachments JobDocument[]
+
+  @@index([organisationId])
+}
+
+model FAQ {
+  id                String       @id @default(uuid())
+  organisationId    String
+  question          String
+  answer            String
+  recruiterApproved Boolean      @default(false)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  organisation      Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+}
+
+model Job {
+  id             String       @id @default(uuid())
+  organisationId String
+  title          String
+  department     String?
+  location       String?
+  employmentType String?
+  description    String
+  normalizedJson Json?
+  embedding      Json?
+  wilmaEnabled   Boolean      @default(false)
+  status         JobStatus    @default(open)
+  sourceUrl      String?
+  jobSourceId    String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  candidates     Candidate[]
+  attachments    JobDocument[]
+  jobSource      JobSource?   @relation(fields: [jobSourceId], references: [id], onDelete: SetNull)
+  organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+
+  @@index([organisationId])
+  @@index([wilmaEnabled])
+  @@index([jobSourceId])
+  @@unique([organisationId, title, location])
+}
+
+model Candidate {
+  id               String             @id @default(uuid())
+  jobId            String
+  name             String
+  email            String
+  linkedin         String?
+  linkedinPhotoUrl String?
+  cvUrl            String?
+  matchScore       Int?
+  summary          String?
+  extractedSkills  Json?
+  matchStrengths   Json?
+  matchGaps        Json?
+  matchSummary     String?
+  createdAt        DateTime           @default(now())
+  job              Job                @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  followups        FollowUpQuestion[]
+  videos           VideoAnswer[]
+
+  @@index([jobId])
+}
+
+model FollowUpQuestion {
+  id                 String        @id @default(uuid())
+  candidateId        String
+  question           String
+  reason             String?
+  competencyTargeted String?
+  transcript         String?
+  createdAt          DateTime      @default(now())
+  candidate          Candidate     @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  videos             VideoAnswer[]
+}
+
+model VideoAnswer {
+  id                 String           @id @default(uuid())
+  candidateId        String
+  followupQuestionId String
+  videoUrl           String
+  transcript         String?
+  analysis           Json?
+  createdAt          DateTime         @default(now())
+  candidate          Candidate        @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  followupQuestion   FollowUpQuestion @relation(fields: [followupQuestionId], references: [id], onDelete: Cascade)
+}
+
+model DocumentChunk {
+  id         String   @id @default(uuid())
+  documentId String
+  chunkId    String
+  text       String
+  metadata   Json?
+  embedding  Json
+  createdAt  DateTime @default(now())
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+}
+
+enum DocumentSourceType {
+  upload
+  crawl
+  news
+}
+
+enum JobStatus {
+  open
+  closed
+}
+
+enum JobSourceType {
+  crawl
+  upload
+  manual
+}
+
+model JobSource {
+  id             String        @id @default(uuid())
+  organisationId String
+  organisation   Organisation  @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+  type           JobSourceType @default(crawl)
+  url            String
+  label          String?
+  lastFetchedAt  DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  jobs           Job[]
+
+  @@unique([organisationId, url])
+}
+
+model JobDocument {
+  id         String    @id @default(uuid())
+  jobId      String?
+  job        Job?      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  documentId String
+  document   Document  @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  metadata   Json?
+  createdAt  DateTime  @default(now())
+
+  @@unique([jobId, documentId])
+}

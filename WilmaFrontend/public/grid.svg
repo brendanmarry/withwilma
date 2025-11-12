@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 40 40" fill="none">
+  <path d="M0 0H40V40H0V0Z" fill="none"/>
+  <path d="M0 0H40" stroke="white" stroke-opacity="0.08"/>
+  <path d="M0 10H40" stroke="white" stroke-opacity="0.08"/>
+  <path d="M0 20H40" stroke="white" stroke-opacity="0.08"/>
+  <path d="M0 30H40" stroke="white" stroke-opacity="0.08"/>
+  <path d="M10 0V40" stroke="white" stroke-opacity="0.08"/>
+  <path d="M20 0V40" stroke="white" stroke-opacity="0.08"/>
+  <path d="M30 0V40" stroke="white" stroke-opacity="0.08"/>
+</svg>
+
