@@ -53,11 +53,14 @@ export function InterviewExperience({ job, fromFallback = false }: InterviewExpe
   }, [job, jobs, selectJob, setJobs]);
 
   useEffect(() => {
-    void connect();
-    return () => {
-      disconnect();
-    };
-  }, [connect, disconnect]);
+    // Defer connection significantly to avoid HMR interference during development
+    // Wait for Fast Refresh to complete (usually 3 cycles)
+    const timer = setTimeout(() => {
+      void connect();
+    }, 2000); // 2 seconds should be enough for HMR to settle
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (isConnected && !hasGreeted) {
@@ -106,10 +109,10 @@ export function InterviewExperience({ job, fromFallback = false }: InterviewExpe
             transition={{ duration: 0.4 }}
             className="space-y-3"
           >
-            <p className="text-xs uppercase tracking-[0.3em] text-purple-500">Live with Wilma</p>
-            <h1 className="text-3xl font-semibold text-slate-900 md:text-4xl">Let’s explore the {job.title} role together</h1>
+            <p className="text-xs uppercase tracking-[0.3em] text-blue-600">Live with Wilma</p>
+            <h1 className="text-3xl font-semibold text-slate-900 md:text-4xl">Let's explore the {job.title} role together</h1>
             <p className="text-sm text-slate-600 md:text-base">
-              Wilma knows the ins and outs of this organisation’s products, team culture, and expectations. Ask her anything — she’ll respond instantly with voice and transcript.
+              Wilma knows the ins and outs of this organisation's products, team culture, and expectations. Ask her anything — she'll respond instantly with voice and transcript.
             </p>
           </motion.div>
 
@@ -139,7 +142,7 @@ export function InterviewExperience({ job, fromFallback = false }: InterviewExpe
               >
                 {isMicStreaming ? <Mic className="h-4 w-4" /> : <MicOff className="h-4 w-4" />} {isMicStreaming ? "Mute microphone" : "Enable microphone"}
               </Button>
-              {isConnecting ? <Loader2 className="h-4 w-4 animate-spin text-purple-500" /> : null}
+              {isConnecting ? <Loader2 className="h-4 w-4 animate-spin text-blue-600" /> : null}
             </div>
             <AnimatePresence>
               {lastError ? (

@@ -26,21 +26,29 @@ export const scoreMatch = async ({
   jobDescription,
   cvText,
   companyKnowledge,
+  videoTranscripts,
 }: {
   jobDescription: string;
   cvText: string;
   companyKnowledge: string;
+  videoTranscripts?: string[];
 }): Promise<MatchScoreResult> => {
   const prompt = await loadPrompt("cv-job-matching.md");
+  
+  const additionalContext = videoTranscripts && videoTranscripts.length > 0
+    ? `\n\nADDITIONAL CONTEXT - Video Interview Responses:\n${videoTranscripts.map((t, i) => `Response ${i + 1}:\n${t}`).join("\n\n")}\n\nWhen scoring, consider both the CV content AND the candidate's video responses. Video responses provide additional evidence of skills, communication ability, and cultural fit.`
+    : "";
+  
   const userContent = JSON.stringify(
     {
       job_description: jobDescription,
       cv_text: cvText,
       company_knowledge: companyKnowledge,
+      video_responses: videoTranscripts || [],
     },
     null,
     2,
-  );
+  ) + additionalContext;
 
   const result = await callJsonLLM({
     systemPrompt: prompt,

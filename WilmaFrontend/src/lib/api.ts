@@ -1,7 +1,7 @@
 import { FollowUpQuestion, Job } from "./types";
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? process.env.API_BASE_URL ?? "http://localhost:4000";
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? process.env.API_BASE_URL ?? "http://localhost:3000";
 const ORGANISATION_ID = process.env.NEXT_PUBLIC_ORGANISATION_ID;
 const ORGANISATION_ROOT_URL = process.env.NEXT_PUBLIC_ORGANISATION_ROOT_URL;
 
@@ -122,20 +122,30 @@ export async function getFollowUpQuestions(applicationId: string): Promise<Follo
   }
 }
 
-export async function uploadVideoAnswer(applicationId: string, questionId: string, file: Blob): Promise<void> {
+export async function uploadVideoAnswer(
+  applicationId: string,
+  questionId: string,
+  file: Blob,
+): Promise<{ processing: boolean }> {
   const formData = new FormData();
   formData.append("questionId", questionId);
   formData.append("video", file);
 
-  try {
-    const response = await fetch(buildUrl(`/api/application/${applicationId}/upload-video`), {
-      method: "POST",
-      body: formData,
-    });
-    if (!response.ok) throw new Error(`Video upload failed: ${response.status}`);
-  } catch (error) {
-    console.warn("Video upload fallback", error);
+  const response = await fetch(buildUrl(`/api/application/${applicationId}/upload-video`), {
+    method: "POST",
+    body: formData,
+  });
+
+  if (response.status === 202 || response.status === 201) {
+    try {
+      const data = (await response.json()) as { processing?: boolean };
+      return { processing: Boolean(data.processing) };
+    } catch {
+      return { processing: response.status === 202 };
+    }
   }
+
+  throw new Error(`Video upload failed: ${response.status}`);
 }
 
 export async function finalizeApplication(applicationId: string): Promise<{ status: "received" }> {

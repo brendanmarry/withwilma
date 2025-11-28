@@ -32,22 +32,22 @@ export function CVUploader({ onFileSelected, helperText }: CVUploaderProps) {
   return (
     <div
       className={cn(
-        "flex w-full flex-col items-center justify-center rounded-3xl border-2 border-dashed border-purple-200 bg-purple-50/50 px-6 py-10 text-center shadow-sm transition hover:border-purple-300 hover:bg-purple-50",
+        "flex w-full flex-col items-center justify-center rounded-2xl border border-dashed border-purple-200 bg-purple-50/60 px-5 py-7 text-center shadow-sm transition hover:border-purple-300 hover:bg-purple-50 md:px-6 md:py-8",
       )}
     >
-      <UploadCloud className="h-9 w-9 text-purple-500" />
-      <p className="mt-4 text-sm font-semibold text-gray-900">
+      <UploadCloud className="h-8 w-8 text-purple-500" />
+      <p className="mt-3 text-sm font-semibold text-gray-900">
         {file ? `Selected: ${file.name}` : "Drag & drop your CV or click to upload"}
       </p>
-      <p className="mt-2 text-xs text-gray-500">
+      <p className="mt-2 max-w-sm text-xs text-gray-500">
         {helperText ?? "Accepted formats: PDF, DOCX. Max size 10MB."}
       </p>
-      <div className="mt-6 flex items-center gap-3">
+      <div className="mt-5 flex items-center gap-2">
         <Button
           variant="subtle"
           type="button"
           onClick={() => inputRef.current?.click()}
-          className="bg-white text-purple-600 hover:bg-purple-100"
+          className="px-4 py-2 text-sm text-purple-600 hover:bg-purple-100"
         >
           {file ? "Replace file" : "Upload CV"}
         </Button>

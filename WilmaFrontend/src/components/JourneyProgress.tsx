@@ -27,9 +27,9 @@ export function JourneyProgress({ currentStep, className }: JourneyProgressProps
                 className={cn(
                   "flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-semibold transition",
                   isActive
-                    ? "border-purple-600 bg-purple-600 text-white"
+                    ? "border-blue-600 bg-blue-600 text-white"
                     : isComplete
-                      ? "border-purple-300 bg-purple-100 text-purple-700"
+                      ? "border-blue-200 bg-blue-100 text-blue-700"
                       : "border-slate-200 bg-white text-slate-400",
                 )}
               >
@@ -39,9 +39,9 @@ export function JourneyProgress({ currentStep, className }: JourneyProgressProps
                 className={cn(
                   "hidden text-xs font-medium uppercase tracking-wide md:block",
                   isActive
-                    ? "text-purple-700"
+                    ? "text-blue-700"
                     : isComplete
-                      ? "text-purple-400"
+                      ? "text-blue-400"
                       : "text-slate-400",
                 )}
               >
@@ -52,9 +52,9 @@ export function JourneyProgress({ currentStep, className }: JourneyProgressProps
                   className={cn(
                     "h-[2px] flex-1 rounded-full",
                     isComplete
-                      ? "bg-purple-400"
+                      ? "bg-blue-400"
                       : isActive
-                        ? "bg-purple-200"
+                        ? "bg-blue-200"
                         : "bg-slate-200",
                   )}
                 />

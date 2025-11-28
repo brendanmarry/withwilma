@@ -158,3 +158,20 @@ export const uploadStream = async (
   });
 };
 
+export const downloadBuffer = async (key: string): Promise<Buffer> => {
+  const client = getClient();
+  const command = new GetObjectCommand({
+    Bucket: env().S3_BUCKET,
+    Key: key,
+  });
+  const response = await client.send(command);
+  if (!response.Body) {
+    throw new Error("Empty response body");
+  }
+  const chunks: Buffer[] = [];
+  for await (const chunk of response.Body as Readable) {
+    chunks.push(Buffer.from(chunk));
+  }
+  return Buffer.concat(chunks);
+};
+

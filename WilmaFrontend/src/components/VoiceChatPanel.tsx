@@ -40,11 +40,14 @@ export function VoiceChatPanel({ className }: VoiceChatPanelProps) {
   const seenIds = useRef<Set<string>>(new Set());
 
   useEffect(() => {
-    void connect();
-    return () => {
-      disconnect();
-    };
-  }, [connect, disconnect]);
+    // Defer connection significantly to avoid HMR interference during development
+    // Wait for Fast Refresh to complete (usually 3 cycles)
+    const timer = setTimeout(() => {
+      void connect();
+    }, 2000); // 2 seconds should be enough for HMR to settle
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (isConnected && !hasGreeted) {

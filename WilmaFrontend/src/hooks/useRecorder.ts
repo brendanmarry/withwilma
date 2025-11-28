@@ -45,10 +45,12 @@ export function useRecorder({ maxDuration = 30, mimeType = "video/webm;codecs=vp
       } catch (err) {
         stopResolveRef.current = null
         stopRejectRef.current = null
+        stream?.getTracks().forEach((track) => track.stop())
+        setStream(null)
         reject(err as Error)
       }
     })
-  }, [])
+  }, [stream])
 
   useEffect(() => {
     if (!isRecording) return
@@ -109,6 +111,10 @@ export function useRecorder({ maxDuration = 30, mimeType = "video/webm;codecs=vp
     setIsRecording(false)
     setError(null)
     chunksRef.current = []
+    mediaRecorderRef.current?.stop()
+    mediaRecorderRef.current = null
+    stream?.getTracks().forEach((track) => track.stop())
+    setStream(null)
   }, [])
 
   return {
@@ -119,6 +125,7 @@ export function useRecorder({ maxDuration = 30, mimeType = "video/webm;codecs=vp
     isRecording,
     error,
     maxDuration,
+    stream,
   }
 }
 

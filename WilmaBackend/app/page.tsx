@@ -1,30 +1,36 @@
 import Link from "next/link";
 
 const HomePage = () => (
-  <div className="flex min-h-screen flex-col items-center justify-center bg-slate-950 px-6 text-slate-100">
-    <div className="max-w-3xl space-y-6 text-center">
-      <h1 className="text-4xl font-semibold">Wilma Recruitment Assistant</h1>
-      <p className="text-base text-slate-400">
-        This service powers a RAG-enhanced recruitment flow. Recruiters can ingest
-        company knowledge, enable specific job roles, and review AI-augmented candidate
-        submissions through the admin dashboard.
-      </p>
-      <div className="flex flex-wrap items-center justify-center gap-3">
+  <main className="flex min-h-screen items-center justify-center bg-[var(--background)] px-6 py-16">
+    <div className="mx-auto flex max-w-4xl flex-col items-center gap-8 text-center">
+      <span className="inline-flex items-center gap-2 rounded-full bg-[var(--brand-primary-soft)] px-4 py-1 text-sm font-medium text-[var(--brand-primary)]">
+        Wilma platform services
+      </span>
+      <div className="space-y-4">
+        <h1 className="text-4xl font-semibold text-[var(--foreground)] sm:text-5xl">
+          Powering the knowledge behind every AI interview
+        </h1>
+        <p className="text-base text-slate-600 sm:text-lg">
+          This service lets your recruiting team ingest company knowledge, curate open roles, and review AI-generated candidate insights
+          before they’re sent downstream. Everything lives in one connected workspace.
+        </p>
+      </div>
+      <div className="flex flex-col items-center gap-3 sm:flex-row">
         <Link
           href="/admin"
-          className="rounded-full bg-purple-500 px-5 py-2 text-sm font-semibold text-white hover:bg-purple-400"
+          className="inline-flex items-center justify-center rounded-full bg-[var(--brand-primary)] px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--brand-primary-hover)]"
         >
-          Open Admin Dashboard
+          Open Admin Console
         </Link>
         <Link
           href="/docs/api"
-          className="rounded-full border border-slate-700 px-5 py-2 text-sm font-semibold text-slate-200 hover:border-purple-400 hover:text-purple-200"
+          className="inline-flex items-center justify-center rounded-full border border-[var(--surface-subtle)] px-6 py-3 text-sm font-semibold text-slate-600 transition hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)]"
         >
-          API Reference
+          View API docs
         </Link>
       </div>
     </div>
-  </div>
+  </main>
 );
 
 export default HomePage;

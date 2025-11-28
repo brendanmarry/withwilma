@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenAI Realtime API Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        .status.disconnected {
+            background: #fee;
+            color: #c33;
+            border: 1px solid #fcc;
+        }
+        .status.connecting {
+            background: #fef3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .status.connected {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        button {
+            background: #5851ea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background: #4641d9;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .log-container {
+            margin-top: 30px;
+        }
+        .log-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .logs {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 5px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .log-entry {
+            margin-bottom: 5px;
+        }
+        .log-timestamp {
+            color: #808080;
+        }
+        .log-info { color: #4ec9b0; }
+        .log-success { color: #6a9955; }
+        .log-warning { color: #ce9178; }
+        .log-error { color: #f48771; }
+        .controls {
+            margin-bottom: 20px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        input[type="text"]:focus, input[type="password"]:focus {
+            outline: none;
+            border-color: #5851ea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎙️ OpenAI Realtime API Test</h1>
+        <p class="subtitle">Direct connection to OpenAI's Realtime Voice Agent</p>
+        
+        <div id="status" class="status disconnected">
+            Disconnected
+        </div>
+
+        <div class="controls">
+            <div class="input-group">
+                <label for="apiKey">OpenAI API Key:</label>
+                <input type="password" id="apiKey" placeholder="sk-proj-...">
+            </div>
+            
+            <button id="connectBtn" onclick="connect()">Connect</button>
+            <button id="disconnectBtn" onclick="disconnect()" disabled>Disconnect</button>
+            <button id="clearLogsBtn" onclick="clearLogs()">Clear Logs</button>
+        </div>
+
+        <div class="log-container">
+            <div class="log-title">Connection Logs</div>
+            <div id="logs" class="logs"></div>
+        </div>
+    </div>
+
+    <script>
+        let ws = null;
+        let sessionData = null;
+        const OPENAI_REALTIME_URL = 'wss://api.openai.com/v1/realtime';
+
+        function log(message, type = 'info') {
+            const logsDiv = document.getElementById('logs');
+            const timestamp = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            entry.innerHTML = `<span class="log-timestamp">[${timestamp}]</span> ${message}`;
+            logsDiv.appendChild(entry);
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+        }
+
+        function updateStatus(text, state) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = text;
+            statusDiv.className = `status ${state}`;
+        }
+
+        function clearLogs() {
+            document.getElementById('logs').innerHTML = '';
+        }
+
+        async function createSession(apiKey) {
+            log('Creating OpenAI Realtime client secret...', 'info');
+            
+            try {
+                const response = await fetch('https://api.openai.com/v1/realtime/client_secrets', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                });
+
+                if (!response.ok) {
+                    const error = await response.text();
+                    throw new Error(`Session creation failed (${response.status}): ${error}`);
+                }
+
+                const clientSecret = await response.json();
+                console.log('Full session response:', clientSecret);
+                
+                log(`✓ Client secret created`, 'success');
+                log(`  Expires at: ${new Date(clientSecret.expires_at * 1000).toLocaleTimeString()}`, 'info');
+                log(`  Token: ${clientSecret.value.substring(0, 20)}...`, 'info');
+                
+                return clientSecret;
+            } catch (error) {
+                log(`✗ Session creation failed: ${error.message}`, 'error');
+                throw error;
+            }
+        }
+
+        async function connect() {
+            const apiKey = document.getElementById('apiKey').value.trim();
+            
+            if (!apiKey) {
+                alert('Please enter your OpenAI API key');
+                return;
+            }
+
+            if (ws) {
+                log('Already connected or connecting', 'warning');
+                return;
+            }
+
+            try {
+                document.getElementById('connectBtn').disabled = true;
+                updateStatus('Creating session...', 'connecting');
+
+                // Create client secret
+                sessionData = await createSession(apiKey);
+                
+                log('Connecting to OpenAI WebSocket...', 'info');
+                updateStatus('Connecting to WebSocket...', 'connecting');
+
+                // Connect to WebSocket with ephemeral token
+                // The client secret response has the token directly in the 'value' field
+                const ephemeralToken = sessionData.value;
+                
+                if (!ephemeralToken) {
+                    throw new Error('No ephemeral token in session response');
+                }
+                
+                // Construct the WebSocket URL
+                // Use the model from the session object if available
+                const model = sessionData.session?.model || 'gpt-4o-realtime-preview';
+                const wsUrl = `${OPENAI_REALTIME_URL}?model=${encodeURIComponent(model)}`;
+                
+                log(`Connecting with ephemeral token...`, 'info');
+                log(`Model: ${model}`, 'info');
+                
+                // Create WebSocket with the ephemeral token in the subprotocol
+                // Format: openai-insecure-api-key.{token}
+                ws = new WebSocket(wsUrl, ['realtime', `openai-insecure-api-key.${ephemeralToken}`]);
+
+                ws.onopen = () => {
+                    log('✓ WebSocket connected!', 'success');
+                    updateStatus('Connected', 'connected');
+                    document.getElementById('disconnectBtn').disabled = false;
+                    
+                    log('✓ Session ready - waiting for session.created event', 'success');
+                };
+
+                ws.onmessage = (event) => {
+                    try {
+                        const data = JSON.parse(event.data);
+                        
+                        // Log important events
+                        switch (data.type) {
+                            case 'session.created':
+                                log(`✓ Session created: ${data.session.id}`, 'success');
+                                log(`  Model: ${data.session.model}, Voice: ${data.session.voice || 'default'}`, 'info');
+                                log(`  Modalities: ${data.session.modalities?.join(', ') || 'unknown'}`, 'info');
+                                log('✓ Session ready! No session.update needed with client secrets.', 'success');
+                                
+                                // Test: Send a response.create to have Wilma introduce herself
+                                const greeting = {
+                                    type: 'response.create',
+                                    response: {
+                                        instructions: 'Say hello and introduce yourself as Wilma, the AI recruitment assistant.'
+                                    }
+                                };
+                                log('📤 Sending test greeting...', 'info');
+                                ws.send(JSON.stringify(greeting));
+                                break;
+                            case 'session.updated':
+                                log('✓ Session configuration updated successfully', 'success');
+                                break;
+                            case 'error':
+                                log(`✗ Error: ${data.error.message}`, 'error');
+                                if (data.error.param) {
+                                    log(`  Parameter: ${data.error.param}`, 'error');
+                                }
+                                break;
+                            case 'response.output_audio_transcript.delta':
+                                log(`🎤 Wilma: ${data.delta}`, 'info');
+                                break;
+                            case 'response.output_audio_transcript.done':
+                                log(`✓ Wilma finished speaking`, 'success');
+                                break;
+                            case 'conversation.item.input_audio_transcription.completed':
+                                log(`📝 You: ${data.transcript}`, 'info');
+                                break;
+                            case 'response.done':
+                                log(`✓ Response complete`, 'success');
+                                break;
+                            default:
+                                // Don't log every event to avoid spam
+                                if (!data.type.includes('.delta') && !data.type.includes('.added')) {
+                                    log(`Event: ${data.type}`, 'info');
+                                }
+                        }
+                    } catch (error) {
+                        log(`Failed to parse message: ${error.message}`, 'error');
+                    }
+                };
+
+                ws.onerror = (error) => {
+                    log(`✗ WebSocket error: ${error.message || 'Unknown error'}`, 'error');
+                    updateStatus('Error', 'disconnected');
+                };
+
+                ws.onclose = (event) => {
+                    log(`✗ WebSocket closed (code: ${event.code}, reason: ${event.reason || 'none'})`, 'warning');
+                    updateStatus('Disconnected', 'disconnected');
+                    ws = null;
+                    sessionData = null;
+                    document.getElementById('connectBtn').disabled = false;
+                    document.getElementById('disconnectBtn').disabled = true;
+                };
+
+            } catch (error) {
+                log(`✗ Connection failed: ${error.message}`, 'error');
+                updateStatus('Connection failed', 'disconnected');
+                document.getElementById('connectBtn').disabled = false;
+                ws = null;
+                sessionData = null;
+            }
+        }
+
+        function disconnect() {
+            if (ws) {
+                log('Disconnecting...', 'info');
+                ws.close(1000, 'User disconnected');
+            }
+        }
+
+        // Clean up on page unload
+        window.addEventListener('beforeunload', () => {
+            if (ws) {
+                ws.close();
+            }
+        });
+
+        log('Ready to connect. Enter your OpenAI API key and click Connect.', 'info');
+    </script>
+</body>
+</html>
+

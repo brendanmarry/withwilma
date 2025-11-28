@@ -7,8 +7,8 @@ const Badge = React.forwardRef<
   React.HTMLAttributes<HTMLSpanElement> & { variant?: "default" | "outline" | "success" }
 >(({ className, variant = "default", ...props }, ref) => {
   const variants: Record<typeof variant, string> = {
-    default: "bg-purple-100 text-purple-700",
-    outline: "border border-purple-200 text-purple-700",
+    default: "bg-blue-100 text-blue-700",
+    outline: "border border-blue-200 text-blue-600",
     success: "bg-emerald-100 text-emerald-700",
   } as const
 

@@ -41,7 +41,7 @@ export function JobCard({ job }: JobCardProps) {
           <Button
             type="button"
             variant="ghost"
-            className="flex items-center gap-2 text-sm text-purple-600 hover:text-purple-700"
+            className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700"
             onClick={() => setIsOpen((prev) => !prev)}
           >
             {isOpen ? (
@@ -74,10 +74,10 @@ export function JobCard({ job }: JobCardProps) {
         ) : null}
       </AnimatePresence>
 
-      <CardContent className="flex flex-col gap-3 rounded-2xl bg-purple-50 p-6 md:flex-row md:items-center md:justify-between">
+      <CardContent className="flex flex-col gap-3 rounded-2xl bg-blue-50 p-6 md:flex-row md:items-center md:justify-between">
         <div>
-          <p className="text-sm font-medium text-purple-900">Ready to learn more directly from Wilma’s AI assistant?</p>
-          <p className="text-xs text-purple-700">
+          <p className="text-sm font-medium text-blue-900">Ready to learn more directly from Wilma’s AI assistant?</p>
+          <p className="text-xs text-blue-700">
             Have a conversation tailored to {job.title} and get the inside scoop on the team, culture, and expectations.
           </p>
         </div>

@@ -19,21 +19,23 @@ export default async function ApplyPage({ params }: ApplyPageProps) {
   }
 
   return (
-    <div className="mx-auto flex min-h-screen w-full max-w-4xl flex-col items-center gap-8 px-6 pb-24 pt-16">
-      <div className="flex w-full flex-wrap items-center justify-between gap-4">
+    <div className="flex min-h-screen flex-col bg-slate-50">
+      <div className="flex flex-wrap items-center gap-4 px-6 pt-6 lg:px-12">
         <BackButton label="Back" />
-        <JourneyProgress currentStep={3} className="max-w-3xl" />
+        <JourneyProgress currentStep={3} className="min-w-[260px] flex-1" />
       </div>
 
-      {fromFallback ? (
-        <div className="w-full rounded-3xl border border-amber-200 bg-amber-50 px-5 py-3 text-xs text-amber-900">
-          Job data is currently coming from the sample dataset because the backend jobs table is unreachable or empty. Start the backend and populate jobs to continue with live data.
+      <main className="flex flex-1 justify-center overflow-y-auto px-6 pb-16 pt-6 lg:px-12">
+        <div className="flex w-full max-w-4xl flex-col gap-6">
+          {fromFallback ? (
+            <div className="rounded-3xl border border-amber-200 bg-amber-50 px-5 py-3 text-xs text-amber-900">
+              Job data is currently coming from the sample dataset because the backend jobs table is unreachable or empty. Start the backend and populate jobs to continue with live data.
+            </div>
+          ) : null}
+
+          <ApplicationForm job={job} />
         </div>
-      ) : null}
-
-      <div className="w-full">
-        <ApplicationForm job={job} />
-      </div>
+      </main>
     </div>
   );
 }

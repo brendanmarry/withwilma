@@ -1,8 +1,23 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f9fafb;
+  --foreground: #0f172a;
+
+  --surface-primary: #ffffff;
+  --surface-muted: #f1f5f9;
+  --surface-subtle: #e2e8f0;
+
+  --brand-primary: #5851ea;
+  --brand-primary-hover: #4641d9;
+  --brand-primary-soft: #ebe9ff;
+  --brand-secondary: #8b84ff;
+  --brand-accent: #46e6b3;
+  
+  --neutral-100: #f8fafc;
+  --neutral-200: #e2e8f0;
+  --neutral-500: #64748b;
+  --neutral-700: #334155;
 }
 
 @theme inline {
@@ -10,17 +25,191 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-primary-hover: var(--brand-primary-hover);
 }
 
+/* Force light mode - override system dark mode preference */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #f9fafb;
+    --foreground: #0f172a;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+}
+
+.admin-shell {
+  background: var(--background);
+  min-height: 100vh;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+
+.admin-shell {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+}
+
+.admin-shell :is(.bg-slate-950, .bg-slate-900, .bg-slate-900\/40, .bg-slate-950\/40, .bg-slate-950\/60) {
+  background-color: var(--surface-primary) !important;
+  color: var(--foreground);
+  border: 1px solid var(--surface-subtle);
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+.admin-shell :is(.bg-slate-800, .bg-slate-700, .bg-slate-800\/40) {
+  background-color: var(--surface-muted) !important;
+  color: var(--neutral-700) !important;
+}
+
+.admin-shell :is(.hover\:bg-slate-800:hover, .hover\:bg-slate-700:hover) {
+  background-color: var(--surface-subtle) !important;
+}
+
+.admin-shell :is(.border-slate-800, .border-slate-700, .border-slate-900) {
+  border-color: var(--surface-subtle) !important;
+}
+
+.admin-shell :is(.text-white, .text-slate-100, .text-slate-200, .text-slate-50) {
+  color: var(--foreground) !important;
+}
+
+.admin-shell :is(.text-slate-300, .text-slate-400, .text-slate-500, .text-slate-600) {
+  color: var(--neutral-500) !important;
+}
+
+.admin-shell :is(.bg-slate-900\/70) {
+  background-color: var(--surface-muted) !important;
+}
+
+.admin-shell :is(.placeholder-slate-500, .placeholder-slate-400) {
+  color: var(--neutral-500) !important;
+}
+
+.admin-shell :is(.bg-purple-500, .bg-purple-500\/20) {
+  background-color: var(--brand-primary) !important;
+  color: #ffffff !important;
+}
+
+.admin-shell :is(.text-purple-200, .text-purple-300, .text-purple-400) {
+  color: var(--brand-primary) !important;
+}
+
+.admin-shell button[class*="bg-purple"],
+.admin-shell a[class*="bg-purple"],
+.admin-shell .hover\:bg-purple-400:hover,
+.admin-shell button[class*="bg-[var(--brand-primary)]"],
+.admin-shell a[class*="bg-[var(--brand-primary)]"] {
+  background-color: var(--brand-primary) !important;
+  border-color: transparent !important;
+  color: #ffffff !important;
+}
+
+/* Ensure emerald and rose buttons also have proper contrast */
+.admin-shell button[class*="bg-emerald"],
+.admin-shell button[class*="bg-rose"] {
+  color: #ffffff !important;
+}
+
+.admin-shell :is(.text-slate-400\/70, .text-slate-500\/70) {
+  color: var(--neutral-500) !important;
+  opacity: 0.7;
+}
+
+.admin-shell button[class*="border-slate"],
+.admin-shell input[class*="border-slate"],
+.admin-shell textarea[class*="border-slate"],
+.admin-shell select[class*="border-slate"] {
+  border-color: var(--surface-subtle) !important;
+  background-color: var(--surface-primary) !important;
+  color: var(--foreground) !important;
+}
+
+.admin-shell input::placeholder,
+.admin-shell textarea::placeholder {
+  color: var(--neutral-500) !important;
+}
+
+.admin-shell .tag-pill {
+  background: var(--brand-primary-soft);
+  color: var(--brand-primary);
+}
+
+.admin-shell .card-grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.admin-shell .card-grid.md {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.admin-shell .page-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 2.5rem;
+}
+
+.admin-shell .page-heading h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.admin-shell .page-heading p {
+  color: var(--neutral-500);
+  max-width: 48rem;
+}
+
+.admin-shell .panel {
+  border-radius: 1.5rem;
+  background: var(--surface-primary);
+  border: 1px solid var(--surface-subtle);
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+.admin-shell .panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.admin-shell .panel-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.admin-shell .panel p,
+.admin-shell .panel ul,
+.admin-shell .panel li {
+  color: var(--neutral-700);
+}
+
+.admin-shell .panel small,
+.admin-shell .panel .text-xs {
+  color: var(--neutral-500);
+}
+
+.admin-shell .panel .text-sm {
+  color: var(--neutral-700);
+}
+
+.admin-shell .panel .text-slate-500 {
+  color: #3b475a !important;
 }

@@ -11,12 +11,12 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-purple-600 text-white hover:bg-purple-700",
+        default: "bg-blue-600 text-white hover:bg-blue-700",
         outline:
-          "border border-input bg-transparent text-foreground hover:bg-purple-50 hover:text-purple-700",
-        ghost: "hover:bg-purple-50 hover:text-purple-700",
+          "border border-input bg-transparent text-foreground hover:bg-blue-50 hover:text-blue-600",
+        ghost: "hover:bg-blue-50 hover:text-blue-600",
         secondary: "bg-gray-900 text-white hover:bg-gray-800",
-        subtle: "bg-purple-100 text-purple-700 hover:bg-purple-200",
+        subtle: "bg-blue-100 text-blue-700 hover:bg-blue-200",
       },
       size: {
         default: "h-10 px-4 py-2",

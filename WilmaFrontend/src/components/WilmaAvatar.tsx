@@ -8,42 +8,61 @@ interface WilmaAvatarProps {
 }
 
 export function WilmaAvatar({ audioAnalyser }: WilmaAvatarProps) {
-  const [mouthScale, setMouthScale] = useState(1);
-  const dataRef = useRef<Uint8Array>();
+  const [glowLevel, setGlowLevel] = useState(0);
+  const dataRef = useRef<Uint8Array | null>(null);
 
   useEffect(() => {
     let animationFrame: number;
 
-    const updateMouth = () => {
+    const updateGlow = () => {
       if (audioAnalyser) {
-        const buffer = dataRef.current ?? new Uint8Array(audioAnalyser.frequencyBinCount);
-        audioAnalyser.getByteTimeDomainData(buffer);
-        dataRef.current = buffer;
+        let buffer = dataRef.current;
+        if (!buffer) {
+          buffer = new Uint8Array(audioAnalyser.frequencyBinCount);
+          dataRef.current = buffer;
+        }
+        audioAnalyser.getByteTimeDomainData(buffer as any);
         const avg = buffer.reduce((sum, value) => sum + Math.abs(value - 128), 0) / buffer.length;
-        const normalized = Math.min(avg / 40, 1);
-        setMouthScale(1 + normalized * 0.8);
+        const normalized = Math.min(avg / 45, 1);
+        setGlowLevel(normalized);
       } else {
-        setMouthScale(1);
+        setGlowLevel(0);
       }
-      animationFrame = window.requestAnimationFrame(updateMouth);
+      animationFrame = window.requestAnimationFrame(updateGlow);
     };
 
-    animationFrame = window.requestAnimationFrame(updateMouth);
+    animationFrame = window.requestAnimationFrame(updateGlow);
 
     return () => window.cancelAnimationFrame(animationFrame);
   }, [audioAnalyser]);
 
-  const mouthTransform = useMemo(() => `scaleY(${mouthScale.toFixed(3)})`, [mouthScale]);
+  const glowStyle = useMemo(
+    () => ({
+      opacity: 0.4 + glowLevel * 0.5,
+      transform: `scale(${1 + glowLevel * 0.04})`,
+      boxShadow: `0 0 ${28 + glowLevel * 52}px rgba(148, 116, 255, ${0.35 + glowLevel * 0.35})`,
+    }),
+    [glowLevel],
+  );
 
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-3xl bg-gradient-to-br from-purple-900 via-purple-600 to-indigo-500">
-      <Image src="/wilma-avatar.svg" alt="Wilma avatar illustration" fill className="object-cover" priority />
+    <div className="relative h-full w-full overflow-hidden rounded-3xl bg-[#120B27]">
+      <div className="absolute inset-0">
+        <Image
+          src="/wilma-video-presenter.svg"
+          alt="Wilma AI assistant"
+          fill
+          priority
+          className="object-cover"
+        />
+      </div>
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
       <div
-        className="absolute left-1/2 top-[64%] h-12 w-20 -translate-x-1/2 origin-center rounded-full bg-[#F8A8C7]/90 transition-transform duration-100"
-        style={{ transform: mouthTransform }}
+        className="pointer-events-none absolute inset-0 m-6 rounded-[34px] bg-purple-500/15 blur-2xl transition-transform duration-100"
+        style={glowStyle}
       />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-      <div className="absolute bottom-4 left-4 rounded-full bg-black/55 px-3 py-1 text-xs font-semibold uppercase tracking-[0.4em] text-white backdrop-blur">
+      <div className="pointer-events-none absolute inset-0 rounded-3xl border border-white/10" />
+      <div className="absolute bottom-4 left-4 rounded-full bg-black/45 px-3 py-1 text-xs font-semibold uppercase tracking-[0.4em] text-white backdrop-blur">
         Wilma
       </div>
     </div>

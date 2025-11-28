@@ -21,13 +21,13 @@ const AdminIndexPage = () => {
   // Redirect if organisation is already selected
   useEffect(() => {
     if (!isLoading && selectedOrganisation) {
-      router.push("/admin/knowledge");
+      router.push("/admin/candidates");
     }
   }, [selectedOrganisation, isLoading, router]);
 
   const handleSelectOrganisation = (org: OrganisationSummary) => {
     setSelectedOrganisation(org);
-    router.push("/admin/knowledge");
+    router.push("/admin/candidates");
   };
 
   const filteredOrganisations = organisations.filter(
@@ -47,55 +47,67 @@ const AdminIndexPage = () => {
   }
 
   return (
-    <div className="mx-auto max-w-4xl">
-      <div className="mb-8 text-center">
-        <h1 className="mb-2 text-3xl font-bold">Select Organisation</h1>
-        <p className="text-slate-400">
-          Choose an organisation to manage its knowledge base, open roles, and candidate reviews.
+    <div className="mx-auto max-w-5xl space-y-8">
+      <div className="page-heading">
+        <div className="inline-flex items-center gap-2 rounded-full bg-[var(--brand-primary-soft)] px-3 py-1 text-xs font-medium text-[var(--brand-primary)]">
+          Organisations
+        </div>
+        <h1>Select an organisation to manage Wilma</h1>
+        <p>
+          Choose which brand context you’d like to work on. We’ll keep the experience seamless as you ingest knowledge,
+          configure roles, and review candidates.
         </p>
       </div>
 
-      <div className="mb-6">
-        <label className="mb-2 block text-sm text-slate-400">Search Organisations</label>
+      <div className="panel p-6">
+        <label className="mb-2 block text-sm font-semibold text-slate-600">Search organisations</label>
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search by name or URL..."
-          className="w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 text-white placeholder-slate-500 focus:border-purple-500 focus:outline-none"
+          className="w-full rounded-xl border border-[var(--surface-subtle)] bg-white px-4 py-3 text-sm text-[var(--foreground)] placeholder-slate-400 focus:border-[var(--brand-primary)] focus:outline-none"
         />
       </div>
 
       {organisations.length === 0 ? (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-8 text-center">
-          <p className="mb-4 text-slate-400">No organisations found.</p>
-          <p className="text-sm text-slate-500">
-            Create an organisation by ingesting content or uploading job descriptions.
-          </p>
-        </div>
+        <EmptyState
+          title="No organisations yet"
+          description="Create your first organisation by ingesting content or uploading job descriptions."
+        />
       ) : filteredOrganisations.length === 0 ? (
-        <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-8 text-center">
-          <p className="text-slate-400">No organisations match your search.</p>
-        </div>
+        <EmptyState
+          title="No matches"
+          description="Try a different search term or clear the filter to see all organisations."
+        />
       ) : (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="card-grid md">
           {filteredOrganisations.map((org) => (
             <button
               key={org.id}
               onClick={() => handleSelectOrganisation(org)}
-              className="group rounded-xl border border-slate-800 bg-slate-900/40 p-6 text-left transition hover:border-purple-500/50 hover:bg-slate-900/60"
+              className="group flex h-full flex-col gap-4 rounded-2xl border border-[var(--surface-subtle)] bg-white p-6 text-left transition hover:border-[var(--brand-primary)] hover:shadow-lg"
             >
-              <div className="mb-2 flex items-start justify-between">
-                <h3 className="text-lg font-semibold text-white group-hover:text-purple-200">
-                  {org.name}
-                </h3>
-                <span className="rounded-full bg-purple-500/20 px-2 py-1 text-xs text-purple-200">
-                  Select →
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h3 className="text-lg font-semibold text-[var(--foreground)]">{org.name}</h3>
+                  <p className="mt-1 text-sm text-slate-500">{org.rootUrl}</p>
+                </div>
+                <span className="rounded-full bg-[var(--brand-primary-soft)] px-3 py-1 text-xs font-medium text-[var(--brand-primary)]">
+                  Select
                 </span>
               </div>
-              <p className="mb-3 text-sm text-slate-400">{org.rootUrl}</p>
-              <div className="flex gap-4 text-xs text-slate-500">
-                <span>Created: {new Date(org.createdAt).toLocaleDateString()}</span>
+              <div className="flex flex-wrap gap-3 text-xs text-slate-500">
+                <span>Created {new Date(org.createdAt).toLocaleDateString()}</span>
+                <span>
+                  Documents <strong>{org.counts.documents}</strong>
+                </span>
+                <span>
+                  Jobs <strong>{org.counts.jobs}</strong>
+                </span>
+                <span>
+                  FAQs <strong>{org.counts.faqs}</strong>
+                </span>
               </div>
             </button>
           ))}
@@ -103,12 +115,19 @@ const AdminIndexPage = () => {
       )}
 
       {organisations.length > 0 && (
-        <div className="mt-8 rounded-xl border border-slate-800 bg-slate-900/40 p-6">
-          <h3 className="mb-2 text-sm font-semibold text-slate-200">Quick Actions</h3>
-          <p className="text-xs text-slate-400">
-            After selecting an organisation, you can manage its knowledge base, open roles, and
-            review candidates from the navigation above.
-          </p>
+        <div className="panel p-6">
+          <h3 className="mb-2 text-sm font-semibold text-slate-700">Quick tips</h3>
+          <ul className="flex flex-wrap gap-3 text-xs text-slate-500">
+            <li className="rounded-full bg-[var(--brand-primary-soft)] px-3 py-1 text-[var(--brand-primary)]">
+              Ingest documents in the Knowledge tab
+            </li>
+            <li className="rounded-full bg-[var(--brand-primary-soft)] px-3 py-1 text-[var(--brand-primary)]">
+              Enable roles before sending to candidates
+            </li>
+            <li className="rounded-full bg-[var(--brand-primary-soft)] px-3 py-1 text-[var(--brand-primary)]">
+              Review candidate clips in the Candidates tab
+            </li>
+          </ul>
         </div>
       )}
     </div>

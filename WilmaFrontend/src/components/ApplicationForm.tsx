@@ -71,17 +71,17 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
   }
 
   return (
-    <Card className="space-y-6 bg-white/90 p-10 shadow-xl">
-      <header className="space-y-2 text-center">
-        <p className="text-xs uppercase tracking-[0.3em] text-purple-500">Step 3</p>
-        <h1 className="text-3xl font-semibold text-slate-900">Share your details with Wilma</h1>
-        <p className="text-sm text-slate-600">
+    <Card className="mx-auto max-w-4xl space-y-5 bg-white/95 px-6 py-8 shadow-xl md:px-8 md:py-9">
+      <header className="space-y-1 text-center">
+        <p className="text-[11px] uppercase tracking-[0.3em] text-purple-500">Step 3</p>
+        <h1 className="text-2xl font-semibold text-slate-900 md:text-[28px]">Share your details with Wilma</h1>
+        <p className="text-sm text-slate-600 md:text-[15px]">
           Wilma will compare your experience to the role and ask a few follow-up questions so the talent team has the best possible picture of you.
         </p>
       </header>
 
-      <form className="space-y-6" onSubmit={handleSubmit} noValidate>
-        <div className="grid gap-4 sm:grid-cols-2">
+      <form className="space-y-5" onSubmit={handleSubmit} noValidate>
+        <div className="grid gap-4 md:grid-cols-2">
           <Input
             label="Full name"
             value={name}
@@ -106,16 +106,18 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
           helperText="We recommend the format https://www.linkedin.com/in/your-profile"
           required
         />
-        <CVUploader
-          onFileSelected={setCvFile}
-          helperText="Upload your CV as PDF or DOCX. Max size 10MB."
-        />
+        <div className="rounded-2xl border border-slate-100 bg-white/70 p-4">
+          <CVUploader
+            onFileSelected={setCvFile}
+            helperText="Upload your CV as PDF or DOCX. Max size 10MB."
+          />
+        </div>
 
         {error ? <p className="text-sm text-red-600">{error}</p> : null}
 
         <Button
           type="submit"
-          className="h-12 w-full bg-purple-600 text-base text-white hover:bg-purple-700"
+          className="h-11 w-full bg-purple-600 text-base text-white hover:bg-purple-700 md:h-12"
           disabled={isSubmitting}
         >
           {isSubmitting ? (
@@ -128,9 +130,9 @@ export function ApplicationForm({ job }: ApplicationFormProps) {
         </Button>
       </form>
 
-      <div className="rounded-3xl bg-slate-100 p-6 text-sm text-slate-600">
+      <div className="rounded-2xl bg-slate-100 p-5 text-sm text-slate-600 md:p-6">
         <p className="font-medium text-slate-800">What happens next?</p>
-        <ol className="mt-3 space-y-2 text-left">
+        <ol className="mt-3 space-y-1.5 text-left">
           <li>• Wilma compares your CV to the {job.title} description.</li>
           <li>• She prepares a couple of focused follow-up questions.</li>
           <li>• You record short answers (30 seconds each) that go straight to the hiring team.</li>
