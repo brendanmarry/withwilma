@@ -220,7 +220,7 @@ const processVideoAnswer = async ({
           });
           return extracted;
         } catch (error) {
-          const serialised = serializeError(error);
+          const serialised = serializeError(error) as any;
           const isNetworkError =
             serialised.code === "ECONNRESET" ||
             serialised.code === "ETIMEDOUT" ||
