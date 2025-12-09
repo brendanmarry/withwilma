@@ -66,6 +66,8 @@ services:
     build:
       context: ./WilmaFrontend
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: https://api.withwilma.com
     container_name: wilma-frontend
     restart: unless-stopped
     environment:
@@ -82,6 +84,9 @@ services:
     build:
       context: ./WilmaWebsite
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_CANDIDATE_APP_URL: https://app.withwilma.com
+        NEXT_PUBLIC_RECRUITER_APP_URL: https://app.withwilma.com/admin
     container_name: wilma-website
     restart: unless-stopped
     environment:

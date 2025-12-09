@@ -15,6 +15,10 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Build Next.js
+ARG NEXT_PUBLIC_CANDIDATE_APP_URL
+ARG NEXT_PUBLIC_RECRUITER_APP_URL
+ENV NEXT_PUBLIC_CANDIDATE_APP_URL=$NEXT_PUBLIC_CANDIDATE_APP_URL
+ENV NEXT_PUBLIC_RECRUITER_APP_URL=$NEXT_PUBLIC_RECRUITER_APP_URL
 RUN npm run build
 
 # Production image, copy all the files and run next
