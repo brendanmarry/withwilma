@@ -69,7 +69,7 @@ services:
     container_name: wilma-frontend
     restart: unless-stopped
     environment:
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3001}
+      NEXT_PUBLIC_API_URL: https://api.withwilma.com
       NODE_ENV: production
     ports:
       - "3000:3000"
@@ -85,6 +85,8 @@ services:
     container_name: wilma-website
     restart: unless-stopped
     environment:
+      NEXT_PUBLIC_CANDIDATE_APP_URL: https://app.withwilma.com
+      NEXT_PUBLIC_RECRUITER_APP_URL: https://app.withwilma.com/admin
       NODE_ENV: production
     ports:
       - "3002:3002"
