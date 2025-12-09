@@ -43,6 +43,10 @@ services:
       MINIO_ACCESS_KEY: ${MINIO_ROOT_USER:-wilma}
       MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-wilma-secret}
       MINIO_BUCKET: ${MINIO_BUCKET:-wilma-local}
+      S3_BUCKET: ${MINIO_BUCKET:-wilma-local}
+      S3_REGION: "us-east-1"
+      S3_ACCESS_KEY_ID: ${MINIO_ROOT_USER:-wilma}
+      S3_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD:-wilma-secret}
       S3_ENDPOINT: https://minio.withwilma.com
       S3_FORCE_PATH_STYLE: "true"
       OPENAI_API_KEY: ${OPENAI_API_KEY}
