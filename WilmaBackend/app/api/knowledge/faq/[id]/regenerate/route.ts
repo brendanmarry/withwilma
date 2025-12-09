@@ -19,7 +19,7 @@ export const POST = async (
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
-  const { id } = await params;
+
 
   let faq = await prisma.fAQ.findUnique({
     where: { id },
