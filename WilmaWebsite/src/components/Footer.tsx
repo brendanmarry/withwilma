@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Github, Linkedin, Twitter } from "lucide-react";
 import { Container } from "@/components/ui/Container";
+import { CANDIDATE_APP_URL, RECRUITER_APP_URL } from "@/lib/external-links";
 
 const columns = [
   {
@@ -10,6 +11,8 @@ const columns = [
       { label: "Feature Deep Dive", href: "/features" },
       { label: "Case Studies", href: "/case-studies" },
       { label: "Pricing", href: "/pricing" },
+      { label: "Candidate Login", href: CANDIDATE_APP_URL },
+      { label: "Recruiter Login", href: RECRUITER_APP_URL },
     ],
   },
   {
