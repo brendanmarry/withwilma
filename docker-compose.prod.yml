@@ -46,6 +46,7 @@ services:
       S3_ENDPOINT: https://minio.withwilma.com
       S3_FORCE_PATH_STYLE: "true"
       OPENAI_API_KEY: ${OPENAI_API_KEY}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
       NODE_ENV: production
     extra_hosts:
       - "minio.withwilma.com:host-gateway"
