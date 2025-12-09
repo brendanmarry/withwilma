@@ -13,7 +13,7 @@ export const POST = async (request: Request) => {
   let rawBody: unknown;
   try {
     rawBody = await request.json();
-    const input = emailTemplateSchema.parse({ ...rawBody, type: "schedule" });
+    const input = emailTemplateSchema.parse({ ...(rawBody as Record<string, unknown>), type: "schedule" });
     const template = await generateEmailTemplate(input);
     return NextResponse.json(template);
   } catch (error) {
