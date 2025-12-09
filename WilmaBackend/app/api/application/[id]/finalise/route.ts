@@ -6,6 +6,7 @@ export const POST = async (
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) => {
+
   const { id } = await params;
   const candidate = await prisma.candidate.findUnique({
     where: { id },

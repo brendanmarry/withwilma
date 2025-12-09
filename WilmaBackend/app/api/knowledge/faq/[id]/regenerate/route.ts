@@ -13,6 +13,7 @@ export const POST = async (
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) => {
+  const { id } = await params;
   const admin = await getAdminTokenFromRequest();
   if (!admin) {
     return new NextResponse("Unauthorized", { status: 401 });

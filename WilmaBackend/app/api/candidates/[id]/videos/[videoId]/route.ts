@@ -8,6 +8,7 @@ export const GET = async (
   _request: NextRequest,
   { params }: { params: Promise<{ id: string; videoId: string }> },
 ) => {
+
   const { id, videoId } = await params;
   const admin = await getAdminTokenFromRequest();
   if (!admin) {

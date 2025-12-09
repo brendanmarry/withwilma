@@ -8,6 +8,7 @@ export const PUT = async (
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) => {
+
   const { id } = await params;
   const admin = await getAdminTokenFromRequest();
   if (!admin) {

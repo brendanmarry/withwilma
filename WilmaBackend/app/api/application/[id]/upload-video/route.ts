@@ -51,6 +51,7 @@ export const POST = async (
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) => {
+
   const { id } = await params;
   let questionIdValue: string | null = null;
   try {
@@ -306,26 +307,26 @@ const processVideoAnswer = async ({
         aiGeneratedDetected: aiDetectionResult?.isAiGenerated ?? false,
         analysis: summary
           ? {
-              keyPoints: summary.key_points,
-              recruiterSummary: summary.recruiter_summary,
-              aiDetection: aiDetectionResult
-                ? {
-                    isAiGenerated: aiDetectionResult.isAiGenerated,
-                    confidence: aiDetectionResult.confidence,
-                    reasoning: aiDetectionResult.reasoning,
-                    indicators: aiDetectionResult.indicators,
-                  }
-                : undefined,
-            }
+            keyPoints: summary.key_points,
+            recruiterSummary: summary.recruiter_summary,
+            aiDetection: aiDetectionResult
+              ? {
+                isAiGenerated: aiDetectionResult.isAiGenerated,
+                confidence: aiDetectionResult.confidence,
+                reasoning: aiDetectionResult.reasoning,
+                indicators: aiDetectionResult.indicators,
+              }
+              : undefined,
+          }
           : aiDetectionResult
             ? {
-                aiDetection: {
-                  isAiGenerated: aiDetectionResult.isAiGenerated,
-                  confidence: aiDetectionResult.confidence,
-                  reasoning: aiDetectionResult.reasoning,
-                  indicators: aiDetectionResult.indicators,
-                },
-              }
+              aiDetection: {
+                isAiGenerated: aiDetectionResult.isAiGenerated,
+                confidence: aiDetectionResult.confidence,
+                reasoning: aiDetectionResult.reasoning,
+                indicators: aiDetectionResult.indicators,
+              },
+            }
             : null,
       },
     });

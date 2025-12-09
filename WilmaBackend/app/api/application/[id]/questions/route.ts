@@ -6,6 +6,7 @@ export const GET = async (
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) => {
+
   const { id } = await params;
   const followups = await prisma.followUpQuestion.findMany({
     where: { candidateId: id },
