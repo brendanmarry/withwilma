@@ -74,22 +74,41 @@ const AdminIndexPage = () => {
         </p>
       </div>
 
-      <div className="panel p-6">
-        <label className="mb-2 block text-sm font-semibold text-slate-600">Search organisations</label>
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search by name or URL..."
-          className="w-full rounded-xl border border-[var(--surface-subtle)] bg-white px-4 py-3 text-sm text-[var(--foreground)] placeholder-slate-400 focus:border-[var(--brand-primary)] focus:outline-none"
-        />
+      <div className="flex gap-4 items-end">
+        <div className="panel p-6 flex-1">
+          <label className="mb-2 block text-sm font-semibold text-slate-600">Search organisations</label>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by name or URL..."
+            className="w-full rounded-xl border border-[var(--surface-subtle)] bg-white px-4 py-3 text-sm text-[var(--foreground)] placeholder-slate-400 focus:border-[var(--brand-primary)] focus:outline-none"
+          />
+        </div>
+        <button
+          onClick={() => router.push("/admin/organisations/new")}
+          className="h-full rounded-xl bg-[var(--brand-primary)] px-6 py-4 text-sm font-medium text-white shadow-sm transition hover:bg-[var(--brand-primary-dark)]"
+        >
+          New Organisation
+        </button>
       </div>
 
       {organisations.length === 0 ? (
-        <EmptyState
-          title="No organisations yet"
-          description="Create your first organisation by ingesting content or uploading job descriptions."
-        />
+        <div className="panel flex flex-col items-center gap-3 p-12 text-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--brand-primary-soft)] text-[var(--brand-primary)]">
+            ✨
+          </div>
+          <h3 className="text-lg font-semibold text-[var(--foreground)]">No organisations yet</h3>
+          <p className="max-w-md text-sm text-slate-500 mb-4">
+            Create your first organisation by analyzing your website to extract values and culture.
+          </p>
+          <button
+            onClick={() => router.push("/admin/organisations/new")}
+            className="rounded-lg bg-[var(--brand-primary)] px-6 py-2 text-sm font-medium text-white hover:bg-[var(--brand-primary-dark)]"
+          >
+            Create Organisation
+          </button>
+        </div>
       ) : filteredOrganisations.length === 0 ? (
         <EmptyState
           title="No matches"
