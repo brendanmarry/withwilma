@@ -296,7 +296,7 @@ const processVideoAnswer = async ({
     }
 
     const transcriptForStorage =
-      summary?.clean_transcript?.trim().length ?? false
+      summary && summary.clean_transcript && summary.clean_transcript.trim().length > 0
         ? summary.clean_transcript.trim()
         : transcriptText;
 
@@ -327,7 +327,7 @@ const processVideoAnswer = async ({
                 indicators: aiDetectionResult.indicators,
               },
             }
-            : null,
+            : undefined,
       },
     });
 
