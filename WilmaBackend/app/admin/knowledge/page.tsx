@@ -541,7 +541,7 @@ const KnowledgePage = () => {
           <div className="mt-6 grid gap-4 lg:grid-cols-12">
             <div className="lg:col-span-12 rounded-xl border border-slate-800 bg-slate-950/60 p-4">
               <h3 className="mb-2 text-sm font-semibold text-white">Overview</h3>
-              <p className="text-sm text-slate-300">{summary.overview}</p>
+              <p className="text-sm text-slate-300">{profile?.overview}</p>
             </div>
             <div className="lg:col-span-6 rounded-xl border border-slate-800 bg-slate-950/40 p-4">
               <h4 className="text-sm font-semibold text-white">Products & Services</h4>

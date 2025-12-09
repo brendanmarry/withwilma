@@ -48,7 +48,7 @@ export const POST = async (
       organisationId: faq.organisationId,
       question: requestQuestion,
     });
-
+    
     faq = await prisma.fAQ.update({
       where: { id },
       data: {
