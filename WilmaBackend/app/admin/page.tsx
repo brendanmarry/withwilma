@@ -4,6 +4,16 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useOrganisation } from "./context/OrganisationContext";
 
+const EmptyState = ({ title, description }: { title: string; description: string }) => (
+  <div className="panel flex flex-col items-center gap-3 p-12 text-center">
+    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--brand-primary-soft)] text-[var(--brand-primary)]">
+      ✨
+    </div>
+    <h3 className="text-lg font-semibold text-[var(--foreground)]">{title}</h3>
+    <p className="max-w-md text-sm text-slate-500">{description}</p>
+  </div>
+);
+
 type OrganisationSummary = {
   id: string;
   name: string;
