@@ -644,13 +644,13 @@ const KnowledgePage = () => {
             />
           </div>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-xs text-slate-500">Supports up to 10 files per upload batch.</p>
+            <p className="text-xs text-slate-500">{status && <span className="text-[var(--brand-primary)] font-medium">{status}</span>}</p>
             <button
               type="submit"
-              disabled={uploading}
+              disabled={uploading || status?.startsWith("Starting")}
               className="inline-flex items-center justify-center rounded-full bg-[var(--brand-primary)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[var(--brand-primary-hover)] disabled:opacity-50"
             >
-              {uploading ? "Uploading…" : "Upload documents"}
+              {uploading ? "Processing…" : "Sync URL"}
             </button>
           </div>
         </form>
