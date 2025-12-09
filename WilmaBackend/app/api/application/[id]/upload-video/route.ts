@@ -276,7 +276,7 @@ const processVideoAnswer = async ({
         jobDescription: followup.candidate.job.description,
       });
     } catch (transcriptionError) {
-      const errorDetails = serializeError(transcriptionError);
+      const errorDetails = serializeError(transcriptionError) as any;
       logger.error("Video transcription failed", {
         error: errorDetails,
         candidateId,
