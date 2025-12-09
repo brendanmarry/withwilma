@@ -43,8 +43,12 @@ services:
       MINIO_ACCESS_KEY: ${MINIO_ROOT_USER:-wilma}
       MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-wilma-secret}
       MINIO_BUCKET: ${MINIO_BUCKET:-wilma-local}
+      S3_ENDPOINT: https://minio.withwilma.com
+      S3_FORCE_PATH_STYLE: "true"
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       NODE_ENV: production
+    extra_hosts:
+      - "minio.withwilma.com:host-gateway"
     ports:
       - "3001:3001"
     depends_on:
