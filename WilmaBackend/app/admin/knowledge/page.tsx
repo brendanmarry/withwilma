@@ -180,8 +180,8 @@ const KnowledgePage = () => {
     }
   }, [selectedOrganisation, loadOrganisationKnowledge]);
 
-  const ingestUrls = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const ingestUrls = async (event?: FormEvent<HTMLFormElement>) => {
+    event?.preventDefault();
     if (!rootUrl) {
       setStatus("Root URL is required");
       return;
@@ -214,13 +214,13 @@ const KnowledgePage = () => {
     }
   };
 
-  const handleFileUpload = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleFileUpload = async (event?: FormEvent<HTMLFormElement>) => {
+    event?.preventDefault();
     if (!rootUrl) {
       setStatus("Root URL is required");
       return;
     }
-    const formData = new FormData(event.currentTarget);
+    const formData = event ? new FormData(event.currentTarget) : new FormData();
     setUploading(true);
     setStatus("Uploading documents…");
     try {
@@ -619,14 +619,14 @@ const KnowledgePage = () => {
           <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
-              onClick={() => void ingestUrls(new FormEvent("submit"))}
+              onClick={() => void ingestUrls()}
               className="inline-flex items-center justify-center rounded-full bg-[var(--brand-primary)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[var(--brand-primary-hover)] disabled:opacity-50"
             >
               Sync knowledge
             </button>
             <button
               type="button"
-              onClick={() => void handleFileUpload(new FormEvent("submit"))}
+              onClick={() => void handleFileUpload()}
               className="inline-flex items-center justify-center rounded-full bg-[var(--brand-primary)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[var(--brand-primary-hover)] disabled:opacity-50"
             >
               Upload documents
@@ -722,7 +722,7 @@ const KnowledgePage = () => {
                     Uploaded document ({document.mimeType ?? "unknown format"})
                   </p>
                 )}
-                {document.metadata?.originalName && (
+                {!!document.metadata?.originalName && (
                   <p className="mt-1 text-xs text-slate-500">
                     Original file: {String(document.metadata.originalName)}
                   </p>
