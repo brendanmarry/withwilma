@@ -7,7 +7,7 @@ import { docxToText } from "@/lib/parsing/docx";
 import { pdfToText } from "@/lib/parsing/pdf";
 import { indexDocumentChunks } from "@/lib/vector/retriever";
 
-type IngestSourceType = "html" | "pdf" | "docx" | "text";
+export type IngestSourceType = "html" | "pdf" | "docx" | "text";
 
 export type IngestItem = {
   type: IngestSourceType;

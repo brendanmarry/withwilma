@@ -4,9 +4,11 @@ import { prisma } from "@/lib/db";
 import { normaliseOrganisationRootUrl } from "@/lib/organisation";
 
 const formatOrganisation = (
-  organisation: Awaited<
-    ReturnType<typeof prisma.organisation.findFirst>
-  > & { _count?: { documents: number; faqs: number; jobs: number } },
+  organisation:
+    | (NonNullable<Awaited<ReturnType<typeof prisma.organisation.findFirst>>> & {
+      _count?: { documents: number; faqs: number; jobs: number };
+    })
+    | null,
 ) => {
   if (!organisation) {
     return null;

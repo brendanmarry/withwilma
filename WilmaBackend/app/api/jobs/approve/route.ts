@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
 import { getAdminTokenFromRequest } from "@/lib/auth";
 import { z } from "zod";
 import { ensureOrganisationByRootUrl } from "@/lib/organisation";
@@ -67,7 +68,7 @@ export const POST = async (request: Request) => {
         department: input.department,
         employmentType: input.employmentType,
         description: input.description,
-        normalizedJson: input.normalizedJson ?? null,
+        normalizedJson: input.normalizedJson as Prisma.InputJsonValue,
         jobSourceId: jobSource.id,
         sourceUrl: input.jobUrl,
         status: "open",
@@ -80,7 +81,7 @@ export const POST = async (request: Request) => {
         department: input.department,
         employmentType: input.employmentType,
         description: input.description,
-        normalizedJson: input.normalizedJson ?? null,
+        normalizedJson: input.normalizedJson as Prisma.InputJsonValue,
         jobSourceId: jobSource.id,
         sourceUrl: input.jobUrl,
         status: "open",

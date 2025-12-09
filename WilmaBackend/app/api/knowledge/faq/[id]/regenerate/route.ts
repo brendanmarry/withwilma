@@ -48,7 +48,7 @@ export const POST = async (
       organisationId: faq.organisationId,
       question: requestQuestion,
     });
-    
+
     faq = await prisma.fAQ.update({
       where: { id },
       data: {
@@ -56,6 +56,7 @@ export const POST = async (
         answer: answer.answer,
         recruiterApproved: false,
       },
+      include: { organisation: true },
     });
 
     return NextResponse.json({

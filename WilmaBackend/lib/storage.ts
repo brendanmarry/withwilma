@@ -4,6 +4,7 @@ import {
   GetObjectCommand,
   HeadBucketCommand,
   CreateBucketCommand,
+  type BucketLocationConstraint,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { randomUUID } from "crypto";
@@ -59,7 +60,7 @@ const ensureBucketExists = async (client: S3Client) => {
               new CreateBucketCommand({
                 Bucket: env().S3_BUCKET,
                 ...(env().S3_REGION && env().S3_REGION !== "us-east-1"
-                  ? { CreateBucketConfiguration: { LocationConstraint: env().S3_REGION } }
+                  ? { CreateBucketConfiguration: { LocationConstraint: env().S3_REGION as BucketLocationConstraint } }
                   : {}),
               }),
             );

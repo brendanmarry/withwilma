@@ -12,10 +12,12 @@ let initialisePromise: Promise<void> | null = null;
 
 const ensureDirectory = () => {
   if (!initialisePromise) {
-    initialisePromise = mkdir(logDir, { recursive: true }).catch((error) => {
-      initialisePromise = null;
-      throw error;
-    });
+    initialisePromise = mkdir(logDir, { recursive: true })
+      .then(() => { })
+      .catch((error) => {
+        initialisePromise = null;
+        throw error;
+      });
   }
   return initialisePromise;
 };
@@ -77,9 +79,18 @@ const toSerializable = (value: unknown, depth = 0): unknown => {
   }
 };
 
-export const serializeError = (error: unknown) => {
+export interface SerializedError {
+  name?: string;
+  message?: string;
+  stack?: string;
+  code?: string;
+  cause?: unknown;
+  [key: string]: unknown;
+}
+
+export const serializeError = (error: unknown): SerializedError => {
   if (error instanceof Error) {
-    const serialised: Record<string, unknown> = {
+    const serialised: SerializedError = {
       name: error.name,
       message: truncateString(error.message),
     };
@@ -88,13 +99,16 @@ export const serializeError = (error: unknown) => {
       serialised.stack = truncateString(error.stack);
     }
 
-    const anyError = error as Error & { cause?: unknown };
+    const anyError = error as Error & { cause?: unknown; code?: string };
     if (anyError.cause !== undefined) {
       serialised.cause = toSerializable(anyError.cause);
     }
+    if (anyError.code !== undefined) {
+      serialised.code = anyError.code;
+    }
 
     for (const key of Object.getOwnPropertyNames(error)) {
-      if (["name", "message", "stack", "cause"].includes(key)) continue;
+      if (["name", "message", "stack", "cause", "code"].includes(key)) continue;
       const descriptor = Object.getOwnPropertyDescriptor(error, key);
       if (!descriptor || typeof descriptor.value === "undefined") continue;
       serialised[key] = toSerializable(descriptor.value);
@@ -102,7 +116,11 @@ export const serializeError = (error: unknown) => {
     return serialised;
   }
 
-  return toSerializable(error);
+  if (typeof error === "object" && error !== null) {
+    return toSerializable(error) as SerializedError;
+  }
+
+  return { message: String(error) };
 };
 
 const writeLog = async (

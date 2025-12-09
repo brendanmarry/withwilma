@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAdminTokenFromRequest } from "@/lib/auth";
 import { ensureOrganisationByRootUrl } from "@/lib/organisation";
-import { ingestDocuments } from "@/lib/llm/pipelines/ingestion";
+import { ingestDocuments, type IngestSourceType } from "@/lib/llm/pipelines/ingestion";
 import { normaliseJob } from "@/lib/llm/pipelines/job_normalisation";
 import { validateJobDescription } from "@/lib/llm/pipelines/job_validation";
 import { prisma } from "@/lib/db";
@@ -14,7 +14,7 @@ const uploadSchema = z.object({
   jobId: z.string().uuid().optional(),
 });
 
-const detectType = (fileName: string, mimeType: string | undefined) => {
+const detectType = (fileName: string, mimeType: string | undefined): IngestSourceType => {
   if (mimeType?.includes("pdf") || fileName.endsWith(".pdf")) return "pdf";
   if (
     mimeType?.includes("vnd.openxmlformats-officedocument.wordprocessingml.document") ||
@@ -220,7 +220,7 @@ export const POST = async (request: Request) => {
           const normalised = await normaliseJob({ raw: text });
           const title =
             normalised.title?.trim() ||
-            (attachment.metadata?.originalName as string | undefined)?.replace(/\.[^/.]+$/, "") ||
+            (attachment.metadata as any)?.originalName?.replace(/\.[^/.]+$/, "") ||
             "";
           if (!title) {
             logger.warn("Unable to derive job title from uploaded document", {

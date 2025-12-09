@@ -71,8 +71,8 @@ export const GET = async (request: NextRequest) => {
   const organisation =
     organisationIdParam !== null
       ? await prisma.organisation.findUnique({
-          where: { id: organisationIdParam },
-        })
+        where: { id: organisationIdParam },
+      })
       : await findOrganisationByRootUrl(rootUrlParam!);
 
   if (!organisation) {
@@ -98,7 +98,7 @@ export const GET = async (request: NextRequest) => {
 
   const sources = documents.map((doc, index) => ({
     id: doc.id,
-    label: buildSourceLabel({ sourceUrl: doc.sourceUrl, metadata: doc.metadata, index }),
+    label: buildSourceLabel({ sourceUrl: doc.sourceUrl, metadata: doc.metadata as Record<string, unknown> | null, index }),
     snippet: truncate(doc.textContent, MAX_SNIPPET_LENGTH),
     createdAt: doc.createdAt,
   }));
