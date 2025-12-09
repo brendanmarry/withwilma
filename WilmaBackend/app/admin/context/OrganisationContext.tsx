@@ -8,6 +8,11 @@ type OrganisationSummary = {
   rootUrl: string;
   createdAt: string;
   updatedAt: string;
+  counts: {
+    documents: number;
+    faqs: number;
+    jobs: number;
+  };
 };
 
 type OrganisationContextType = {
