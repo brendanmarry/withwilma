@@ -5,16 +5,17 @@ import { jobUpdateSchema } from "@/lib/validators";
 import { logger, serializeError } from "@/lib/logger";
 
 type Params = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 export const PATCH = async (request: NextRequest, { params }: Params) => {
+  const { id } = await params;
   const admin = await getAdminTokenFromRequest();
   if (!admin) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
-  const { id } = params;
+
   let rawBody: unknown;
 
   try {
@@ -54,19 +55,20 @@ export const PATCH = async (request: NextRequest, { params }: Params) => {
   } catch (error) {
     logger.error("Failed to update job", {
       error: serializeError(error),
-      request: { jobId: params.id, rawBody },
+      request: { jobId: id, rawBody },
     });
     return new NextResponse("Failed to update job", { status: 500 });
   }
 };
 
 export const DELETE = async (_request: NextRequest, { params }: Params) => {
+  const { id } = await params;
   const admin = await getAdminTokenFromRequest();
   if (!admin) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
-  const { id } = params;
+
 
   try {
     const attachments = await prisma.jobDocument.findMany({

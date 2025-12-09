@@ -4,16 +4,17 @@ import { prisma } from "@/lib/db";
 import { logger, serializeError } from "@/lib/logger";
 
 type Params = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 export const DELETE = async (_request: NextRequest, { params }: Params) => {
+  const { id } = await params;
   const admin = await getAdminTokenFromRequest();
   if (!admin) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
-  const { id } = params;
+
 
   try {
     const attachment = await prisma.jobDocument.findUnique({
