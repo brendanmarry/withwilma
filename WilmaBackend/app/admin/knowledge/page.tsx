@@ -545,9 +545,9 @@ const KnowledgePage = () => {
             </div>
             <div className="lg:col-span-6 rounded-xl border border-slate-800 bg-slate-950/40 p-4">
               <h4 className="text-sm font-semibold text-white">Products & Services</h4>
-              {profile?.productsAndServices.length > 0 ? (
+              {(profile?.productsAndServices?.length ?? 0) > 0 ? (
                 <ul className="mt-2 list-disc space-y-1 pl-4 text-sm text-slate-300">
-                  {profile.productsAndServices.map((item, index) => (
+                  {profile!.productsAndServices.map((item, index) => (
                     <li key={index}>{item}</li>
                   ))}
                 </ul>
@@ -557,9 +557,9 @@ const KnowledgePage = () => {
             </div>
             <div className="lg:col-span-6 rounded-xl border border-slate-800 bg-slate-950/40 p-4">
               <h4 className="text-sm font-semibold text-white">Company history</h4>
-              {profile?.historyHighlights.length > 0 ? (
+              {(profile?.historyHighlights?.length ?? 0) > 0 ? (
                 <ul className="mt-2 list-disc space-y-1 pl-4 text-sm text-slate-300">
-                  {profile.historyHighlights.map((item, index) => (
+                  {profile!.historyHighlights.map((item, index) => (
                     <li key={index}>{item}</li>
                   ))}
                 </ul>
@@ -571,9 +571,9 @@ const KnowledgePage = () => {
             </div>
             <div className="lg:col-span-4 rounded-xl border border-slate-800 bg-slate-950/40 p-4">
               <h4 className="text-sm font-semibold text-white">Leadership</h4>
-              {profile?.leadershipTeam.length > 0 ? (
+              {(profile?.leadershipTeam?.length ?? 0) > 0 ? (
                 <ul className="mt-2 list-disc space-y-1 pl-4 text-sm text-slate-300">
-                  {profile.leadershipTeam.map((item, index) => (
+                  {profile!.leadershipTeam.map((item, index) => (
                     <li key={index}>{item}</li>
                   ))}
                 </ul>
@@ -594,11 +594,11 @@ const KnowledgePage = () => {
               <h4 className="text-sm font-semibold text-white">Ownership</h4>
               <p className="text-sm text-slate-300">{profile?.ownershipStructure}</p>
             </div>
-            {profile?.notes.length > 0 && (
+            {(profile?.notes?.length ?? 0) > 0 && (
               <div className="lg:col-span-12 rounded-xl border border-slate-800 bg-slate-950/40 p-4">
                 <h4 className="text-sm font-semibold text-white">Additional notes</h4>
                 <ul className="mt-2 list-disc space-y-1 pl-4 text-sm text-slate-300">
-                  {profile.notes.map((note, index) => (
+                  {profile!.notes.map((note, index) => (
                     <li key={index}>{note}</li>
                   ))}
                 </ul>
