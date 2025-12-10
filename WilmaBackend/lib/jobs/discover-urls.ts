@@ -56,7 +56,7 @@ const scoreJobUrl = (url: string, anchorText: string, pageTitle: string): number
 
   // High confidence for known job board domains
   if (isJobBoardDomain(url)) {
-    score += 30;
+    return 100; // Immediate match for known boards
   }
 
   // URL patterns that suggest job postings
@@ -70,12 +70,18 @@ const scoreJobUrl = (url: string, anchorText: string, pageTitle: string): number
     /\/opening[s]?/,
     /\/apply/,
     /\/hiring/,
+    /\/stellen/, // German
+    /\/offene-stellen/,
+    /\/jobs/,
+    /\/karriere/,
+    /\/work-at/,
+    /\/join/,
   ];
 
   // Check URL patterns
   for (const pattern of jobPatterns) {
     if (pattern.test(lowerUrl)) {
-      score += 10;
+      score += 20; // Increased from 10
     }
   }
 
@@ -90,45 +96,47 @@ const scoreJobUrl = (url: string, anchorText: string, pageTitle: string): number
     /vacancy/i,
     /opening/i,
     /hiring/i,
+    /work with/i,
+    /join/i,
+    /stelle/i, // German
+    /karriere/i,
   ];
 
   for (const pattern of anchorPatterns) {
     if (pattern.test(lowerText)) {
-      score += 5;
+      score += 15; // Increased from 5
     }
   }
 
   // Check page title patterns
   for (const pattern of anchorPatterns) {
     if (pattern.test(lowerTitle)) {
-      score += 3;
+      score += 10; // Increased from 3
     }
   }
 
   // Boost score if URL contains job-related keywords in path
   const pathSegments = lowerUrl.split("/");
   for (const segment of pathSegments) {
-    if (segment.match(/^(job|career|position|role|opportunity|vacancy|opening|apply|hiring)/)) {
-      score += 8;
+    if (segment.match(/^(job|career|position|role|opportunity|vacancy|opening|apply|hiring|stellen|karriere|work)/)) {
+      score += 15; // Increased from 8
     }
   }
 
   // Penalize common non-job pages
   const excludePatterns = [
-    /\/about/,
     /\/contact/,
     /\/blog/,
     /\/news/,
     /\/press/,
-    /\/team/,
-    /\/privacy/,
-    /\/terms/,
-    /\/cookie/,
+    /\/(terms|privacy|legal)/,
+    /\/login/,
+    /\/signup/,
   ];
 
   for (const pattern of excludePatterns) {
     if (pattern.test(lowerUrl)) {
-      score -= 15;
+      score -= 30; // Increased penalty
     }
   }
 
@@ -205,7 +213,7 @@ export const discoverJobUrls = async (
       // Score this page as a potential job posting
       const score = scoreJobUrl(url, pageTitle, pageTitle);
 
-      if (score > 5) {
+      if (score > 5) { // Kept low to catch potential pages
         candidates.push({
           url,
           title: pageTitle || url,
@@ -215,7 +223,8 @@ export const discoverJobUrls = async (
       }
 
       // If this looks like a careers listing page, crawl deeper
-      if (level < 2 && score > 10) {
+      // Relaxed condition: level < 2 OR score > 5 (even if low confidence, crawl a bit)
+      if (level < 2) {
         const anchors = document.querySelectorAll("a[href]");
         anchors.forEach((anchor) => {
           const href = anchor.getAttribute("href");
@@ -232,7 +241,8 @@ export const discoverJobUrls = async (
             // Check if it's an external URL (job board or high-scoring job URL)
             const isExternal = !isSameOrigin(origin, target);
             const isExternalJobBoard = isExternal && isJobBoardDomain(resolved);
-            const isHighScoringExternalJob = isExternal && linkScore > 20;
+            // Relaxed: Capture external if score > 10 (was 20)
+            const isHighScoringExternalJob = isExternal && linkScore > 10;
 
             // Collect external job URLs to fetch later
             if ((isExternalJobBoard || isHighScoringExternalJob) && !visited.has(resolved)) {
@@ -243,8 +253,15 @@ export const discoverJobUrls = async (
                 linkScore,
               });
             } else if (isSameOrigin(origin, target)) {
-              // Internal links - only follow if they look like job postings
-              if (linkScore > 8 && !visited.has(resolved)) {
+              // Internal links 
+              // Relaxed: Follow almost all internal links at level 0/1 to find hidden careers pages
+              // Stricter at deeper levels
+              const shouldFollow =
+                (level === 0 && linkScore >= 0) ||
+                (level === 1 && linkScore > 5) ||
+                (linkScore > 10);
+
+              if (shouldFollow && !visited.has(resolved)) {
                 queue.push({ url: resolved, level: level + 1, origin });
               }
             }

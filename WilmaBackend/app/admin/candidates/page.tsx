@@ -204,7 +204,7 @@ const CandidatesPage = () => {
   const handleScheduleClick = async (candidateId: string) => {
     const candidate = candidates.find((c) => c.id === candidateId);
     if (!candidate || !selectedOrganisation) return;
-    
+
     setScheduleModal(candidateId);
     setRejectModal(null);
     setEmailDraft(null);
@@ -250,11 +250,10 @@ const CandidatesPage = () => {
           {candidates.map((candidate) => (
             <div
               key={candidate.id}
-              className={`rounded-xl border bg-white p-4 transition-shadow ${
-                candidate.reviewedAt
-                  ? "border-slate-200"
-                  : "border-[var(--brand-primary)]/30 shadow-lg shadow-[var(--brand-primary)]/10"
-              }`}
+              className={`rounded-xl border p-5 transition-all hover:shadow-md ${candidate.reviewedAt
+                  ? "border-slate-200 bg-white"
+                  : "border-[var(--brand-primary)]/40 bg-[var(--brand-primary-soft)]/10 shadow-sm"
+                }`}
             >
               <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div className="flex-1">
@@ -293,15 +292,14 @@ const CandidatesPage = () => {
                       Role: {candidate.job.title} · Match Score:{" "}
                     </span>
                     <span
-                      className={`rounded-full px-2 py-0.5 text-xs font-semibold ${
-                        candidate.matchScore === undefined
+                      className={`rounded-full px-2 py-0.5 text-xs font-semibold ${candidate.matchScore === undefined
                           ? "bg-slate-100 text-slate-600"
                           : candidate.matchScore >= 70
                             ? "bg-emerald-100 text-emerald-700"
                             : candidate.matchScore >= 50
                               ? "bg-yellow-100 text-yellow-700"
                               : "bg-rose-100 text-rose-700"
-                      }`}
+                        }`}
                     >
                       {candidate.matchScore ?? "Pending"}
                     </span>

@@ -155,13 +155,13 @@ export function useRealtimeAgent({
 
   const disconnect = useCallback(() => {
     console.info("[WilmaRealtime] disconnect called");
-    
+
     // Clean up audio processor
     const audioContext = audioContextRef.current;
     if (audioContext) {
       const processor = (audioContext as any).__wilmaProcessor;
       const source = (audioContext as any).__wilmaSource;
-      
+
       if (processor) {
         processor.disconnect();
         processor.onaudioprocess = null;
@@ -170,7 +170,7 @@ export function useRealtimeAgent({
         source.disconnect();
       }
     }
-    
+
     // Stop media tracks
     microphoneStreamRef.current?.getTracks().forEach((track) => track.stop());
     microphoneStreamRef.current = null;
@@ -194,30 +194,30 @@ export function useRealtimeAgent({
   useEffect(() => {
     isMountedRef.current = true;
     console.info("[WilmaRealtime] Component mounted");
-    
+
     return () => {
       console.info("[WilmaRealtime] Component unmounting, scheduling cleanup");
       isMountedRef.current = false;
-      
+
       // In development (React StrictMode), be VERY conservative about cleanup
       // Only cleanup after a substantial delay to avoid disrupting legitimate connections
       if (cleanupTimerRef.current) {
         clearTimeout(cleanupTimerRef.current);
       }
-      
-          cleanupTimerRef.current = setTimeout(() => {
-            // Only disconnect if still unmounted after delay AND not connecting
-            if (!isMountedRef.current && !isConnecting && !isConnected) {
-              console.info("[WilmaRealtime] Cleanup confirmed, disconnecting");
-              disconnect();
-            } else {
-              console.info("[WilmaRealtime] Component remounted or connection active, skipping cleanup", {
-                mounted: isMountedRef.current,
-                connecting: isConnecting,
-                connected: isConnected
-              });
-            }
-          }, 5000); // 5 second grace period to handle StrictMode and navigation
+
+      cleanupTimerRef.current = setTimeout(() => {
+        // Only disconnect if still unmounted after delay AND not connecting
+        if (!isMountedRef.current && !isConnecting && !isConnected) {
+          console.info("[WilmaRealtime] Cleanup confirmed, disconnecting");
+          disconnect();
+        } else {
+          console.info("[WilmaRealtime] Component remounted or connection active, skipping cleanup", {
+            mounted: isMountedRef.current,
+            connecting: isConnecting,
+            connected: isConnected
+          });
+        }
+      }, 5000); // 5 second grace period to handle StrictMode and navigation
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -286,11 +286,11 @@ export function useRealtimeAgent({
       analyser.connect(audioContext.destination);
       source.start(0);
       audioSourceRef.current = source;
-      
-      console.log("[WilmaRealtime] Playing audio chunk", { 
-        duration: audioBuffer.duration, 
+
+      console.log("[WilmaRealtime] Playing audio chunk", {
+        duration: audioBuffer.duration,
         length: float32.length,
-        contextState: audioContext.state 
+        contextState: audioContext.state
       });
     } catch (error) {
       console.error("[WilmaRealtime] Failed to play audio chunk", error);
@@ -320,7 +320,7 @@ export function useRealtimeAgent({
         case "session.created": {
           // With client secrets, the session is pre-configured and ready immediately
           console.info("[WilmaRealtime] Session created by OpenAI, connection ready!");
-          
+
           // Update session to configure the voice to "verse"
           console.info("[WilmaRealtime] Updating session to use 'verse' voice...");
           sendFrame({
@@ -329,7 +329,7 @@ export function useRealtimeAgent({
               voice: "verse",
             },
           });
-          
+
           setIsConnected(true);
           setIsConnecting(false);
           break;
@@ -424,7 +424,7 @@ export function useRealtimeAgent({
     try {
       // NEW APPROACH: Get ephemeral token and connect DIRECTLY to OpenAI (like test page)
       console.info("[WilmaRealtime] Requesting ephemeral token from backend...");
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000'}/api/realtime/session`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'https://api.withwilma.com'}/api/realtime/session`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -437,9 +437,9 @@ export function useRealtimeAgent({
       const sessionData = await response.json();
       const token = sessionData.value;
       const model = sessionData.session?.model || 'gpt-4o-realtime-preview';
-      
+
       console.info("[WilmaRealtime] Got ephemeral token, connecting directly to OpenAI...");
-      
+
       // Connect DIRECTLY to OpenAI (no proxy!)
       const openaiUrl = `wss://api.openai.com/v1/realtime?model=${encodeURIComponent(model)}`;
       console.info("[WilmaRealtime] connecting to OpenAI", openaiUrl);
@@ -460,7 +460,7 @@ export function useRealtimeAgent({
           binaryType: ws.binaryType,
         });
         // Keep isConnecting true until we get session.updated
-        
+
         // OpenAI keeps the connection alive automatically, no need for client-side ping
       };
 
@@ -478,7 +478,7 @@ export function useRealtimeAgent({
 
       // Track connection time for debugging
       const connectAttemptTime = Date.now();
-      
+
       ws.onclose = (event) => {
         const duration = Date.now() - connectAttemptTime;
         console.warn("[WilmaRealtime] ❌ WebSocket CLOSED", {
@@ -488,7 +488,7 @@ export function useRealtimeAgent({
           durationMs: duration,
           readyState: ws.readyState,
         });
-        
+
         // Log code meanings for easier debugging
         const codeMessage = {
           1000: "Normal Closure",
@@ -504,28 +504,27 @@ export function useRealtimeAgent({
           1011: "Internal Server Error",
           1015: "TLS Handshake Failure",
         }[event.code];
-        
+
         if (codeMessage) {
           console.warn(`[WilmaRealtime] Close code ${event.code}: ${codeMessage}`);
         }
-        
+
         // Only clear the socket if it's the same one that closed
         if (socketRef.current === ws) {
           socketRef.current = null;
           setIsConnected(false);
           setIsMicStreaming(false);
           setIsConnecting(false);
-          
+
           // Clear HMR reference
           if (typeof window !== 'undefined') {
             // @ts-ignore
             window.__wilmaRealtimeSocket = null;
           }
-          
+
           if (event.code !== 1000 || event.reason) {
             setLastError(
-              `Connection closed (code ${event.code}${
-                event.reason ? `, reason: ${event.reason}` : ""
+              `Connection closed (code ${event.code}${event.reason ? `, reason: ${event.reason}` : ""
               })`,
             );
           }
@@ -580,7 +579,7 @@ export function useRealtimeAgent({
   const startMicrophone = useCallback(async () => {
     if (!enableAudio || isMicStreaming) return;
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ 
+      const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           channelCount: 1,
           sampleRate: 24000,
@@ -593,10 +592,10 @@ export function useRealtimeAgent({
       // Create audio context to convert to PCM16
       const audioContext = new AudioContext({ sampleRate: PCM_SAMPLE_RATE });
       const source = audioContext.createMediaStreamSource(stream);
-      
+
       // Use larger buffer size (8192 samples = ~341ms at 24kHz) to ensure we have enough audio
       const processor = audioContext.createScriptProcessor(8192, 1, 1);
-      
+
       // Buffer to accumulate audio chunks
       let audioBuffer: Int16Array[] = [];
       let bufferSize = 0;
@@ -607,18 +606,18 @@ export function useRealtimeAgent({
 
       processor.onaudioprocess = (event) => {
         const inputData = event.inputBuffer.getChannelData(0);
-        
+
         // Convert float32 to PCM16
         const pcm16 = new Int16Array(inputData.length);
         for (let i = 0; i < inputData.length; i++) {
           const s = Math.max(-1, Math.min(1, inputData[i]));
           pcm16[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
         }
-        
+
         // Add to buffer
         audioBuffer.push(pcm16);
         bufferSize += pcm16.length;
-        
+
         // Only send when we have at least 100ms of audio
         if (bufferSize >= MIN_BUFFER_SIZE) {
           // Combine all buffered chunks
@@ -628,13 +627,13 @@ export function useRealtimeAgent({
             combined.set(chunk, offset);
             offset += chunk.length;
           }
-          
+
           // Convert to base64 and send
           const base64 = arrayBufferToBase64(combined.buffer);
           const durationMs = (bufferSize / 24000) * 1000;
           console.log(`[WilmaRealtime] Sending audio buffer: ${bufferSize} samples (~${durationMs.toFixed(1)}ms)`);
           sendFrame({ type: "input_audio_buffer.append", audio: base64 });
-          
+
           // Reset buffer
           audioBuffer = [];
           bufferSize = 0;
@@ -667,7 +666,7 @@ export function useRealtimeAgent({
     if (audioContext) {
       const processor = (audioContext as any).__wilmaProcessor;
       const source = (audioContext as any).__wilmaSource;
-      
+
       if (processor) {
         processor.disconnect();
         processor.onaudioprocess = null;
@@ -675,18 +674,18 @@ export function useRealtimeAgent({
       if (source) {
         source.disconnect();
       }
-      
+
       // Note: Don't close the audioContext as it's used for playback too
     }
-    
+
     // Stop media tracks
     microphoneStreamRef.current?.getTracks().forEach((track) => track.stop());
     microphoneStreamRef.current = null;
     setIsMicStreaming(false);
-    
+
     // Commit any remaining audio
     sendFrame({ type: "input_audio_buffer.commit" });
-    
+
     console.info("[WilmaRealtime] Microphone stopped");
   }, [sendFrame]);
 

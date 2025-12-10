@@ -3,11 +3,11 @@
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useOrganisation } from "../context/OrganisationContext";
-
+import { Sparkles, Upload, Link as LinkIcon, FileText } from "lucide-react";
 const EmptyState = ({ title, description }: { title: string; description: string }) => (
   <div className="panel flex flex-col items-center gap-3 p-12 text-center">
     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--brand-primary-soft)] text-[var(--brand-primary)]">
-      ✨
+      <Sparkles className="h-6 w-6" />
     </div>
     <h3 className="text-lg font-semibold text-[var(--foreground)]">{title}</h3>
     <p className="max-w-md text-sm text-slate-500">{description}</p>

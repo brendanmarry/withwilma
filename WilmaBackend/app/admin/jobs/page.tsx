@@ -15,6 +15,7 @@ type OrganisationSummary = {
 type JobRecord = {
   id: string;
   title: string;
+  description?: string;
   location: string | null;
   employmentType: string | null;
   department: string | null;
@@ -87,6 +88,37 @@ const formatDate = (value: string | null | undefined) => {
   return new Date(value).toLocaleString();
 };
 
+const Modal = ({
+  open,
+  title,
+  onClose,
+  children,
+}: {
+  open: boolean;
+  title: string;
+  onClose: () => void;
+  children: React.ReactNode;
+}) => {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+      <div className="w-full max-w-2xl max-h-[85vh] flex flex-col rounded-2xl border border-slate-700 bg-slate-900 shadow-xl overflow-hidden">
+        <div className="flex items-center justify-between border-b border-slate-700 p-4">
+          <h3 className="text-lg font-semibold text-white">{title}</h3>
+          <button
+            onClick={onClose}
+            className="rounded-lg p-1 text-slate-400 hover:bg-slate-800 hover:text-white"
+          >
+            <span className="sr-only">Close</span>
+            ✕
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto p-6">{children}</div>
+      </div>
+    </div>
+  );
+};
+
 const JobsPage = () => {
   const router = useRouter();
   const { selectedOrganisation, isLoading: contextLoading } = useOrganisation();
@@ -101,6 +133,7 @@ const JobsPage = () => {
   const [approving, setApproving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
+  const [viewingJob, setViewingJob] = useState<JobRecord | null>(null);
 
   // Redirect if no organisation is selected
   useEffect(() => {
@@ -333,14 +366,14 @@ const JobsPage = () => {
       prev.map((j) => (j.id === job.id ? { ...j, wilmaEnabled: enabled } : j)),
     );
     setStatus(enabled ? "Wilma enabled for job" : "Wilma disabled for job");
-    
+
     // Update on server
     const response = await fetch(`/api/jobs/${job.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ wilmaEnabled: enabled }),
     });
-    
+
     if (response.ok && selectedOrganisation) {
       // Refresh to ensure consistency
       await loadDashboard(selectedOrganisation.id);
@@ -546,20 +579,19 @@ const JobsPage = () => {
               </button>
             </div>
 
-            <div className="mb-4 rounded-lg border border-slate-700 bg-slate-950/50 p-4">
-              <h5 className="mb-2 text-sm font-semibold text-slate-200">Job Description</h5>
-              <p className="max-h-64 overflow-y-auto whitespace-pre-wrap text-sm text-slate-300">
+            <div className="mb-4 rounded-lg border border-slate-700 bg-black/40 p-4">
+              <h5 className="mb-2 text-sm font-semibold text-white">Job Description</h5>
+              <div className="max-h-64 overflow-y-auto whitespace-pre-wrap text-sm text-slate-100/90 leading-relaxed">
                 {preview.description}
-              </p>
+              </div>
             </div>
 
             {preview.validation && (
               <div
-                className={`mb-4 rounded-lg border p-4 ${
-                  preview.validation.is_valid
-                    ? "border-emerald-500/30 bg-emerald-950/20"
-                    : "border-amber-500/30 bg-amber-950/20"
-                }`}
+                className={`mb-4 rounded-lg border p-4 ${preview.validation.is_valid
+                  ? "border-emerald-500/30 bg-emerald-950/20"
+                  : "border-amber-500/30 bg-amber-950/20"
+                  }`}
               >
                 <h5 className="mb-2 text-sm font-semibold text-slate-200">Validation</h5>
                 {preview.validation.is_valid ? (
@@ -675,11 +707,10 @@ const JobsPage = () => {
                 jobs.map((job) => (
                   <tr
                     key={job.id}
-                    className={`border-t border-slate-800 ${
-                      !job.wilmaEnabled && job.status === "open"
-                        ? "bg-purple-950/10"
-                        : ""
-                    }`}
+                    className={`border-t border-slate-800 ${!job.wilmaEnabled && job.status === "open"
+                      ? "bg-purple-950/10"
+                      : ""
+                      }`}
                   >
                     <td className="px-4 py-3">
                       <div className="font-medium text-white">{job.title}</div>
@@ -699,22 +730,20 @@ const JobsPage = () => {
                         <button
                           type="button"
                           onClick={() => void toggleJobStatus(job, "open")}
-                          className={`rounded-full px-3 py-1 text-xs transition ${
-                            job.status === "open"
-                              ? "bg-emerald-500/20 text-emerald-200"
-                              : "border border-slate-700 text-slate-300 hover:border-emerald-400 hover:text-emerald-200"
-                          }`}
+                          className={`rounded-full px-3 py-1 text-xs transition ${job.status === "open"
+                            ? "bg-emerald-500/20 text-emerald-200"
+                            : "border border-slate-700 text-slate-300 hover:border-emerald-400 hover:text-emerald-200"
+                            }`}
                         >
                           Open
                         </button>
                         <button
                           type="button"
                           onClick={() => void toggleJobStatus(job, "closed")}
-                          className={`rounded-full px-3 py-1 text-xs transition ${
-                            job.status === "closed"
-                              ? "bg-rose-500/20 text-rose-200"
-                              : "border border-slate-700 text-slate-300 hover:border-rose-400 hover:text-rose-200"
-                          }`}
+                          className={`rounded-full px-3 py-1 text-xs transition ${job.status === "closed"
+                            ? "bg-rose-500/20 text-rose-200"
+                            : "border border-slate-700 text-slate-300 hover:border-rose-400 hover:text-rose-200"
+                            }`}
                         >
                           Closed
                         </button>
@@ -722,13 +751,12 @@ const JobsPage = () => {
                     </td>
                     <td className="px-4 py-3">
                       <label
-                        className={`inline-flex items-center gap-2 text-xs ${
-                          job.wilmaEnabled
-                            ? "text-purple-200 font-medium"
-                            : job.status === "closed"
-                              ? "text-slate-500 cursor-not-allowed"
-                              : "text-slate-300 cursor-pointer hover:text-purple-200"
-                        }`}
+                        className={`inline-flex items-center gap-2 text-xs ${job.wilmaEnabled
+                          ? "text-purple-200 font-medium"
+                          : job.status === "closed"
+                            ? "text-slate-500 cursor-not-allowed"
+                            : "text-slate-300 cursor-pointer hover:text-purple-200"
+                          }`}
                       >
                         <input
                           type="checkbox"
@@ -746,6 +774,13 @@ const JobsPage = () => {
                     <td className="px-4 py-3">{formatDate(job.updatedAt)}</td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setViewingJob(job)}
+                          className="rounded-lg border border-slate-700 px-3 py-1 text-xs text-slate-300 hover:border-slate-500 hover:text-white"
+                        >
+                          View Desc
+                        </button>
                         <button
                           type="button"
                           onClick={() => void handleDeleteJob(job)}
@@ -812,6 +847,60 @@ const JobsPage = () => {
           )}
         </div>
       </section>
+
+      {/* View Job Description Modal */}
+      <Modal
+        open={!!viewingJob}
+        title={viewingJob?.title || "Job Description"}
+        onClose={() => setViewingJob(null)}
+      >
+        <div className="space-y-6">
+          <div className="flex flex-wrap gap-3">
+            {viewingJob?.location && (
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
+                <span>📍</span>
+                <span>{viewingJob.location}</span>
+              </div>
+            )}
+            {viewingJob?.department && (
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
+                <span>🏢</span>
+                <span>{viewingJob.department}</span>
+              </div>
+            )}
+            {viewingJob?.employmentType && (
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
+                <span>💼</span>
+                <span>{viewingJob.employmentType}</span>
+              </div>
+            )}
+            {viewingJob?.jobSource?.url && (
+              <a
+                href={viewingJob.jobSource.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-full border border-purple-200 bg-purple-50 px-3 py-1 text-xs font-medium text-purple-700 hover:bg-purple-100 transition-colors"
+              >
+                <span>🔗</span>
+                <span>View Source</span>
+              </a>
+            )}
+          </div>
+
+          <div className="border-t border-slate-200 pt-6">
+            <h4 className="text-xs font-bold text-slate-500 mb-4 uppercase tracking-wider">Description</h4>
+            {viewingJob?.description ? (
+              <div className="text-sm text-slate-800 leading-relaxed space-y-4">
+                {viewingJob.description.split('\n').map((paragraph, idx) => (
+                  paragraph.trim() ? <p key={idx}>{paragraph}</p> : <br key={idx} />
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-slate-500 italic">No description available for this job.</p>
+            )}
+          </div>
+        </div>
+      </Modal>
 
       {status && (
         <div className="rounded-xl border border-purple-500/30 bg-purple-950/20 px-4 py-3 text-sm text-purple-200">
