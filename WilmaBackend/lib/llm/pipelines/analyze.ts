@@ -1,5 +1,4 @@
 import { getOpenAIClient } from "../client";
-import { SystemMessage, UserMessage } from "../utils";
 
 export type BusinessAnalysis = {
     summary: string;
@@ -37,8 +36,8 @@ ${textContent.slice(0, 15000)} // Limit context window usage
     const response = await client.chat.completions.create({
         model: "gpt-4o",
         messages: [
-            SystemMessage(systemPrompt),
-            UserMessage(userPrompt),
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt },
         ],
         response_format: { type: "json_object" },
         temperature: 0.5,
