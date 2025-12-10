@@ -68,7 +68,11 @@ const FALLBACK_QUESTIONS: FollowUpQuestion[] = [
   },
 ];
 
-const INTERNAL_API_URL = process.env.INTERNAL_API_URL ?? "http://wilma-backend:3001";
+const INTERNAL_API_URL =
+  process.env.INTERNAL_API_URL ??
+  (process.env.NODE_ENV === "development"
+    ? "http://localhost:3001"
+    : "http://wilma-backend:3001");
 
 function buildUrl(path: string) {
   const baseUrl = typeof window === "undefined" ? INTERNAL_API_URL : API_BASE_URL;
