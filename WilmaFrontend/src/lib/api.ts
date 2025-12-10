@@ -1,7 +1,10 @@
 import { FollowUpQuestion, Job } from "./types";
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? process.env.API_BASE_URL ?? "http://localhost:3000";
+  process.env.NEXT_PUBLIC_API_URL ??
+  process.env.NEXT_PUBLIC_API_BASE_URL ??
+  process.env.API_BASE_URL ??
+  "https://api.withwilma.com";
 const ORGANISATION_ID = process.env.NEXT_PUBLIC_ORGANISATION_ID;
 const ORGANISATION_ROOT_URL = process.env.NEXT_PUBLIC_ORGANISATION_ROOT_URL;
 
