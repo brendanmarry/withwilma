@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server"
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? process.env.API_BASE_URL
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL ??
+  process.env.NEXT_PUBLIC_API_BASE_URL ??
+  process.env.API_BASE_URL ??
+  "https://api.withwilma.com"
 
 if (!API_BASE_URL) {
   console.warn("API_BASE_URL (or NEXT_PUBLIC_API_BASE_URL) is not defined. Realtime session proxy will fail.")
