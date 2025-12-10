@@ -7,8 +7,14 @@ import Section from "@/components/ui/Section";
 import { Badge } from "@/components/ui/badge";
 import { JourneyProgress } from "@/components/JourneyProgress";
 
-export default async function JobsPage() {
-  const { jobs, fromFallback } = await getJobs();
+type Props = {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+export default async function JobsPage({ searchParams }: Props) {
+  const resolvedSearchParams = await searchParams;
+  const organisationId = typeof resolvedSearchParams.organisationId === "string" ? resolvedSearchParams.organisationId : undefined;
+  const { jobs, fromFallback } = await getJobs(organisationId);
   const organisationName =
     process.env.NEXT_PUBLIC_ORGANISATION_NAME ??
     process.env.ORGANISATION_NAME ??

@@ -55,3 +55,15 @@ export interface Candidate {
   linkedinPhotoUrl?: string
 }
 
+export interface Organisation {
+  id: string;
+  name: string;
+  rootUrl: string;
+  createdAt: string;
+  updatedAt: string;
+  counts: {
+    documents: number;
+    faqs: number;
+    jobs: number;
+  };
+}

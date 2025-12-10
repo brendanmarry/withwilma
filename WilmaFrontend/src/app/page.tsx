@@ -72,7 +72,7 @@ export default function Home() {
 
             <div className="flex justify-center">
               <Button asChild size="lg" className="inline-flex items-center gap-2 rounded-full bg-[var(--brand-primary)] px-6 py-3 text-white shadow-sm transition hover:bg-[var(--brand-primary-hover)]">
-                <Link href="/jobs">
+                <Link href="/select-company">
                   Explore open roles
                   <ArrowRight className="ml-1 h-4 w-4" />
                 </Link>

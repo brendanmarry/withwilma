@@ -75,9 +75,11 @@ function buildUrl(path: string) {
   return `${baseUrl.replace(/\/$/, "")}${path}`;
 }
 
-export async function getJobs(): Promise<{ jobs: Job[]; fromFallback: boolean }> {
+export async function getJobs(organisationId?: string): Promise<{ jobs: Job[]; fromFallback: boolean }> {
   const url = new URL(buildUrl("/api/jobs"));
-  if (ORGANISATION_ID) {
+  if (organisationId) {
+    url.searchParams.set("organisationId", organisationId);
+  } else if (ORGANISATION_ID) {
     url.searchParams.set("organisationId", ORGANISATION_ID);
   } else if (ORGANISATION_ROOT_URL) {
     url.searchParams.set("rootUrl", ORGANISATION_ROOT_URL);
@@ -93,6 +95,16 @@ export async function getJobs(): Promise<{ jobs: Job[]; fromFallback: boolean }>
     console.warn("Falling back to static job list", error);
     return { jobs: FALLBACK_JOBS, fromFallback: true };
   }
+}
+
+export async function getOrganisations() {
+  const response = await fetch(buildUrl("/api/organisations/public"), {
+    cache: "no-store",
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to fetch organisations: ${response.statusText}`);
+  }
+  return response.json();
 }
 
 export async function submitApplication(
