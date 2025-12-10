@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useOrganisation } from "../context/OrganisationContext";
 
@@ -214,13 +214,26 @@ const KnowledgePage = () => {
     }
   };
 
-  const handleFileUpload = async (event?: FormEvent<HTMLFormElement>) => {
-    event?.preventDefault();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const triggerFileUpload = () => {
     if (!rootUrl) {
       setStatus("Root URL is required");
       return;
     }
-    const formData = event ? new FormData(event.currentTarget) : new FormData();
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    const formData = new FormData();
+    formData.append("rootUrl", rootUrl);
+    Array.from(files).forEach((file) => {
+      formData.append("files", file);
+    });
+
     setUploading(true);
     setStatus("Uploading documents…");
     try {
@@ -246,6 +259,9 @@ const KnowledgePage = () => {
       }
     } finally {
       setUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     }
   };
 
@@ -626,7 +642,7 @@ const KnowledgePage = () => {
             </button>
             <button
               type="button"
-              onClick={() => void handleFileUpload()}
+              onClick={triggerFileUpload}
               className="inline-flex items-center justify-center rounded-full bg-[var(--brand-primary)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[var(--brand-primary-hover)] disabled:opacity-50"
             >
               Upload documents
@@ -654,6 +670,14 @@ const KnowledgePage = () => {
             </button>
           </div>
         </form>
+        <input
+          type="file"
+          ref={fileInputRef}
+          className="hidden"
+          multiple
+          onChange={handleFileChange}
+          accept=".pdf,.docx,.txt"
+        />
       </section>
 
       <section className="panel p-6">
