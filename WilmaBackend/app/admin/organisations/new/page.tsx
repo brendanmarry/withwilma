@@ -14,7 +14,7 @@ type AnalysisResult = {
 
 const NewOrganisationPage = () => {
     const router = useRouter();
-    const { fetchOrganisations } = useOrganisation();
+    const { refreshOrganisations } = useOrganisation();
 
     const [step, setStep] = useState<"input" | "analyzing" | "review" | "creating">("input");
     const [formData, setFormData] = useState({
@@ -81,7 +81,7 @@ const NewOrganisationPage = () => {
             }
 
             // Refresh context and redirect
-            await fetchOrganisations();
+            await refreshOrganisations();
             router.push("/admin");
         } catch (err: any) {
             console.error(err);
