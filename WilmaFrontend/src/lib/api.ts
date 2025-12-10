@@ -68,8 +68,11 @@ const FALLBACK_QUESTIONS: FollowUpQuestion[] = [
   },
 ];
 
+const INTERNAL_API_URL = process.env.INTERNAL_API_URL ?? "http://wilma-backend:3001";
+
 function buildUrl(path: string) {
-  return `${API_BASE_URL.replace(/\/$/, "")}${path}`;
+  const baseUrl = typeof window === "undefined" ? INTERNAL_API_URL : API_BASE_URL;
+  return `${baseUrl.replace(/\/$/, "")}${path}`;
 }
 
 export async function getJobs(): Promise<{ jobs: Job[]; fromFallback: boolean }> {
