@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { ArrowRight, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MAIN_SITE_URL, RECRUITER_APP_URL } from "@/lib/external-links";
+import { MAIN_SITE_URL, EMPLOYER_APP_URL } from "@/lib/external-links";
 
 const Navigation = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -20,7 +20,7 @@ const Navigation = () => {
             <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[var(--brand-primary)] text-white">
               <span className="text-sm font-semibold">W</span>
             </div>
-            <span className="text-xl font-bold text-gray-900">Wilma</span>
+            <span className="text-xl font-bold text-gray-900">withWilma</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -38,7 +38,7 @@ const Navigation = () => {
 
           <div className="hidden md:flex items-center gap-3">
             <Link
-              href="/recruiter/login"
+              href="/employer/login"
               className="inline-flex items-center gap-2 rounded-full bg-black px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-gray-800"
             >
               Login
@@ -82,7 +82,7 @@ const Navigation = () => {
                 </Link>
               ))}
               <Link
-                href="/recruiter/login"
+                href="/employer/login"
                 className="block w-full rounded-full bg-black px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-gray-800"
                 onClick={() => setMobileMenuOpen(false)}
               >

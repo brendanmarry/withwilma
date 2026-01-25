@@ -26,7 +26,7 @@ export default function LoginPage() {
         try {
             const result = await login(email, password);
             if (result.success) {
-                router.push("/recruiter/dashboard");
+                router.push("/employer/dashboard");
             } else {
                 setError(result.error || "Login failed");
             }
@@ -42,7 +42,7 @@ export default function LoginPage() {
         <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
             <Card className="w-full max-w-md">
                 <CardHeader className="space-y-1">
-                    <CardTitle className="text-2xl font-bold tracking-tight">Recruiter Login</CardTitle>
+                    <CardTitle className="text-2xl font-bold tracking-tight">Employer Login</CardTitle>
                     <CardDescription>
                         Enter your credentials to access your dashboard.
                     </CardDescription>
@@ -86,7 +86,7 @@ export default function LoginPage() {
                 <CardFooter className="flex flex-col gap-2 border-t p-4 text-center">
                     <p className="text-sm text-gray-500">
                         Don&apos;t have an account?{" "}
-                        <Link href="/recruiter/register" className="font-medium text-purple-600 hover:text-purple-500">
+                        <Link href="/employer/register" className="font-medium text-purple-600 hover:text-purple-500">
                             Sign up
                         </Link>
                     </p>

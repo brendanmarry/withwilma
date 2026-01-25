@@ -24,7 +24,7 @@ export default function DashboardPage() {
             <div className="flex flex-col items-center justify-center min-h-screen gap-4">
                 <p>Please log in to access the dashboard.</p>
                 <Button asChild>
-                    <Link href="/recruiter/login">Log In</Link>
+                    <Link href="/employer/login">Log In</Link>
                 </Button>
             </div>
         );
@@ -40,13 +40,13 @@ export default function DashboardPage() {
                     </div>
                     <div className="flex gap-2">
                         <Button asChild variant="outline">
-                            <Link href="/recruiter/settings/account">
+                            <Link href="/employer/settings/account">
                                 <Settings className="mr-2 h-4 w-4" />
                                 Settings
                             </Link>
                         </Button>
                         <Button asChild className="bg-purple-600 hover:bg-purple-700">
-                            <Link href="/recruiter/jobs/new">
+                            <Link href="/employer/jobs/new">
                                 <Plus className="mr-2 h-4 w-4" />
                                 Add New Job
                             </Link>
@@ -67,7 +67,7 @@ export default function DashboardPage() {
                         <CardContent>
                             <div className="text-2xl font-bold">--</div>
                             <p className="text-xs text-muted-foreground">
-                                <Link href="/recruiter/jobs" className="underline hover:text-purple-600">View all jobs</Link>
+                                <Link href="/employer/jobs" className="underline hover:text-purple-600">View all jobs</Link>
                             </p>
                         </CardContent>
                     </Card>
@@ -88,10 +88,10 @@ export default function DashboardPage() {
                             <div className="flex items-center justify-between">
                                 <div>
                                     <h3 className="font-semibold text-purple-900">Refine Company DNA</h3>
-                                    <p className="text-sm text-purple-700 mt-1">Chat with Wilma to improve matching.</p>
+                                    <p className="text-sm text-purple-700 mt-1">Chat with withWilma to improve matching.</p>
                                 </div>
                                 <Button asChild size="sm" className="bg-purple-600">
-                                    <Link href="/recruiter/onboarding">Start</Link>
+                                    <Link href="/employer/onboarding">Start</Link>
                                 </Button>
                             </div>
                         </CardContent>

@@ -18,19 +18,20 @@ export async function GET() {
                 data: {
                     name: "Wilma HQ",
                     rootUrl: "wilma.com",
+                    slug: "wilma-hq",
                 },
             });
         }
 
         // 2. Create User
-        const email = "recruiter@wilma.com";
+        const email = "employer@wilma.com";
         let user = await findUserByEmail(email);
 
         if (!user) {
             user = await createUser({
                 email,
                 password: "password123",
-                name: "Demo Recruiter",
+                name: "Demo Employer",
                 organisationId: org.id,
                 role: "recruiter",
             });

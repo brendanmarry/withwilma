@@ -34,7 +34,7 @@ export function JobSourceCard() {
                 body: JSON.stringify({
                     rootUrl,
                     careersUrl: url,
-                    label: "Recruiter Import"
+                    label: "Employer Import"
                 })
             });
 

@@ -24,12 +24,12 @@ export default function Home() {
               <div className="h-12 w-12 bg-purple-50 rounded-full flex items-center justify-center text-purple-600">
                 <LogIn className="h-6 w-6" />
               </div>
-              <h2 className="text-xl font-semibold">Recruiter Login</h2>
+              <h2 className="text-xl font-semibold">Employer Login</h2>
               <p className="text-sm text-gray-500 text-center">
                 Access your dashboard, manage jobs, and review candidates.
               </p>
               <Button asChild className="w-full mt-2 bg-black hover:bg-gray-800">
-                <Link href="/recruiter/login">Log In</Link>
+                <Link href="/employer/login">Log In</Link>
               </Button>
             </div>
 
@@ -43,7 +43,7 @@ export default function Home() {
                 New to Wilma? precise your company DNA and start hiring with AI.
               </p>
               <Button asChild variant="outline" className="w-full mt-2">
-                <Link href="/recruiter/register">Sign Up</Link>
+                <Link href="/employer/register">Sign Up</Link>
               </Button>
             </div>
           </div>

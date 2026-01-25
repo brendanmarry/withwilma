@@ -10,7 +10,7 @@ datasource db {
 model Organisation {
   id              String           @id @default(uuid())
   name            String
-  rootUrl         String           @unique
+  rootUrl         String
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   documents       Document[]

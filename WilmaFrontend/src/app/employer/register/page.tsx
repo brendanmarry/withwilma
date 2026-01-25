@@ -27,7 +27,7 @@ export default function RegisterPage() {
         try {
             const result = await register(email, password, website);
             if (result.success) {
-                router.push(result.redirectTo || "/recruiter/dashboard");
+                router.push(result.redirectTo || "/employer/dashboard");
             } else {
                 setError(result.error || "Registration failed");
             }
@@ -45,7 +45,7 @@ export default function RegisterPage() {
                 <CardHeader className="space-y-1">
                     <CardTitle className="text-2xl font-bold tracking-tight">Create an Account</CardTitle>
                     <CardDescription>
-                        Join Wilma and start building your AI-powered recruitment engine.
+                        Join withWilma and start building your AI-powered recruitment engine.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -94,7 +94,7 @@ export default function RegisterPage() {
                                 />
                             </div>
                             <p className="text-[0.8rem] text-gray-500">
-                                Wilma uses this to analyze your company culture and jobs.
+                                withWilma uses this to analyze your company culture and jobs.
                             </p>
                         </div>
 
@@ -106,7 +106,7 @@ export default function RegisterPage() {
                 <CardFooter className="flex justify-center border-t p-4">
                     <p className="text-sm text-gray-500">
                         Already have an account?{" "}
-                        <Link href="/recruiter/login" className="font-medium text-purple-600 hover:text-purple-500">
+                        <Link href="/employer/login" className="font-medium text-purple-600 hover:text-purple-500">
                             Log in
                         </Link>
                     </p>

@@ -47,7 +47,8 @@ export async function POST(req: NextRequest) {
         const hostname = new URL(rootUrl).hostname;
         const name = hostname.replace("www.", "").split(".")[0];
         const derivedName = name.charAt(0).toUpperCase() + name.slice(1);
-        const slug = name.toLowerCase().replace(/[^a-z0-9]/g, "");
+        const randomSuffix = Math.random().toString(36).substring(2, 6);
+        const slug = `${name.toLowerCase().replace(/[^a-z0-9]/g, "")}-${randomSuffix}`;
 
         let organisation = await findOrganisationByRootUrl(rootUrl);
 
@@ -98,7 +99,7 @@ export async function POST(req: NextRequest) {
                 role: user.role,
                 organisationId: user.organisationId
             },
-            redirectTo: '/recruiter/onboarding' // Signal frontend to go to calibration
+            redirectTo: '/employer/onboarding' // Signal frontend to go to calibration
         });
 
     } catch (error) {
