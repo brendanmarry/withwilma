@@ -33,15 +33,20 @@ async function main() {
     console.log("Starting ingestion for Babu's...");
 
     // 1. Ensure Organisation
-    const org = await prisma.organisation.upsert({
+    let org = await prisma.organisation.findFirst({
         where: { rootUrl: BABUS_ROOT },
-        update: {},
-        create: {
-            name: "Babu's",
-            rootUrl: BABUS_ROOT,
-            ingestionStatus: "PENDING"
-        },
     });
+
+    if (!org) {
+        org = await prisma.organisation.create({
+            data: {
+                name: "Babu's",
+                rootUrl: BABUS_ROOT,
+                slug: "babus",
+                ingestionStatus: "PENDING"
+            },
+        });
+    }
     console.log(`Organisation ID: ${org.id}`);
 
     // 2. Ensure Job Source
