@@ -37,7 +37,7 @@ export const GET = async (request: NextRequest) => {
 
   if (rootUrlParam) {
     const normalized = normaliseOrganisationRootUrl(rootUrlParam);
-    const organisation = await prisma.organisation.findUnique({
+    const organisation = await prisma.organisation.findFirst({
       where: { rootUrl: normalized },
       include: {
         _count: {
@@ -85,7 +85,7 @@ export const POST = async (request: NextRequest) => {
     const normalizedRootUrl = normaliseOrganisationRootUrl(rootUrl);
 
     // Check if exists
-    const existing = await prisma.organisation.findUnique({
+    const existing = await prisma.organisation.findFirst({
       where: { rootUrl: normalizedRootUrl },
     });
 
@@ -99,6 +99,7 @@ export const POST = async (request: NextRequest) => {
       data: {
         name,
         rootUrl: normalizedRootUrl,
+        slug: normalizedRootUrl.replace(/\./g, "-").toLowerCase(),
       },
     });
 
@@ -153,7 +154,7 @@ export const DELETE = async (request: NextRequest) => {
     });
   } else if (rootUrlParam) {
     const normalized = normaliseOrganisationRootUrl(rootUrlParam);
-    organisation = await prisma.organisation.findUnique({
+    organisation = await prisma.organisation.findFirst({
       where: { rootUrl: normalized },
     });
   }
