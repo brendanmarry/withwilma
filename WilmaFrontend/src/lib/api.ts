@@ -1,4 +1,4 @@
-import { FollowUpQuestion, Job, JobCreateInput } from "./types";
+import { FollowUpQuestion, Job } from "./types";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ??
