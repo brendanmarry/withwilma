@@ -71,7 +71,7 @@ services:
     container_name: wilma-frontend
     restart: unless-stopped
     environment:
-      NEXT_PUBLIC_API_URL: http://api.withwilma.com
+      NEXT_PUBLIC_API_URL: https://api.withwilma.com
       NODE_ENV: production
     ports:
       - "3000:3000"
@@ -85,13 +85,13 @@ services:
       context: ./WilmaWebsite
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_CANDIDATE_APP_URL: http://app.withwilma.com
-        NEXT_PUBLIC_EMPLOYER_APP_URL: http://app.withwilma.com/employer/login
+        NEXT_PUBLIC_CANDIDATE_APP_URL: https://app.withwilma.com
+        NEXT_PUBLIC_EMPLOYER_APP_URL: https://app.withwilma.com/employer/login
     container_name: wilma-website
     restart: unless-stopped
     environment:
-      NEXT_PUBLIC_CANDIDATE_APP_URL: http://app.withwilma.com
-      NEXT_PUBLIC_EMPLOYER_APP_URL: http://app.withwilma.com/employer/login
+      NEXT_PUBLIC_CANDIDATE_APP_URL: https://app.withwilma.com
+      NEXT_PUBLIC_EMPLOYER_APP_URL: https://app.withwilma.com/employer/login
       NODE_ENV: production
     ports:
       - "3002:3002"
@@ -103,8 +103,10 @@ services:
     container_name: wilma-nginx
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
+      - /etc/letsencrypt:/etc/letsencrypt
     restart: unless-stopped
     depends_on:
       - website
