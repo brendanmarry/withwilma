@@ -39,7 +39,7 @@ export default function AddJobPage() {
                 description,
                 autoNormalise: true // Enable LLM cleaning by default
             });
-            router.push("/recruiter/jobs"); // Redirect to jobs list
+            router.push("/employer/jobs"); // Redirect to jobs list
         } catch (err) {
             console.error(err);
             setError("Failed to create job. Please try again.");
@@ -54,7 +54,7 @@ export default function AddJobPage() {
             <Section padding="lg">
                 <div className="mb-8">
                     <Button variant="ghost" asChild className="mb-4 pl-0 hover:bg-transparent hover:text-purple-600">
-                        <Link href="/recruiter/jobs" className="flex items-center gap-2">
+                        <Link href="/employer/jobs" className="flex items-center gap-2">
                             <ArrowLeft className="h-4 w-4" />
                             Back to Jobs
                         </Link>

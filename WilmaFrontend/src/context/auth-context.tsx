@@ -36,7 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const result = await apiLogin(email, password);
         if (result.success && result.user) {
             setUser(result.user);
-            router.push("/recruiter/dashboard");
+            router.push("/employer/dashboard");
         }
         return result;
     };
@@ -44,7 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const logout = () => {
         // Implement logout api call if needed to clear cookie
         setUser(null);
-        router.push("/recruiter/login");
+        router.push("/employer/login");
     };
 
     return (

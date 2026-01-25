@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getAdminTokenFromRequest } from "@/lib/auth";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
-import { JobSourceCard } from "@/app/components/recruiter/JobSourceCard";
+import { JobSourceCard } from "@/app/components/employer/JobSourceCard";
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 
