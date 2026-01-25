@@ -85,13 +85,13 @@ services:
       context: ./WilmaWebsite
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_CANDIDATE_APP_URL: https://app.withwilma.com
-        NEXT_PUBLIC_RECRUITER_APP_URL: https://api.withwilma.com/admin
+        NEXT_PUBLIC_CANDIDATE_APP_URL: http://37.60.250.248:3000
+        NEXT_PUBLIC_EMPLOYER_APP_URL: http://37.60.250.248:3000/employer/login
     container_name: wilma-website
     restart: unless-stopped
     environment:
-      NEXT_PUBLIC_CANDIDATE_APP_URL: https://app.withwilma.com
-      NEXT_PUBLIC_RECRUITER_APP_URL: https://api.withwilma.com/admin
+      NEXT_PUBLIC_CANDIDATE_APP_URL: http://37.60.250.248:3000
+      NEXT_PUBLIC_EMPLOYER_APP_URL: http://37.60.250.248:3000/employer/login
       NODE_ENV: production
     ports:
       - "3002:3002"
