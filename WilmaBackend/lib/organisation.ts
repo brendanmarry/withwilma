@@ -123,6 +123,7 @@ export const ensureOrganisationByRootUrl = async (rootUrl: string) => {
     data: {
       name,
       rootUrl: canonical,
+      slug: canonical.replace(/[^a-z0-9]/gi, "-").toLowerCase(),
     },
   });
 };
