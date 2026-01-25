@@ -3,6 +3,10 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { TenantProvider } from "@/components/providers/TenantProvider";
+import { AuthProvider } from "@/context/auth-context";
+import { getOrganisationBySlug } from "@/lib/api";
+import { headers } from "next/headers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,19 +39,37 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headersList = await headers();
+  const tenantSlug = headersList.get("x-tenant-id");
+
+  let tenant = null;
+  if (tenantSlug) {
+    try {
+      tenant = await getOrganisationBySlug(tenantSlug);
+    } catch (e) {
+      console.error("Failed to fetch tenant", e);
+    }
+  }
+
+  const isTenant = !!tenant;
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
       >
-        <Navigation />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <TenantProvider tenant={tenant}>
+          <AuthProvider>
+            {!isTenant && <Navigation />}
+            <main className="flex-1">{children}</main>
+            {!isTenant && <Footer />}
+          </AuthProvider>
+        </TenantProvider>
       </body>
     </html>
   );

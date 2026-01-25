@@ -1,6 +1,6 @@
-const DEFAULT_MAIN_SITE_URL = "https://withwilma.com";
-const DEFAULT_CANDIDATE_APP_URL = "https://app.withwilma.com";
-const DEFAULT_RECRUITER_APP_URL = "https://api.withwilma.com";
+const DEFAULT_MAIN_SITE_URL = "http://localhost:3002";
+const DEFAULT_CANDIDATE_APP_URL = "http://localhost:3000";
+const DEFAULT_RECRUITER_APP_URL = "http://localhost:3001/auth/login";
 
 export const CANDIDATE_APP_URL =
   process.env.NEXT_PUBLIC_CANDIDATE_APP_URL ?? DEFAULT_CANDIDATE_APP_URL;

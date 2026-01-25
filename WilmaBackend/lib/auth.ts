@@ -10,7 +10,7 @@ export type AdminTokenPayload = {
   sub: string;
   organisationId: string;
   email: string;
-  role: "admin";
+  role: "admin" | "recruiter";
 };
 
 export const createAdminToken = async (

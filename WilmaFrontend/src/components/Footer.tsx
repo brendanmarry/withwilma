@@ -4,29 +4,31 @@ import { Github, Linkedin, Twitter } from "lucide-react";
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
+  const MAIN_SITE = "http://localhost:3002"; // Or use env variable
+
   const footerLinks = {
     Product: [
-      { label: "Features", href: "/#features" },
-      { label: "How it Works", href: "/#how-it-works" },
-      { label: "Apply Now", href: "/apply" },
+      { label: "Features", href: `${MAIN_SITE}/#features` },
+      { label: "How it Works", href: `${MAIN_SITE}/#how-it-works` },
+      { label: "Apply Now", href: `${MAIN_SITE}/apply` },
     ],
     Company: [
-      { label: "About", href: "/about" },
-      { label: "Blog", href: "/blog" },
-      { label: "Careers", href: "/careers" },
-      { label: "Contact", href: "/contact" },
+      { label: "About", href: `${MAIN_SITE}/about` },
+      { label: "Blog", href: `${MAIN_SITE}/blog` },
+      { label: "Careers", href: `${MAIN_SITE}/careers` },
+      { label: "Contact", href: `${MAIN_SITE}/contact` },
     ],
     Resources: [
-      { label: "Documentation", href: "/docs" },
-      { label: "Help Center", href: "/help" },
-      { label: "API", href: "/docs/api" },
-      { label: "Admin", href: "/admin" },
+      { label: "Documentation", href: `${MAIN_SITE}/docs` },
+      { label: "Help Center", href: `${MAIN_SITE}/help` },
+      { label: "API", href: `${MAIN_SITE}/docs/api` },
+      { label: "Admin", href: "/admin" }, // Keep Admin local? Or moved?
     ],
     Legal: [
-      { label: "Privacy", href: "/privacy" },
-      { label: "Terms", href: "/terms" },
-      { label: "Cookie Policy", href: "/cookies" },
-      { label: "Licenses", href: "/licenses" },
+      { label: "Privacy", href: `${MAIN_SITE}/privacy` },
+      { label: "Terms", href: `${MAIN_SITE}/terms` },
+      { label: "Cookie Policy", href: `${MAIN_SITE}/cookies` },
+      { label: "Licenses", href: `${MAIN_SITE}/licenses` },
     ],
   };
 

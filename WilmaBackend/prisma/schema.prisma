@@ -8,16 +8,50 @@ datasource db {
 }
 
 model Organisation {
-  id         String      @id @default(uuid())
-  name       String
-  rootUrl    String      @unique
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  documents  Document[]
-  faqs       FAQ[]
-  jobs       Job[]
-  jobSources JobSource[]
+  id              String           @id @default(uuid())
+  name            String
+  rootUrl         String           @unique
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  documents       Document[]
+  faqs            FAQ[]
+  jobs            Job[]
+  jobSources      JobSource[]
+  users           User[]
+  
+  // Company Context Fields
+  cultureValues   String[]         @default([])
+  benefits        String[]         @default([])
+  techStack       String[]         @default([])
+  tone            String?          // e.g., "Formal", "Playful", "Mission-driven"
+  ingestionStatus IngestionStatus  @default(PENDING)
+  
+  // Multi-tenancy
+  slug            String           @unique
+  branding        Json?            // { primaryColor: string, logoUrl: string }
 }
+
+enum IngestionStatus {
+  PENDING
+  ANALYZED
+  CALIBRATED
+}
+
+model User {
+  id             String       @id @default(uuid())
+  organisationId String
+  email          String       @unique
+  passwordHash   String
+  name           String?
+  role           String       @default("recruiter") // admin, recruiter
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+
+  @@index([organisationId])
+  @@index([email])
+}
+
 
 model Document {
   id             String             @id @default(uuid())
@@ -87,6 +121,7 @@ model Candidate {
   aiGeneratedDetected Boolean            @default(false)
   summary             String?
   extractedSkills     Json?
+  screeningData       Json?           // Answers to permit, availability, etc.
   matchStrengths      Json?
   matchGaps           Json?
   matchSummary        String?

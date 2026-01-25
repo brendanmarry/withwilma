@@ -1,4 +1,4 @@
-import { FollowUpQuestion, Job } from "./types";
+import { FollowUpQuestion, Job, JobCreateInput } from "./types";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ??
@@ -79,8 +79,15 @@ function buildUrl(path: string) {
   return `${baseUrl.replace(/\/$/, "")}${path}`;
 }
 
-export async function getJobs(organisationId?: string): Promise<{ jobs: Job[]; fromFallback: boolean }> {
+
+export async function getJobs(organisationId?: string, tenantSlug?: string): Promise<{ jobs: Job[]; fromFallback: boolean }> {
   const url = new URL(buildUrl("/api/jobs"));
+  const headers: HeadersInit = {};
+
+  if (tenantSlug) {
+    headers["x-tenant-id"] = tenantSlug;
+  }
+
   if (organisationId) {
     url.searchParams.set("organisationId", organisationId);
   } else if (ORGANISATION_ID) {
@@ -91,7 +98,7 @@ export async function getJobs(organisationId?: string): Promise<{ jobs: Job[]; f
   url.searchParams.set("wilmaEnabled", "true");
 
   try {
-    const response = await fetch(url.toString(), { cache: "no-store" });
+    const response = await fetch(url.toString(), { cache: "no-store", headers });
     if (!response.ok) throw new Error(`Failed to load jobs: ${response.status}`);
     const data = (await response.json()) as Job[];
     return { jobs: data, fromFallback: false };
@@ -99,6 +106,24 @@ export async function getJobs(organisationId?: string): Promise<{ jobs: Job[]; f
     console.warn("Falling back to static job list", error);
     return { jobs: FALLBACK_JOBS, fromFallback: true };
   }
+}
+
+export async function getOrganisationBySlug(slug: string) {
+  const url = new URL(buildUrl("/api/organisations/lookup"));
+  url.searchParams.set("slug", slug);
+  const response = await fetch(url.toString(), { cache: "no-store" });
+  if (!response.ok) return null;
+  return response.json();
+}
+
+export async function createJob(data: any) {
+  const response = await fetch(buildUrl("/api/jobs"), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) throw new Error(`Create job failed: ${response.status}`);
+  return response.json();
 }
 
 export async function getOrganisations() {
@@ -175,6 +200,7 @@ export async function finalizeApplication(applicationId: string): Promise<{ stat
     const response = await fetch(buildUrl(`/api/application/${applicationId}/finalise`), {
       method: "POST",
     });
+
     if (!response.ok) throw new Error(`Finalise failed: ${response.status}`);
     return (await response.json()) as { status: "received" };
   } catch (error) {
@@ -182,4 +208,3 @@ export async function finalizeApplication(applicationId: string): Promise<{ stat
     return { status: "received" };
   }
 }
-

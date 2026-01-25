@@ -9,10 +9,7 @@ import { MAIN_SITE_URL, RECRUITER_APP_URL } from "@/lib/external-links";
 const Navigation = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const navLinks = [
-    { href: "/", label: "Home" },
-    { href: "/select-company", label: "Roles" },
-  ];
+  const navLinks: { href: string; label: string }[] = [];
 
   return (
     <nav className="sticky top-0 z-50 border-b border-[var(--surface-subtle)] bg-white/80 backdrop-blur">
@@ -27,7 +24,7 @@ const Navigation = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          {/* <div className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -37,26 +34,15 @@ const Navigation = () => {
                 {link.label}
               </Link>
             ))}
-          </div>
+          </div> */}
 
           <div className="hidden md:flex items-center gap-3">
-            <a
-              href={MAIN_SITE_URL}
-              className="inline-flex items-center gap-2 rounded-full border border-[var(--surface-subtle)] px-4 py-2 text-sm font-semibold text-gray-600 transition hover:border-blue-500 hover:text-blue-600"
-              target="_blank"
-              rel="noreferrer"
+            <Link
+              href="/recruiter/login"
+              className="inline-flex items-center gap-2 rounded-full bg-black px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-gray-800"
             >
-              Main site
-            </a>
-            <a
-              href={RECRUITER_APP_URL}
-              className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Recruiter UI
-              <ArrowRight className="w-4 h-4" />
-            </a>
+              Login
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -95,24 +81,13 @@ const Navigation = () => {
                   {link.label}
                 </Link>
               ))}
-              <a
-                href={MAIN_SITE_URL}
-                className="block w-full rounded-full border border-[var(--surface-subtle)] px-6 py-3 text-center text-sm font-semibold text-gray-600 transition hover:border-blue-500 hover:text-blue-600"
-                target="_blank"
-                rel="noreferrer"
+              <Link
+                href="/recruiter/login"
+                className="block w-full rounded-full bg-black px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-gray-800"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Main site
-              </a>
-              <a
-                href={RECRUITER_APP_URL}
-                className="block w-full rounded-full bg-blue-600 px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-blue-700"
-                target="_blank"
-                rel="noreferrer"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Recruiter UI
-              </a>
+                Login
+              </Link>
             </div>
           </motion.div>
         )}

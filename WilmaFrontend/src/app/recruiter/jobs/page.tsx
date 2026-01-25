@@ -6,15 +6,19 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Section from "@/components/ui/Section";
 import { Badge } from "@/components/ui/badge";
 import { JourneyProgress } from "@/components/JourneyProgress";
+import { headers } from "next/headers";
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 export default async function JobsPage({ searchParams }: Props) {
+  const headersList = await headers();
+  const tenantSlug = headersList.get("x-tenant-id");
+
   const resolvedSearchParams = await searchParams;
   const organisationId = typeof resolvedSearchParams.organisationId === "string" ? resolvedSearchParams.organisationId : undefined;
-  const { jobs, fromFallback } = await getJobs(organisationId);
+  const { jobs, fromFallback } = await getJobs(organisationId, tenantSlug || undefined);
   const organisationName =
     process.env.NEXT_PUBLIC_ORGANISATION_NAME ??
     process.env.ORGANISATION_NAME ??

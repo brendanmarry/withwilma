@@ -57,11 +57,8 @@ export function Navigation() {
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <ButtonLink href={CANDIDATE_APP_URL} variant="ghost" size="sm" external>
-            Candidate UI
-          </ButtonLink>
-          <ButtonLink href={RECRUITER_APP_URL} size="sm" external>
-            Recruiter UI
+          <ButtonLink href="http://localhost:3000/recruiter/login" size="sm" external>
+            Login
           </ButtonLink>
         </div>
 
@@ -110,11 +107,8 @@ export function Navigation() {
                 )
               ))}
               <div className="flex flex-col gap-3 pt-2">
-                <ButtonLink href={CANDIDATE_APP_URL} variant="secondary" size="md" external>
-                  Candidate UI
-                </ButtonLink>
-                <ButtonLink href={RECRUITER_APP_URL} size="md" external>
-                  Recruiter UI
+                <ButtonLink href="http://localhost:3000/recruiter/login" size="md" external>
+                  Login
                 </ButtonLink>
               </div>
             </div>

@@ -69,3 +69,14 @@ export type JobUpdateInput = z.infer<typeof jobUpdateSchema>;
 export type ApplicationSubmitInput = z.infer<typeof applicationSubmitSchema>;
 export type EmailTemplateInput = z.infer<typeof emailTemplateSchema>;
 
+export const jobCreateSchema = z.object({
+  title: z.string().min(1),
+  location: z.string().optional(),
+  department: z.string().optional(),
+  employmentType: z.string().optional(),
+  description: z.string().min(10), // The raw text description
+  autoNormalise: z.boolean().default(true),
+});
+
+export type JobCreateInput = z.infer<typeof jobCreateSchema>;
+
