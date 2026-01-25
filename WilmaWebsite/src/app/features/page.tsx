@@ -15,7 +15,7 @@ const pillars = [
     icon: MessageSquare,
     title: "AI interviews that coach themselves",
     description:
-      "Conversational intelligence adapts every question in real-time. Wilma listens, probes deeper, and mirrors your best interviewers.",
+      "Conversational intelligence adapts every question in real-time. withWilma listens, probes deeper, and mirrors your best interviewers.",
     bullets: [
       "Dynamic question trees tied to each role",
       "Voice, video, or chat experiences with branded UI",
@@ -37,7 +37,7 @@ const pillars = [
     icon: FileText,
     title: "Knowledge ingestion & memory",
     description:
-      "Upload playbooks, documentation, and research. Wilma synthesizes it into on-brand, accurate responses for candidates.",
+      "Upload playbooks, documentation, and research. withWilma synthesizes it into on-brand, accurate responses for candidates.",
     bullets: [
       "Drag-and-drop ingestion for docs, decks, Help Centers",
       "Auto-updates when knowledge sources change",
@@ -51,13 +51,13 @@ const workflows = [
     step: "Before the interview",
     title: "Briefing in one click",
     description:
-      "Wilma generates interviewer prep docs with candidate history, scorecard focus areas, and key moments to probe—in seconds.",
+      "withWilma generates interviewer prep docs with candidate history, scorecard focus areas, and key moments to probe—in seconds.",
   },
   {
     step: "During the interview",
     title: "Co-pilot whisper stream",
     description:
-      "Recruiters nudge Wilma with real-time prompts, track candidate sentiment, and bookmark moments for deeper review.",
+      "Recruiters nudge withWilma with real-time prompts, track candidate sentiment, and bookmark moments for deeper review.",
   },
   {
     step: "After the interview",
@@ -78,7 +78,7 @@ const globalFeatures = [
     icon: Sparkle,
     title: "Persona builder",
     description:
-      "Craft Wilma’s interviewing style to match your employer brand—curious, direct, warm, technical—you choose.",
+      "Craft withWilma’s interviewing style to match your employer brand—curious, direct, warm, technical—you choose.",
   },
   {
     icon: Brain,
@@ -91,7 +91,7 @@ const globalFeatures = [
 export const metadata: Metadata = {
   title: "Feature Deep Dive",
   description:
-    "Explore Wilma’s AI interviewing, candidate scoring, and knowledge ingestion capabilities across the full talent lifecycle.",
+    "Explore withWilma’s AI interviewing, candidate scoring, and knowledge ingestion capabilities across the full talent lifecycle.",
 };
 
 export default function FeaturesPage() {
@@ -106,7 +106,7 @@ export default function FeaturesPage() {
           <FadeIn delay={0.05}>
             <SectionHeading
               title="Everything teams need to deliver AI-native recruiting"
-              description="Wilma unifies conversational AI, adaptive scoring, and recruiter co-pilots so every candidate encounter feels bespoke and decisive."
+              description="withWilma unifies conversational AI, adaptive scoring, and recruiter co-pilots so every candidate encounter feels bespoke and decisive."
             />
           </FadeIn>
           <FadeIn delay={0.1} className="grid grid-cols-1 gap-8 lg:grid-cols-3">
@@ -135,7 +135,7 @@ export default function FeaturesPage() {
               align="center"
               eyebrow="workflow spotlight"
               title="Recruiter co-pilot keeps humans at the center"
-              description="Wilma augments recruiters, interviewers, and hiring managers with real-time intelligence and automation."
+              description="withWilma augments recruiters, interviewers, and hiring managers with real-time intelligence and automation."
             />
           </FadeIn>
           <FadeIn delay={0.1} className="grid grid-cols-1 gap-8 md:grid-cols-3">
@@ -155,7 +155,7 @@ export default function FeaturesPage() {
               description="Orchestrate multi-market interviews, localized messaging, and knowledge updates from a single interface."
             />
             <p className="text-base text-slate-600">
-              Wilma supports enterprise teams operating in dozens of languages and compliance regimes. Build custom personas for your graduate program, executive hiring, or technical orgs—all while maintaining governance across the platform.
+              withWilma supports enterprise teams operating in dozens of languages and compliance regimes. Build custom personas for your graduate program, executive hiring, or technical orgs—all while maintaining governance across the platform.
             </p>
             <ButtonLink href="/contact" size="md">
               Schedule a feature workshop
@@ -176,7 +176,7 @@ export default function FeaturesPage() {
               align="center"
               eyebrow="for developers"
               title="Integrates with the tools your teams already love"
-              description="Wilma connects to your ATS, HRIS, BI stack, and collaboration tools with secure APIs and event streams."
+              description="withWilma connects to your ATS, HRIS, BI stack, and collaboration tools with secure APIs and event streams."
             />
           </FadeIn>
           <FadeIn delay={0.1} className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -205,7 +205,7 @@ export default function FeaturesPage() {
         <Container className="flex flex-col items-center gap-6 text-center text-white">
           <FadeIn className="max-w-3xl">
             <h2 className="text-4xl font-semibold md:text-5xl">
-              Experience the full Wilma platform
+              Experience the full withWilma platform
             </h2>
             <p className="mt-4 text-lg text-white/80">
               Launch a sandbox with your real roles, knowledge base, and candidate flows. Our team will co-pilot every step.
@@ -214,9 +214,7 @@ export default function FeaturesPage() {
               <ButtonLink href={candidateAppUrl} variant="secondary" size="lg" external>
                 Start your pilot
               </ButtonLink>
-              <ButtonLink href="/case-studies" variant="ghost" size="lg">
-                Explore customer stories
-              </ButtonLink>
+
             </div>
           </FadeIn>
         </Container>

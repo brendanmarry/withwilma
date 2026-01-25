@@ -5,7 +5,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { ButtonLink } from "@/components/ui/ButtonLink";
-import { CANDIDATE_APP_URL, RECRUITER_APP_URL } from "@/lib/external-links";
+import { CANDIDATE_APP_URL, EMPLOYER_APP_URL } from "@/lib/external-links";
 
 interface NavLink {
   href: string;
@@ -29,7 +29,7 @@ export function Navigation() {
           <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-500 text-white">
             W
           </div>
-          <span>Wilma</span>
+          <span>withWilma</span>
         </Link>
 
         <nav className="hidden items-center gap-6 text-sm font-medium text-slate-600 lg:flex">
@@ -57,7 +57,7 @@ export function Navigation() {
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <ButtonLink href="http://localhost:3000/recruiter/login" size="sm" external>
+          <ButtonLink href={EMPLOYER_APP_URL} size="sm" external>
             Login
           </ButtonLink>
         </div>
@@ -107,7 +107,7 @@ export function Navigation() {
                 )
               ))}
               <div className="flex flex-col gap-3 pt-2">
-                <ButtonLink href="http://localhost:3000/recruiter/login" size="md" external>
+                <ButtonLink href={EMPLOYER_APP_URL} size="md" external>
                   Login
                 </ButtonLink>
               </div>

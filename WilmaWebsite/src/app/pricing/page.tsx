@@ -75,12 +75,12 @@ const faqs = [
   {
     question: "Can we bring our own language models?",
     answer:
-      "Yes. Enterprise customers can deploy Wilma on private LLM infrastructure or connect to approved third-party models via our governance framework.",
+      "Yes. Enterprise customers can deploy withWilma on private LLM infrastructure or connect to approved third-party models via our governance framework.",
   },
   {
     question: "Do you integrate with our ATS and HRIS?",
     answer:
-      "Wilma integrates natively with Greenhouse, Lever, Ashby, Workday, and SuccessFactors. Our team will blueprint workflows during onboarding.",
+      "withWilma integrates natively with Greenhouse, Lever, Ashby, Workday, and SuccessFactors. Our team will blueprint workflows during onboarding.",
   },
   {
     question: "How do you ensure fairness and compliance?",
@@ -103,7 +103,7 @@ export default function PricingPage() {
             <SectionHeading
               align="center"
               eyebrow="pricing that scales"
-              title="Choose the Wilma plan that fits your hiring velocity"
+              title="Choose the withWilma plan that fits your hiring velocity"
               description="Every plan includes AI voice + video interviews, recruiter co-pilot, and candidate scoring. Add-on modules expand as your team grows."
             />
           </FadeIn>
@@ -111,11 +111,10 @@ export default function PricingPage() {
             {plans.map((plan) => (
               <div
                 key={plan.name}
-                className={`flex h-full flex-col rounded-3xl border ${
-                  plan.featured
-                    ? "border-brand-200 bg-white shadow-xl shadow-brand-500/20"
-                    : "border-slate-200 bg-white/90 shadow-lg"
-                } p-8`}
+                className={`flex h-full flex-col rounded-3xl border ${plan.featured
+                  ? "border-brand-200 bg-white shadow-xl shadow-brand-500/20"
+                  : "border-slate-200 bg-white/90 shadow-lg"
+                  } p-8`}
               >
                 <div className="flex items-center justify-between">
                   <h3 className="text-3xl font-semibold text-slate-900">{plan.name}</h3>
@@ -231,9 +230,7 @@ export default function PricingPage() {
               <ButtonLink href="/contact" variant="secondary" size="lg">
                 Book a pricing workshop
               </ButtonLink>
-              <ButtonLink href="/case-studies" variant="ghost" size="lg">
-                See ROI in action
-              </ButtonLink>
+
             </div>
           </FadeIn>
         </Container>

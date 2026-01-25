@@ -55,7 +55,7 @@ const howItWorks = [
     step: "02",
     title: "Launch AI-led experiences",
     description:
-      "Candidates meet Wilma across voice, video, and chat and improve their application by recording short answers to persoanlised questions. Then Wilma scores the candidate based on the job description and the interview answers, presenting this all to use to make informed selection decisions.",
+      "Candidates meet withWilma across voice, video, and chat and improve their application by recording short answers to persoanlised questions. Then withWilma scores the candidate based on the job description and the interview answers, presenting this all to use to make informed selection decisions.",
   },
   {
     step: "03",
@@ -68,14 +68,14 @@ const howItWorks = [
 const testimonials = [
   {
     quote:
-      "We tripled our candidate throughput without adding headcount. Candidates are amazed that Wilma remembers context across interviews.",
+      "We tripled our candidate throughput without adding headcount. Candidates are amazed that withWilma remembers context across interviews.",
     author: "Lena Ortiz",
     role: "Head of Talent",
     company: "Aurora Capital",
   },
   {
     quote:
-      "Recruiters spend less time scheduling and more time closing. Wilma's interview insights give us a competitive advantage.",
+      "Recruiters spend less time scheduling and more time closing. withWilma's interview insights give us a competitive advantage.",
     author: "Marcus Chen",
     role: "Director of Recruiting",
     company: "Northwind Labs",
@@ -93,7 +93,7 @@ const conciergeFeatures = [
   {
     icon: MessageCircle,
     title: "Live Recruiter Co-Pilot",
-    description: "Shadow interviews, whisper prompts, and suggested follow-ups while Wilma handles the conversation.",
+    description: "Shadow interviews, whisper prompts, and suggested follow-ups while withWilma handles the conversation.",
   },
   {
     icon: Sparkles,
@@ -118,7 +118,7 @@ export default function HomePage() {
             </FadeIn>
 
             <FadeIn delay={0.2} className="mt-6 max-w-2xl text-lg text-slate-600 md:text-xl">
-              Wilma surfaces the best candidate applications through every submission by conducting personalised conversations, that surface improved data to score candidates with radical clarity, and fast follow-ups that close top talent.
+              withWilma surfaces the best candidate applications through every submission by conducting personalised conversations, that surface improved data to score candidates with radical clarity, and fast follow-ups that close top talent.
             </FadeIn>
 
             <FadeIn delay={0.3} className="mt-10 flex flex-wrap items-center gap-4">
@@ -127,7 +127,7 @@ export default function HomePage() {
                 size="lg"
                 icon={<ArrowRight className="h-5 w-5" />}
                 external
-              
+
                 className="group">
                 Launch a demo interview
               </ButtonLink>
@@ -149,14 +149,14 @@ export default function HomePage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-brand-500">Live Interview</p>
-                    <p className="text-lg font-semibold text-slate-900">AI Recruiter: Wilma</p>
+                    <p className="text-lg font-semibold text-slate-900">AI Recruiter: withWilma</p>
                   </div>
                   <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-600">
                     Recording
                   </span>
                 </div>
                 <div className="space-y-4 text-sm text-slate-600">
-                  <p><strong>Wilma:</strong> Walk me through your product launch that required cross-functional alignment.</p>
+                  <p><strong>withWilma:</strong> Walk me through your product launch that required cross-functional alignment.</p>
                   <p><strong>Candidate:</strong> I led go-to-market for Atlas Robotics...</p>
                   <p className="rounded-2xl bg-brand-500/10 p-4 text-brand-600">
                     Insight: Coachability signals high. Suggest follow-up on stakeholder management.
@@ -187,7 +187,7 @@ export default function HomePage() {
             align="center"
             eyebrow="trusted by talent-first teams"
             title="AI recruitment co-pilots for modern hiring orgs"
-            description="From scale-ups to global enterprises, teams trust Wilma to elevate every candidate conversation."
+            description="From scale-ups to global enterprises, teams trust withWilma to elevate every candidate conversation."
           />
           <LogoCloud />
         </Container>
@@ -200,7 +200,7 @@ export default function HomePage() {
             align="center"
             eyebrow="end-to-end intelligence"
             title="Everything you need to deliver unforgettable candidate experiences"
-            description="Wilma fuses conversational AI, recruiter co-pilots, and adaptive scoring into one cohesive platform."
+            description="withWilma fuses conversational AI, recruiter co-pilots, and adaptive scoring into one cohesive platform."
           />
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -220,7 +220,7 @@ export default function HomePage() {
             align="center"
             eyebrow="Go live in days"
             title="Launch AI-native recruiting without process chaos"
-            description="Wilma meets you where you are. No overhauls. No complicated change management."
+            description="withWilma meets you where you are. No overhauls. No complicated change management."
           />
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
@@ -239,8 +239,8 @@ export default function HomePage() {
           <FadeIn className="space-y-6">
             <SectionHeading
               eyebrow="always-on concierge"
-              title="Recruiters stay strategic while Wilma handles the heavy lifting"
-              description="Combine human intuition with AI orchestration. Wilma gives recruiters superpowers across every candidate touchpoint."
+              title="Recruiters stay strategic while withWilma handles the heavy lifting"
+              description="Combine human intuition with AI orchestration. withWilma gives recruiters superpowers across every candidate touchpoint."
             />
             <div className="space-y-6">
               {conciergeFeatures.map((feature) => (
@@ -304,7 +304,7 @@ export default function HomePage() {
               Turn every candidate conversation into a hiring superpower
             </h2>
             <p className="mt-4 text-lg text-white/80">
-              Launch in days, scale globally, and close the talent your competitors are chasing. Wilma adapts to your workflows—no heavy lift required.
+              Launch in days, scale globally, and close the talent your competitors are chasing. withWilma adapts to your workflows—no heavy lift required.
             </p>
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               <ButtonLink href={candidateAppUrl} size="lg" variant="secondary" external>

@@ -16,11 +16,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Wilma | AI-Powered Recruitment Platform",
-    template: "%s | Wilma",
+    default: "withWilma | AI-Powered Recruitment Platform",
+    template: "%s | withWilma",
   },
   description:
-    "Wilma is the AI recruitment co-pilot that delivers intelligent interviews, candidate scoring, and recruiter insights in one powerful platform.",
+    "withWilma is the AI recruitment co-pilot that delivers intelligent interviews, candidate scoring, and recruiter insights in one powerful platform.",
   keywords: [
     "AI recruitment",
     "AI interviews",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     "recruiting software",
   ],
   openGraph: {
-    title: "Wilma | AI-Powered Recruitment Platform",
+    title: "withWilma | AI-Powered Recruitment Platform",
     description:
       "Deliver unforgettable candidate experiences with AI-driven interviews, scoring, and recruiter intelligence.",
     type: "website",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Wilma | AI-Powered Recruitment Platform",
+    title: "withWilma | AI-Powered Recruitment Platform",
     description:
       "Unlock faster, smarter hiring with AI-driven interviews, candidate scoring, and recruiter intelligence.",
   },

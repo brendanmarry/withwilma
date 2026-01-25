@@ -16,7 +16,7 @@ const offices = [
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Talk to Wilma’s team about making your job application progess faster and more efficiently.",
+  description: "Talk to withWilma’s team about making your job application progess faster and more efficiently.",
 };
 
 export default function ContactPage() {
@@ -29,7 +29,7 @@ export default function ContactPage() {
               align="center"
               eyebrow="let’s collaborate"
               title="Make your job application progress faster and more efficiently"
-              description="Share your hiring roadmap and we’ll blueprint a Wilma implementation that meets your team where they are."
+              description="Share your hiring roadmap and we’ll blueprint a withWilma implementation that meets your team where they are."
             />
           </FadeIn>
           <FadeIn delay={0.1} className="mx-auto grid max-w-6xl grid-cols-1 overflow-hidden rounded-3xl border border-brand-100 bg-white shadow-xl lg:grid-cols-2">
@@ -40,7 +40,7 @@ export default function ContactPage() {
                   <strong className="text-brand-500">Discovery call (30 min):</strong> Map your current stack, interview volume, and DEI priorities.
                 </li>
                 <li>
-                  <strong className="text-brand-500">Live Wilma tour:</strong> Experience AI-led interviews, scoring, and knowledge ingestion tailored to your roles.
+                  <strong className="text-brand-500">Live withWilma tour:</strong> Experience AI-led interviews, scoring, and knowledge ingestion tailored to your roles.
                 </li>
                 <li>
                   <strong className="text-brand-500">ROI & rollout plan:</strong> Receive a customized pilot roadmap, change management toolkit, and security documentation.
@@ -140,7 +140,7 @@ export default function ContactPage() {
                 Request a roadmap
               </button>
               <p className="text-xs text-slate-400">
-                By submitting, you agree to Wilma’s <a href="/privacy" className="text-brand-500">Privacy Policy</a> and consent to receiving product updates.
+                By submitting, you agree to withWilma’s <a href="/privacy" className="text-brand-500">Privacy Policy</a> and consent to receiving product updates.
               </p>
             </form>
           </FadeIn>
@@ -161,7 +161,7 @@ export default function ContactPage() {
             <div className="space-y-4">
               <h3 className="text-2xl font-semibold text-slate-900">Already a customer?</h3>
               <p className="text-sm text-slate-600">
-                Visit the Wilma Help Center for best practices, release notes, and platform status updates.
+                Visit the withWilma Help Center for best practices, release notes, and platform status updates.
               </p>
             </div>
             <ButtonLink href="/help" variant="primary" size="md" className="self-start">

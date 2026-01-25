@@ -26,7 +26,7 @@ const values = [
 const timeline = [
   {
     year: "2021",
-    milestone: "Wilma founded",
+    milestone: "withWilma founded",
     details:
       "Former recruiters, data scientists, and product designers build the first AI recruiter prototype in Brooklyn.",
   },
@@ -40,7 +40,7 @@ const timeline = [
     year: "2023",
     milestone: "Voice intelligence launch",
     details:
-      "Released Wilma Voice—real-time voice interviews with recruiter co-pilot, enabling whisper coaching and auto notes.",
+      "Released withWilma Voice—real-time voice interviews with recruiter co-pilot, enabling whisper coaching and auto notes.",
   },
   {
     year: "2024",
@@ -50,7 +50,7 @@ const timeline = [
   },
   {
     year: "2025",
-    milestone: "Wilma 3.0",
+    milestone: "withWilma 3.0",
     details:
       "Unified candidate graph, multi-source scoring, and knowledge ingestion across support wikis, pitch decks, and more.",
   },
@@ -58,7 +58,7 @@ const timeline = [
 
 const stats = [
   { label: "Customers", value: "150+", description: "Hiring orgs across tech, healthcare, climate, and fintech." },
-  { label: "Candidate interviews", value: "2.8M", description: "AI-led conversations conducted by Wilma to date." },
+  { label: "Candidate interviews", value: "2.8M", description: "AI-led conversations conducted by withWilma to date." },
   { label: "Diversity uplift", value: "32%", description: "Average increase in diverse candidate progression with bias guardrails enabled." },
 ];
 
@@ -81,7 +81,7 @@ const leaders = [
 ];
 
 export const metadata: Metadata = {
-  title: "About Wilma",
+  title: "About withWilma",
   description:
     "Meet the team reimagining candidate experiences with AI-native recruiting technology.",
 };
@@ -95,7 +95,7 @@ export default function AboutPage() {
             <SectionHeading
               eyebrow="Our story"
               title="We’re building the nervous system for modern recruiting"
-              description="Wilma was founded by people leaders and AI researchers who believe every candidate deserves a remarkable experience—without creating more work for recruiting teams."
+              description="withWilma was founded by people leaders and AI researchers who believe every candidate deserves a remarkable experience—without creating more work for recruiting teams."
             />
           </FadeIn>
           <FadeIn delay={0.1} className="grid grid-cols-1 gap-8 md:grid-cols-3">
@@ -112,10 +112,10 @@ export default function AboutPage() {
             <SectionHeading
               eyebrow="Why we exist"
               title="The hiring playbook needed a reboot"
-              description="Recruiters are expected to be strategic partners, storytellers, data scientists, and psychologists. Wilma gives teams superpowers to do all of it—while candidates feel heard."
+              description="Recruiters are expected to be strategic partners, storytellers, data scientists, and psychologists. withWilma gives teams superpowers to do all of it—while candidates feel heard."
             />
             <p className="text-base text-slate-600">
-              We collaborate with companies pushing the boundaries of science, climate, fintech, and healthcare. They need to win talent fast without sacrificing quality or belonging. Wilma fuses real human empathy with AI orchestration, so every candidate interaction feels bespoke, responsive, and honest.
+              We collaborate with companies pushing the boundaries of science, climate, fintech, and healthcare. They need to win talent fast without sacrificing quality or belonging. withWilma fuses real human empathy with AI orchestration, so every candidate interaction feels bespoke, responsive, and honest.
             </p>
           </FadeIn>
           <FadeIn delay={0.1} className="space-y-4">

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Github, Linkedin, Twitter } from "lucide-react";
 import { Container } from "@/components/ui/Container";
-import { CANDIDATE_APP_URL, RECRUITER_APP_URL } from "@/lib/external-links";
+import { CANDIDATE_APP_URL, EMPLOYER_APP_URL } from "@/lib/external-links";
 
 const columns = [
   {
@@ -9,10 +9,8 @@ const columns = [
     links: [
       { label: "Overview", href: "/#overview" },
       { label: "Feature Deep Dive", href: "/features" },
-      { label: "Case Studies", href: "/case-studies" },
       { label: "Pricing", href: "/pricing" },
-      { label: "Candidate Login", href: CANDIDATE_APP_URL },
-      { label: "Recruiter Login", href: RECRUITER_APP_URL },
+      { label: "Employer Login", href: EMPLOYER_APP_URL },
     ],
   },
   {
@@ -28,18 +26,7 @@ const columns = [
     title: "Company",
     links: [
       { label: "About", href: "/about" },
-      { label: "Press", href: "/about#press" },
-      { label: "Careers", href: "/about#careers" },
       { label: "Contact", href: "/contact" },
-    ],
-  },
-  {
-    title: "Resources",
-    links: [
-      { label: "Documentation", href: "/docs" },
-      { label: "Help Center", href: "/help" },
-      { label: "API Reference", href: "/docs/api" },
-      { label: "Status", href: "https://status.trywilma.com" },
     ],
   },
 ];
@@ -61,10 +48,10 @@ export function Footer() {
             <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-500 text-white">
               W
             </div>
-            Wilma
+            withWilma
           </Link>
           <p className="max-w-sm text-sm text-slate-300">
-            Wilma helps teams build brilliant candidate experiences with AI-driven interviews,
+            withWilma helps teams build brilliant candidate experiences with AI-driven interviews,
             scoring, and recruiter intelligence—all in one cohesive platform.
           </p>
           <div className="flex items-center gap-3 text-slate-400">
@@ -108,16 +95,13 @@ export function Footer() {
 
       <div className="border-t border-white/10">
         <Container className="flex flex-col items-center justify-between gap-4 py-6 text-xs text-slate-500 sm:flex-row">
-          <p>© {year} Wilma. All rights reserved.</p>
+          <p>© {year} withWilma. All rights reserved.</p>
           <div className="flex items-center gap-6">
             <Link href="/privacy" className="transition hover:text-white">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="transition hover:text-white">
-              Terms of Service
-            </Link>
-            <Link href="/security" className="transition hover:text-white">
-              Security
+            <Link href="/cookies" className="transition hover:text-white">
+              Cookie Policy
             </Link>
           </div>
         </Container>

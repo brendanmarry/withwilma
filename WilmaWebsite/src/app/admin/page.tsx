@@ -40,12 +40,12 @@ const dashboards = [
   {
     step: "Recruiter home",
     title: "AI queue prioritization",
-    description: "Wilma triages candidates by impact, nudging recruiters toward actions that move offers forward faster.",
+    description: "withWilma triages candidates by impact, nudging recruiters toward actions that move offers forward faster.",
   },
   {
     step: "Interview ops",
     title: "Live whisper coaching",
-    description: "Observe conversations, send prompts to Wilma, and track key themes without disrupting candidate flow.",
+    description: "Observe conversations, send prompts to withWilma, and track key themes without disrupting candidate flow.",
   },
   {
     step: "Talent intelligence",
@@ -57,7 +57,7 @@ const dashboards = [
 export const metadata: Metadata = {
   title: "Admin Experience",
   description:
-    "Explore the Wilma admin workspace—real-time control tower, recruiter co-pilot, and governance tools for talent leaders.",
+    "Explore the withWilma admin workspace—real-time control tower, recruiter co-pilot, and governance tools for talent leaders.",
 };
 
 export default function AdminPage() {
@@ -71,14 +71,14 @@ export default function AdminPage() {
           <FadeIn delay={0.05}>
             <SectionHeading
               title="The application review and control centre your team deserves"
-              description="Wilma’s admin workspace unifies live candidate experiences, recruiter co-pilot, and intelligence dashboards in one beautifully-designed interface."
+              description="withWilma’s admin workspace unifies live candidate experiences, recruiter co-pilot, and intelligence dashboards in one beautifully-designed interface."
             />
           </FadeIn>
           <FadeIn delay={0.1} className="overflow-hidden rounded-[2.5rem] border border-brand-100 bg-white/90 p-10 shadow-2xl shadow-brand-500/20">
             <div className="grid gap-8 text-sm text-slate-600 lg:grid-cols-2">
               <div className="space-y-4">
                 <h3 className="text-2xl font-semibold text-slate-900">Live control room</h3>
-                <p>Monitor interviews in progress, see candidate sentiment in real-time, and provide whisper coaching to Wilma without breaking the conversation flow.</p>
+                <p>Monitor interviews in progress, see candidate sentiment in real-time, and provide whisper coaching to withWilma without breaking the conversation flow.</p>
                 <ul className="space-y-2">
                   <li>• Adaptive prompts based on company knowledge</li>
                   <li>• Bias guardrail alerts with suggested follow-ups</li>
@@ -106,7 +106,7 @@ export default function AdminPage() {
               align="center"
               eyebrow="workflows"
               title="Design workflows that keep humans in the loop"
-              description="Wilma amplifies the humans on your team. Recruiters stay strategic while AI handles the heavy lift."
+              description="withWilma amplifies the humans on your team. Recruiters stay strategic while AI handles the heavy lift."
             />
           </FadeIn>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -160,7 +160,7 @@ export default function AdminPage() {
             <p className="text-sm uppercase tracking-[0.35em] text-brand-500">pilot ready</p>
             <h3 className="mt-4 text-3xl font-semibold text-slate-900">Launch in days, not quarters</h3>
             <p className="mt-4 text-base text-slate-600">
-              Our implementation team co-designs workflows, migrates knowledge bases, and trains your recruiters with live “Wilma Studio” sessions.
+              Our implementation team co-designs workflows, migrates knowledge bases, and trains your recruiters with live “withWilma Studio” sessions.
             </p>
             <ButtonLink href="/contact" size="md" className="mt-8">
               Plan your admin rollout
