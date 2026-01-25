@@ -9,7 +9,7 @@ export async function GET() {
 
     try {
         // 1. Create Organisation
-        let org = await prisma.organisation.findUnique({
+        let org = await prisma.organisation.findFirst({
             where: { rootUrl: "wilma.com" },
         });
 
