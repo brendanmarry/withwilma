@@ -1,6 +1,6 @@
 
-import { PrismaClient } from '@prisma/client';
-import * as bcrypt from 'bcrypt';
+const { PrismaClient } = require('@prisma/client');
+const bcrypt = require('bcrypt');
 
 const prisma = new PrismaClient();
 
@@ -10,7 +10,7 @@ async function main() {
     const rootUrl = 'https://withwilma.com';
     const branding = {
         primaryColor: '#000000',
-        logoUrl: 'https://withwilma.com/logo.png' // Placeholder or actual logo
+        logoUrl: 'https://withwilma.com/logo.png'
     };
 
     console.log(`Ensuring organisation: ${name} (${slug})`);
