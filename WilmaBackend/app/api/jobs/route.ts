@@ -3,6 +3,8 @@ import { prisma } from "@/lib/db";
 import { getOrganisationFromRequest } from "@/lib/tenant";
 import { corsOptionsResponse, withCors } from "@/app/api/_utils/cors";
 
+export const dynamic = 'force-dynamic';
+
 export const GET = async (request: NextRequest) => {
   const organisation = await getOrganisationFromRequest(request);
 

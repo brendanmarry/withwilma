@@ -12,7 +12,7 @@ import { Readable } from "stream";
 import { env } from "@/lib/env";
 import { logger, serializeError } from "@/lib/logger";
 
-const getClient = () => {
+const getClient = (endpointOverride?: string) => {
   const configuration: ConstructorParameters<typeof S3Client>[0] = {
     region: env().S3_REGION,
     credentials: {
@@ -22,7 +22,9 @@ const getClient = () => {
     forcePathStyle: env().S3_FORCE_PATH_STYLE === "true",
   };
 
-  if (env().S3_ENDPOINT) {
+  if (endpointOverride) {
+    configuration.endpoint = endpointOverride;
+  } else if (env().S3_ENDPOINT) {
     configuration.endpoint = env().S3_ENDPOINT;
   }
 
@@ -119,11 +121,14 @@ export const uploadBuffer = async ({
 export const getDownloadUrl = async (
   key: string,
   expiresInSeconds = 60 * 10,
+  responseContentType?: string,
+  publicEndpoint?: string,
 ): Promise<string> => {
-  const client = getClient();
+  const client = getClient(publicEndpoint);
   const command = new GetObjectCommand({
     Bucket: env().S3_BUCKET,
     Key: key,
+    ResponseContentType: responseContentType,
   });
   return getSignedUrl(client, command, { expiresIn: expiresInSeconds });
 };
@@ -175,4 +180,3 @@ export const downloadBuffer = async (key: string): Promise<Buffer> => {
   }
   return Buffer.concat(chunks);
 };
-

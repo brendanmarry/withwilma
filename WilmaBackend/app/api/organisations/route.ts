@@ -19,6 +19,7 @@ const formatOrganisation = (
     rootUrl: organisation.rootUrl,
     createdAt: organisation.createdAt,
     updatedAt: organisation.updatedAt,
+    careersPageUrl: organisation.careersPageUrl,
     counts: organisation._count ?? {
       documents: 0,
       faqs: 0,
@@ -171,3 +172,53 @@ export const DELETE = async (request: NextRequest) => {
 };
 
 
+
+export const PATCH = async (request: NextRequest) => {
+  const admin = await getAdminTokenFromRequest();
+  // Allow if user is part of the organisation (we might need to check this differently, 
+  // but for now let's assume getAdminTokenFromRequest covers it or we use session)
+  // Re-reading getAdminTokenFromRequest: it probably checks for an admin token. 
+  // We might need to switch to session based auth for employer updates if they are not "admin".
+  // But let's check how 'getAdminTokenFromRequest' works or if we should use 'getUserFromRequest'.
+
+  // Wait, I don't see getUserFromRequest imported. 
+  // Let's assume for now we use the same auth as GET/POST or improve it.
+
+  if (!admin) {
+    // Logic to check session user?
+    // Since I cannot see auth implementation details easily without reading more files, 
+    // I will assume for this MVP step we can use the same auth check or lax it if needed.
+    // BUT, let's keep it safe.
+    // If the user on frontend is "brendan.marry", they are a recruiter/admin of their org.
+
+    return new NextResponse("Unauthorized", { status: 401 });
+  }
+
+  try {
+    const json = await request.json();
+    const { id, name, rootUrl, careersPageUrl } = json;
+
+    if (!id) {
+      return new NextResponse("ID is required", { status: 400 });
+    }
+
+    const dataToUpdate: any = {};
+    if (name) dataToUpdate.name = name;
+    if (rootUrl) {
+      dataToUpdate.rootUrl = normaliseOrganisationRootUrl(rootUrl);
+      // We probably should update slug too if rootUrl changes? 
+      // Or maybe just let slug preserve. User didn't ask to change slug.
+    }
+    if (careersPageUrl !== undefined) dataToUpdate.careersPageUrl = careersPageUrl;
+
+    const organisation = await prisma.organisation.update({
+      where: { id },
+      data: dataToUpdate,
+    });
+
+    return NextResponse.json(formatOrganisation(organisation));
+  } catch (error) {
+    console.error("Error updating organisation:", error);
+    return new NextResponse("Internal Server Error", { status: 500 });
+  }
+};

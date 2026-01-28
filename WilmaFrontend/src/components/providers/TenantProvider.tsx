@@ -26,8 +26,13 @@ export function TenantProvider({
             {children}
             {tenant?.branding?.primaryColor && (
                 <style jsx global>{`
+                @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap');
                 :root {
                     --brand-primary: ${tenant.branding.primaryColor};
+                    --font-tenant: 'Outfit', sans-serif;
+                }
+                body {
+                    font-family: 'Outfit', sans-serif;
                 }
             `}</style>
             )}

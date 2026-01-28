@@ -76,6 +76,11 @@ const scoreJobUrl = (url: string, anchorText: string, pageTitle: string): number
     /\/karriere/,
     /\/work-at/,
     /\/join/,
+    /\/p\//, // common for 'posting'
+    /\/o\//, // common for 'opening' (e.g. lever)
+    /\/jobs\//,
+    /\/careers\//,
+    /\/positions\//,
   ];
 
   // Check URL patterns
@@ -100,6 +105,35 @@ const scoreJobUrl = (url: string, anchorText: string, pageTitle: string): number
     /join/i,
     /stelle/i, // German
     /karriere/i,
+    // Common Job Title Keywords
+    /engineer/i,
+    /developer/i,
+    /manager/i,
+    /director/i,
+    /specialist/i,
+    /consultant/i,
+    /analyst/i,
+    /designer/i,
+    /product/i,
+    /marketing/i,
+    /sales/i,
+    /account/i,
+    /success/i,
+    /support/i,
+    /operations/i,
+    /admin/i,
+    /recruiter/i,
+    /hr/i,
+    /finance/i,
+    /legal/i,
+    /counsel/i,
+    /officer/i,
+    /vp/i,
+    /head of/i,
+    /lead/i,
+    /senior/i,
+    /junior/i,
+    /intern/i,
   ];
 
   for (const pattern of anchorPatterns) {

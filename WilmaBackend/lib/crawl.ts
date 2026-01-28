@@ -4,6 +4,7 @@ import { htmlToText } from "@/lib/parsing/html";
 export type CrawlResult = {
   url: string;
   text: string;
+  html: string;
 };
 
 const isSameOrigin = (base: URL, target: URL) => base.origin === target.origin;
@@ -52,7 +53,7 @@ export const crawlSite = async ({
       if (!response.ok) continue;
       const html = await response.text();
       const text = htmlToText(html);
-      results.push({ url, text });
+      results.push({ url, text, html });
 
       if (level === depth) continue;
 

@@ -4,6 +4,7 @@ import { getAdminTokenFromRequest } from "@/lib/auth";
 import { ensureOrganisationByRootUrl } from "@/lib/organisation";
 import { ingestDocuments, type IngestSourceType } from "@/lib/llm/pipelines/ingestion";
 import { normaliseJob } from "@/lib/llm/pipelines/job_normalisation";
+import { generateJobLayout } from "@/lib/llm/pipelines/job_layout";
 import { validateJobDescription } from "@/lib/llm/pipelines/job_validation";
 import { prisma } from "@/lib/db";
 import { logger, serializeError } from "@/lib/logger";
@@ -217,7 +218,15 @@ export const POST = async (request: Request) => {
         }
 
         try {
-          const normalised = await normaliseJob({ raw: text });
+          const parsingConfig = organisation.jobParsingConfig as any;
+          const customInstructions = parsingConfig?.customInstructions;
+
+          // Run both pipelines in parallel
+          const [normalised, layoutConfig] = await Promise.all([
+            normaliseJob({ raw: text, customInstructions }),
+            generateJobLayout({ raw: text })
+          ]);
+
           const title =
             normalised.title?.trim() ||
             (attachment.metadata as any)?.originalName?.replace(/\.[^/.]+$/, "") ||
@@ -263,7 +272,8 @@ export const POST = async (request: Request) => {
               department,
               employmentType,
               description,
-              normalizedJson: normalised,
+              normalizedJson: normalised as any,
+              layoutConfig: layoutConfig as any,
               jobSourceId: uploadSource.id,
               sourceUrl: uploadSource.url,
               status: "open",
@@ -275,7 +285,8 @@ export const POST = async (request: Request) => {
               department,
               employmentType,
               description,
-              normalizedJson: normalised,
+              normalizedJson: normalised as any,
+              layoutConfig: layoutConfig as any,
               jobSourceId: uploadSource.id,
               sourceUrl: uploadSource.url,
               status: "open",

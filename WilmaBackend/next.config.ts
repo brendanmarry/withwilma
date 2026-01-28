@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   experimental: {
     serverComponentsExternalPackages: ["ws"],
   },
+  async headers() {
+    return [];
+  },
 };
 
 export default nextConfig;

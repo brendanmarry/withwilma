@@ -21,7 +21,7 @@ export const updateFaqSchema = z.object({
 });
 
 export const jobsFetchSchema = organisationRootSchema.extend({
-  careersUrl: z.string().url(),
+  careersUrl: z.string().url().optional(),
   label: z.string().min(1).optional(),
 });
 
@@ -43,7 +43,8 @@ export const applicationSubmitSchema = z.object({
   jobId: z.string().uuid(),
   name: z.string().min(1),
   email: z.string().email(),
-  linkedin: z.string().url().optional(),
+  linkedin: z.string().optional(),
+  screeningData: z.string().optional(),
 });
 
 export const followupQuestionSchema = z.object({

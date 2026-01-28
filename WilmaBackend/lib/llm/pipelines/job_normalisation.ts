@@ -3,6 +3,8 @@ import { loadPrompt } from "@/lib/llm/prompts";
 import { callJsonLLM } from "@/lib/llm/utils";
 
 export const normalisedJobSchema = z.object({
+  is_valid_job_posting: z.boolean().default(false),
+  confidence: z.number().optional().default(0),
   title: z.string().optional().default(""),
   department: z.string().optional().default(""),
   location: z.string().optional().default(""),
@@ -13,6 +15,7 @@ export const normalisedJobSchema = z.object({
   nice_to_have: z.array(z.string()).optional().default([]),
   seniority_level: z.string().optional().default(""),
   company_values_alignment: z.string().optional().default(""),
+  apply_url: z.string().optional().default(""),
   clean_text: z.string().optional().default(""),
 });
 
@@ -20,10 +23,17 @@ export type NormalisedJob = z.infer<typeof normalisedJobSchema>;
 
 export const normaliseJob = async ({
   raw,
+  customInstructions,
 }: {
   raw: string;
+  customInstructions?: string;
 }): Promise<NormalisedJob> => {
-  const prompt = await loadPrompt("job-normalisation.md");
+  let prompt = await loadPrompt("job-normalisation.md");
+
+  if (customInstructions) {
+    prompt += `\n\nIMPORTANT: The user has provided specific custom instructions for parsing this job. You MUST follow them over general instructions if they conflict:\n${customInstructions}`;
+  }
+
   const result = await callJsonLLM({
     systemPrompt: prompt,
     userContent: raw,

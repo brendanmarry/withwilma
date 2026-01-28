@@ -4,7 +4,7 @@ const APP_ORIGIN =
   process.env.CORS_ALLOWED_ORIGIN ??
   process.env.FRONTEND_URL ??
   process.env.NEXT_PUBLIC_APP_URL ??
-  "http://localhost:3001";
+  "http://localhost:3000";
 
 const CORS_HEADERS: Record<string, string> = {
   "Access-Control-Allow-Origin": APP_ORIGIN,

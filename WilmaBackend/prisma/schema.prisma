@@ -29,6 +29,8 @@ model Organisation {
   // Multi-tenancy
   slug            String           @unique
   branding        Json?            // { primaryColor: string, logoUrl: string }
+  careersPageUrl  String?
+  jobParsingConfig Json?           // Custom prompt instructions or schema mapping
 }
 
 enum IngestionStatus {
@@ -89,6 +91,7 @@ model Job {
   employmentType String?
   description    String
   normalizedJson Json?
+  layoutConfig   Json?    // Dynamic UI schema: sections, ordering, headers
   embedding      Json?
   wilmaEnabled   Boolean      @default(false)
   status         JobStatus    @default(open)

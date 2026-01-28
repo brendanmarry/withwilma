@@ -8,6 +8,25 @@ type Params = {
   params: Promise<{ id: string }>;
 };
 
+export const GET = async (_request: NextRequest, { params }: Params) => {
+  const { id } = await params;
+  try {
+    const job = await prisma.job.findUnique({
+      where: { id },
+    });
+    if (!job) {
+      return new NextResponse("Job not found", { status: 404 });
+    }
+    return NextResponse.json(job);
+  } catch (error) {
+    logger.error("Failed to fetch job", {
+      error: serializeError(error),
+      request: { jobId: id },
+    });
+    return new NextResponse("Internal Server Error", { status: 500 });
+  }
+};
+
 export const PATCH = async (request: NextRequest, { params }: Params) => {
   const { id } = await params;
   const admin = await getAdminTokenFromRequest();

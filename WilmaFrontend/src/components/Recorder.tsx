@@ -1,7 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { Loader2, Play, Redo2, StopCircle } from "lucide-react"
+import { Info, Loader2, Play, Redo2, StopCircle } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { ProgressRing } from "@/components/ProgressRing"
@@ -13,7 +13,7 @@ interface RecorderProps {
   onRecorded: (file: Blob) => Promise<void> | void
 }
 
-export function Recorder({ maxDuration = 30, onRecorded }: RecorderProps) {
+export function Recorder({ maxDuration = 20, onRecorded, maxRetries = 3 }: RecorderProps & { maxRetries?: number }) {
   const { startRecording, stopRecording, reset, elapsed, isRecording, error, stream } = useRecorder({
     maxDuration,
   })
@@ -21,6 +21,7 @@ export function Recorder({ maxDuration = 30, onRecorded }: RecorderProps) {
   const [localError, setLocalError] = useState<string | null>(null)
   const [lastRecording, setLastRecording] = useState<Blob | null>(null)
   const [isPlayback, setIsPlayback] = useState(false)
+  const [retriesLeft, setRetriesLeft] = useState(maxRetries)
 
   const hasRecording = useMemo(() => Boolean(lastRecording && lastRecording.size > 0), [lastRecording])
 
@@ -31,15 +32,12 @@ export function Recorder({ maxDuration = 30, onRecorded }: RecorderProps) {
         setLocalError("We couldn’t capture that. Please record again.")
         return
       }
-      setIsUploading(true)
-      await Promise.resolve(onRecorded(blob))
       setLocalError(null)
       setLastRecording(blob)
+      setIsPlayback(true) // Automatically playback after stop to review
     } catch (err) {
       console.error(err)
-      setLocalError("Something went wrong uploading your answer. Please try again.")
-    } finally {
-      setIsUploading(false)
+      setLocalError("Something went wrong capturing your answer. Please try again.")
     }
   }
 
@@ -80,34 +78,51 @@ export function Recorder({ maxDuration = 30, onRecorded }: RecorderProps) {
 
           <div className="flex flex-col items-center gap-3 text-center">
             {error || localError ? (
-              <p className="text-sm text-red-600">{error ?? localError}</p>
+              <p className="text-sm text-red-600 font-bold uppercase tracking-tight">{error ?? localError}</p>
             ) : (
-              <p className="text-sm text-gray-600">
-                {isRecording
-                  ? "Recording... keep your answer concise and focused."
-                  : "Record a short answer (up to 30 seconds)."}
-              </p>
+              <div className="flex flex-col items-center gap-2">
+                <p className="text-sm text-gray-700 font-medium">
+                  {isRecording
+                    ? "Recording... just be yourself!"
+                    : retriesLeft === 0
+                      ? "That's your final attempt! Feel free to review or submit."
+                      : `Ready to shine? Simply be yourself and show us your spark! You have up to ${maxDuration} seconds and ${retriesLeft} attempts to get it perfect.`}
+                </p>
+                {!isRecording && (
+                  <div className="flex items-center gap-1.5 text-[11px] font-medium text-slate-500 bg-slate-50 px-3 py-1 rounded-full border border-slate-100 shadow-sm">
+                    <Info className="h-3 w-3 text-[var(--brand-primary)] opacity-60" />
+                    <span>Relax! We only see the final version you choose to submit.</span>
+                  </div>
+                )}
+              </div>
             )}
           </div>
 
           <div className="flex items-center gap-4">
             {!isRecording ? (
               <Button
-                className="h-16 w-16 rounded-full text-lg"
+                className="h-16 w-16 rounded-full text-lg shadow-lg hover:scale-105 active:scale-95 transition-all bg-[var(--brand-primary)] hover:bg-[var(--brand-primary)]/90"
                 size="icon"
                 onClick={() => {
-                  setIsPlayback(false)
-                  startRecording()
+                  if (retriesLeft > 0 || !hasRecording) {
+                    setIsPlayback(false)
+                    startRecording()
+                  } else {
+                    setLocalError("No retries left. Please use your current recording.")
+                  }
                 }}
-                disabled={isUploading}
+                disabled={isUploading || (retriesLeft === 0 && hasRecording)}
               >
                 {isUploading ? <Loader2 className="h-6 w-6 animate-spin" /> : "Rec"}
               </Button>
             ) : (
               <Button
-                className="h-16 w-16 rounded-full bg-red-600 hover:bg-red-700"
+                className="h-16 w-16 rounded-full bg-red-600 hover:bg-red-700 shadow-lg animate-pulse"
                 size="icon"
-                onClick={handleStop}
+                onClick={async () => {
+                  await handleStop();
+                  setRetriesLeft(prev => Math.max(0, prev - 1));
+                }}
               >
                 <StopCircle className="h-7 w-7" />
               </Button>
@@ -115,21 +130,24 @@ export function Recorder({ maxDuration = 30, onRecorded }: RecorderProps) {
             <Button
               variant="outline"
               size="icon"
-              className="h-12 w-12"
+              className="h-12 w-12 border-slate-200"
               onClick={() => {
-                reset()
-                setLocalError(null)
-                setLastRecording(null)
-                setIsPlayback(false)
+                if (retriesLeft > 0) {
+                  reset()
+                  setLocalError(null)
+                  setLastRecording(null)
+                  setIsPlayback(false)
+                }
               }}
-              disabled={isRecording || isUploading}
+              disabled={isRecording || isUploading || retriesLeft === 0}
+              title={retriesLeft === 0 ? "No retries left" : `${retriesLeft} retries left`}
             >
               <Redo2 className="h-5 w-5" />
             </Button>
             <Button
               variant="ghost"
               size="icon"
-              className="h-12 w-12"
+              className="h-12 w-12 hover:bg-gray-100"
               onClick={() => setIsPlayback(true)}
               disabled={!hasRecording || isRecording || isUploading}
               aria-label="Replay last recording"
@@ -137,6 +155,16 @@ export function Recorder({ maxDuration = 30, onRecorded }: RecorderProps) {
               <Play className="h-5 w-5" />
             </Button>
           </div>
+
+          {hasRecording && !isRecording && (
+            <Button
+              onClick={() => onRecorded(lastRecording!)}
+              disabled={isUploading}
+              className="mt-4 bg-[#616E24] hover:bg-[#4d581c] text-white px-8 h-12 rounded-xl font-bold uppercase tracking-widest text-sm"
+            >
+              {isUploading ? "Uploading..." : "Submit Answer"}
+            </Button>
+          )}
         </div>
       </div>
     </div>

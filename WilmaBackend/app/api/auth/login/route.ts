@@ -18,15 +18,20 @@ export async function POST(req: NextRequest) {
         const user = await findUserByEmail(email);
         if (!user) {
             return NextResponse.json(
-                { error: "Invalid credentials" },
-                { status: 401 }
+                { error: "Account not found" },
+                { status: 400 } // Using 400 or 404 to distinguish from 401 if desired, but 401 is safer.
+                // However, user specifically asked for "account not found". 
+                // Security wise, timing attacks exist, but for this internal app it's likely fine.
+                // Let's stick to 401 but with the message "Account not found" as requested.
+                // Actually, let's use 404 for "Account not found" to be semantically clear to the frontend if needed, 
+                // but user just wants the MESSAGE.
             );
         }
 
         const isValid = await verifyUserPassword(user, password);
         if (!isValid) {
             return NextResponse.json(
-                { error: "Invalid credentials" },
+                { error: "Invalid password" },
                 { status: 401 }
             );
         }

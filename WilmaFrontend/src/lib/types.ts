@@ -9,6 +9,7 @@ export interface NormalisedJob {
   nice_to_have?: string[]
   seniority_level?: string
   company_values_alignment?: string
+  apply_url?: string
   clean_text?: string
 }
 
@@ -24,6 +25,7 @@ export interface Job {
   status?: "open" | "closed"
   sourceUrl?: string | null
   normalizedJson?: NormalisedJob | null
+  layoutConfig?: any | null
 }
 
 export interface ApplicationInput {
@@ -44,6 +46,15 @@ export interface FollowUpQuestion {
   fallbackLabel?: string
 }
 
+export interface VideoAnswer {
+  id: string
+  questionId: string
+  videoUrl: string
+  transcript?: string
+  analysis?: any
+  followupQuestion?: FollowUpQuestion
+}
+
 export interface Candidate {
   id: string
   jobId: string
@@ -53,12 +64,17 @@ export interface Candidate {
   matchScore?: number
   summary?: string
   linkedinPhotoUrl?: string
+  videos?: VideoAnswer[]
+  status?: "new" | "reviewed" | "shortlisted" | "rejected"
+  createdAt?: string
 }
 
 export interface Organisation {
   id: string;
   name: string;
+  slug: string;
   rootUrl: string;
+  careersPageUrl?: string; // Optional
   createdAt: string;
   updatedAt: string;
   counts: {
@@ -66,4 +82,30 @@ export interface Organisation {
     faqs: number;
     jobs: number;
   };
+  branding?: {
+    primaryColor?: string;
+    logoUrl?: string;
+  };
+}
+
+export interface OrganisationProfile {
+  overview: string;
+  productsAndServices: string[];
+  historyHighlights: string[];
+  leadershipTeam: string[];
+  fundingStatus: string;
+  ownershipStructure: string;
+  confidence: "high" | "medium" | "low";
+  notes: string[];
+  generatedAt: string;
+  sourceCount: number;
+}
+
+export interface DocumentSummary {
+  id: string;
+  sourceType: string;
+  sourceUrl: string | null;
+  mimeType: string | null;
+  createdAt: string;
+  metadata: Record<string, any> | null;
 }

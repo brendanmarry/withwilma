@@ -1,5 +1,5 @@
 const API_BASE_URL =
-    process.env.NEXT_PUBLIC_API_URL ??
+    process.env.NEXT_PUBLIC_API_BASE_URL ??
     "https://api.withwilma.com";
 
 const INTERNAL_API_URL =
@@ -13,12 +13,23 @@ function buildUrl(path: string) {
     return `${baseUrl.replace(/\/$/, "")}${path}`;
 }
 
-export type User = {
+export interface User {
     id: string;
     email: string;
-    name: string | null;
-    role: string;
-    organisationId: string;
+    name: string;
+    role: "candidate" | "recruiter" | "admin";
+    organisationId?: string;
+    organisation?: {
+        id: string;
+        name: string;
+        slug: string;
+        rootUrl: string;
+        careersPageUrl?: string; // Optional
+        branding?: {
+            primaryColor?: string;
+            logoUrl?: string;
+        };
+    };
 };
 
 export async function login(email: string, password: string): Promise<{ success: boolean; user?: User; error?: string }> {
@@ -65,6 +76,27 @@ export async function register(email: string, password: string, website: string)
         return { success: true, user: data.user, redirectTo: data.redirectTo };
     } catch (error) {
         console.error("Registration request failed", error);
+        return { success: false, error: "Network error" };
+    }
+}
+
+export async function logout(): Promise<{ success: boolean; error?: string }> {
+    try {
+        const response = await fetch(buildUrl("/api/auth/logout"), {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        });
+
+        if (!response.ok) {
+            return { success: false, error: "Logout failed" };
+        }
+
+        return { success: true };
+    } catch (error) {
+        console.error("Logout request failed", error);
         return { success: false, error: "Network error" };
     }
 }

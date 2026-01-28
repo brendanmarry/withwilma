@@ -14,7 +14,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, ArrowLeft, Upload, Link as LinkIcon, FileText } from "lucide-react";
 import Link from 'next/link';
 import Section from "@/components/ui/Section";
-import { JobSourceCard } from "../../dashboard/JobSourceCard";
+import { JobSourceCard } from "../../home/JobSourceCard";
 
 export default function AddJobPage() {
     const { user, loading } = useAuth();

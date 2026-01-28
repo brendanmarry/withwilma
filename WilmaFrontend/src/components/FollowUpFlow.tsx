@@ -192,11 +192,11 @@ export function FollowUpFlow({ applicationId }: FollowUpFlowProps) {
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-8">
-      <header className="space-y-3 text-center">
-        <p className="text-xs uppercase tracking-[0.3em] text-purple-500">Step 4</p>
-        <h1 className="text-3xl font-semibold text-slate-900">Wilma has a few quick follow-ups for you</h1>
-        <p className="text-sm text-slate-600">
-          Keep each answer to around 30 seconds. Wilma will send these responses directly to the hiring team.
+      <header className="space-y-4 text-center">
+        <h1 className="text-3xl font-bold text-[var(--brand-primary)] tracking-tight">Let&apos;s put a face to the name!</h1>
+        <p className="text-lg font-medium text-gray-700 max-w-2xl mx-auto leading-relaxed">
+          CV received! We&apos;re excited to meet you. To help you stand out and give us a taste of your personality,
+          we&apos;ve got one quick follow-up. Just a 30-second video to bring your application to life!
         </p>
       </header>
 
@@ -209,14 +209,14 @@ export function FollowUpFlow({ applicationId }: FollowUpFlowProps) {
         showPlayPrompt={!hasUserInteracted && currentIndex === 0}
       />
 
-      <Recorder maxDuration={30} onRecorded={handleRecording} />
+      <Recorder maxDuration={30} maxRetries={3} onRecorded={handleRecording} />
 
-      {error ? <p className="text-center text-sm text-red-600">{error}</p> : null}
+      {error ? <p className="text-center text-sm text-red-600 custom-font font-bold">{error}</p> : null}
 
       {isUploading ? (
-        <p className="text-center text-sm text-slate-500">Uploading your answer…</p>
+        <p className="text-center text-sm text-[var(--brand-primary)] font-bold uppercase tracking-widest animate-pulse">Uploading your answer…</p>
       ) : (
-        <p className="text-center text-xs uppercase tracking-[0.3em] text-purple-400">
+        <p className="text-center text-xs uppercase tracking-[0.3em] text-[var(--brand-primary)] font-bold">
           Question {currentIndex + 1} of {questions.length}
         </p>
       )}

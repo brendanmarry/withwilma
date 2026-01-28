@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAdminTokenFromRequest } from "@/lib/auth";
+import { prisma } from "@/lib/db";
 import { findUserByEmail } from "@/lib/users";
 
 export async function GET() {
@@ -9,7 +10,11 @@ export async function GET() {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const user = await findUserByEmail(payload.email);
+        const user = await prisma.user.findUnique({
+            where: { email: payload.email },
+            include: { organisation: true }
+        });
+
         if (!user) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
@@ -21,6 +26,7 @@ export async function GET() {
                 name: user.name,
                 role: user.role,
                 organisationId: user.organisationId,
+                organisation: user.organisation,
             },
         });
     } catch (error) {

@@ -27,7 +27,7 @@ export default function RegisterPage() {
         try {
             const result = await register(email, password, website);
             if (result.success) {
-                router.push(result.redirectTo || "/employer/dashboard");
+                router.push(result.redirectTo || "/employer/home");
             } else {
                 setError(result.error || "Registration failed");
             }

@@ -1,7 +1,7 @@
-import { FollowUpQuestion, Job } from "./types";
+import { FollowUpQuestion, Job, Organisation, OrganisationProfile, DocumentSummary, Candidate } from "./types";
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL ??
+  process.env.NEXT_PUBLIC_API_BASE_URL ??
   "https://api.withwilma.com";
 const ORGANISATION_ID = process.env.NEXT_PUBLIC_ORGANISATION_ID;
 const ORGANISATION_ROOT_URL = process.env.NEXT_PUBLIC_ORGANISATION_ROOT_URL;
@@ -78,7 +78,27 @@ function buildUrl(path: string) {
 }
 
 
-export async function getJobs(organisationId?: string, tenantSlug?: string): Promise<{ jobs: Job[]; fromFallback: boolean }> {
+const DEFAULT_BRANDING = {
+  primaryColor: "#616E24", // Babus Olive
+  secondaryColor: "#BFCC80", // Light Olive
+  fontFamily: "Outfit, sans-serif"
+};
+
+export async function getBranding(job?: Job | null, host?: string) {
+  let tenant = null;
+
+  if (host && (host.includes(".localhost") || host.endsWith(".withwilma.com"))) {
+    const subdomain = host.split(".")[0];
+    if (subdomain !== "www" && subdomain !== "app") {
+      tenant = await getOrganisationBySlug(subdomain);
+    }
+  }
+
+  return tenant?.branding || (job as any)?.organisation?.branding || DEFAULT_BRANDING;
+}
+
+
+export async function getJobs(organisationId?: string, tenantSlug?: string, wilmaEnabled?: boolean): Promise<{ jobs: Job[]; fromFallback: boolean }> {
   const url = new URL(buildUrl("/api/jobs"));
   const headers: HeadersInit = {};
 
@@ -93,10 +113,21 @@ export async function getJobs(organisationId?: string, tenantSlug?: string): Pro
   } else if (ORGANISATION_ROOT_URL) {
     url.searchParams.set("rootUrl", ORGANISATION_ROOT_URL);
   }
-  url.searchParams.set("wilmaEnabled", "true");
+  if (wilmaEnabled !== undefined) {
+    url.searchParams.set("wilmaEnabled", wilmaEnabled.toString());
+  }
+
+  // Force fresh fetch for admin views
+  if (wilmaEnabled === undefined) {
+    url.searchParams.set("_t", Date.now().toString());
+  }
 
   try {
-    const response = await fetch(url.toString(), { cache: "no-store", headers });
+    const response = await fetch(url.toString(), {
+      cache: "no-store",
+      headers,
+      next: { revalidate: 0 } // Add Next.js specific revalidation 
+    });
     if (!response.ok) throw new Error(`Failed to load jobs: ${response.status}`);
     const data = (await response.json()) as Job[];
     return { jobs: data, fromFallback: false };
@@ -104,6 +135,51 @@ export async function getJobs(organisationId?: string, tenantSlug?: string): Pro
     console.warn("Falling back to static job list", error);
     return { jobs: FALLBACK_JOBS, fromFallback: true };
   }
+}
+
+export async function getJob(id: string): Promise<Job> {
+  const response = await fetch(buildUrl(`/api/jobs/${id}`), { cache: "no-store" });
+  if (!response.ok) throw new Error(`Failed to load job: ${response.status}`);
+  return response.json();
+}
+
+export async function getJobCandidates(jobId: string): Promise<Candidate[]> {
+  const response = await fetch(buildUrl(`/api/jobs/${jobId}/candidates`), { cache: "no-store" });
+  if (!response.ok) throw new Error(`Failed to load candidates: ${response.status}`);
+  return response.json();
+}
+
+export async function getCandidates(jobId?: string, organisationId?: string): Promise<{ items: Candidate[] }> {
+  const url = new URL(buildUrl("/api/candidates"));
+  if (jobId) url.searchParams.set("jobId", jobId);
+  if (organisationId) url.searchParams.set("organisationId", organisationId);
+
+  const response = await fetch(url.toString(), { cache: "no-store" });
+  if (!response.ok) throw new Error(`Failed to load all candidates: ${response.status}`);
+  return response.json();
+}
+
+export async function getCandidate(id: string): Promise<Candidate> {
+  const response = await fetch(buildUrl(`/api/candidates/${id}`), { cache: "no-store" });
+  if (!response.ok) throw new Error(`Failed to load candidate: ${response.status}`);
+  return response.json();
+}
+
+export async function updateJob(id: string, data: Partial<Job>): Promise<Job> {
+  const response = await fetch(buildUrl(`/api/jobs/${id}`), {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) throw new Error(`Update job failed: ${response.status}`);
+  return response.json();
+}
+
+export async function deleteJob(id: string): Promise<void> {
+  const response = await fetch(buildUrl(`/api/jobs/${id}`), {
+    method: "DELETE",
+  });
+  if (!response.ok) throw new Error(`Delete job failed: ${response.status}`);
 }
 
 export async function getOrganisationBySlug(slug: string) {
@@ -134,6 +210,16 @@ export async function getOrganisations() {
   return response.json();
 }
 
+export async function askOrganisation(orgId: string, message: string): Promise<{ answer: string }> {
+  const response = await fetch(buildUrl(`/api/organisations/${orgId}/chat`), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message }),
+  });
+  if (!response.ok) throw new Error("Failed to get answer from Wilma");
+  return response.json();
+}
+
 export async function submitApplication(
   data: FormData,
 ): Promise<{ applicationId: string; matchScore: number; recommendedQuestions: FollowUpQuestion[] }> {
@@ -142,15 +228,29 @@ export async function submitApplication(
       method: "POST",
       body: data,
     });
-    if (!response.ok) throw new Error(`Submit failed: ${response.status}`);
+    if (!response.ok) {
+      let errorMessage = `Submit failed: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        if (errorData.error) {
+          errorMessage = errorData.error;
+          if (errorData.details) {
+            errorMessage += `: ${errorData.details[0]?.message || JSON.stringify(errorData.details)}`;
+          }
+        }
+      } catch (e) {
+        // ignore JSON parse error
+      }
+      throw new Error(errorMessage);
+    }
     return (await response.json()) as {
       applicationId: string;
       matchScore: number;
       recommendedQuestions: FollowUpQuestion[];
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Application submission failed", error);
-    throw error;
+    throw new Error(error.message || "Failed to submit application");
   }
 }
 
@@ -202,7 +302,98 @@ export async function finalizeApplication(applicationId: string): Promise<{ stat
     if (!response.ok) throw new Error(`Finalise failed: ${response.status}`);
     return (await response.json()) as { status: "received" };
   } catch (error) {
-    console.warn("Finalise fallback", error);
     return { status: "received" };
   }
+}
+
+export async function getOrganisationProfile(organisationId: string): Promise<{ profile: OrganisationProfile; sources: any[] } | null> {
+  const url = new URL(buildUrl("/api/knowledge/organisation-summary"));
+  url.searchParams.set("organisationId", organisationId);
+  const response = await fetch(url.toString(), { cache: "no-store" });
+  if (!response.ok) return null;
+  return response.json();
+}
+
+export async function getOrganisationKnowledge(organisationId: string): Promise<{ organisation: Organisation; faqs: any[]; documents: DocumentSummary[] } | null> {
+  const url = new URL(buildUrl("/api/knowledge/faqs"));
+  url.searchParams.set("organisationId", organisationId);
+  const response = await fetch(url.toString(), { cache: "no-store" });
+  if (!response.ok) return null;
+  return response.json();
+}
+
+export async function ingestWebsite(rootUrl: string): Promise<{ pagesProcessed: number }> {
+  const response = await fetch(buildUrl("/api/ingest/url"), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ rootUrl, depth: 2 }),
+  });
+  if (!response.ok) throw new Error("Failed to start website analysis");
+  return response.json();
+}
+
+export async function sendCultureInterviewMessage(
+  organisationId: string,
+  history: { role: "user" | "assistant"; content: string }[],
+  currentProfile?: OrganisationProfile | null
+): Promise<{ message: string; analysis?: string; topic?: string; isComplete: boolean }> {
+  const response = await fetch(buildUrl("/api/knowledge/culture-interview"), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ organisationId, history, currentProfile }),
+  });
+  if (!response.ok) throw new Error("Failed to send message");
+  return response.json();
+}
+
+export async function extractJobs(rootUrl: string, careersUrl?: string): Promise<{ jobs: Job[] }> {
+  const response = await fetch(buildUrl("/api/jobs/fetch"), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ rootUrl, careersUrl }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Failed to extract jobs: ${errorText}`);
+  }
+
+  return response.json();
+}
+
+// Update organisation details
+export async function updateOrganisation(organisationId: string, data: Partial<Organisation>): Promise<Organisation> {
+  const response = await fetch(buildUrl(`/api/organisations/${organisationId}`), {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update organisation");
+  }
+
+  return response.json();
+}
+
+export async function uploadJobFiles(rootUrl: string, files: File[]): Promise<{ uploaded: number; createdJobs: string[] }> {
+  const formData = new FormData();
+  formData.append("rootUrl", rootUrl);
+  files.forEach(file => {
+    formData.append("files", file);
+  });
+
+  const response = await fetch(buildUrl("/api/jobs/upload"), {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Upload failed: ${text}`);
+  }
+
+  return response.json();
 }

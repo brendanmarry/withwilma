@@ -1,9 +1,8 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { User, getMe, login as apiLogin } from "@/lib/auth-api";
+import { User, getMe, login as apiLogin, logout as apiLogout } from "@/lib/auth-api";
 import { useRouter } from "next/navigation";
-
 interface AuthContextType {
     user: User | null;
     loading: boolean;
@@ -36,13 +35,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const result = await apiLogin(email, password);
         if (result.success && result.user) {
             setUser(result.user);
-            router.push("/employer/dashboard");
+            router.push("/employer/home");
         }
         return result;
     };
 
-    const logout = () => {
-        // Implement logout api call if needed to clear cookie
+    const logout = async () => {
+        await apiLogout();
         setUser(null);
         router.push("/employer/login");
     };

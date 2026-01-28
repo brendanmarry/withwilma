@@ -65,6 +65,7 @@ export const POST = async (request: Request) => {
       name: formData.get("name"),
       email: formData.get("email"),
       linkedin: formData.get("linkedin") ?? undefined,
+      screeningData: formData.get("screeningData") ?? undefined,
     });
 
     jobId = fields.jobId;
@@ -116,6 +117,7 @@ export const POST = async (request: Request) => {
         matchStrengths: match.strengths ?? [],
         matchGaps: match.gaps ?? [],
         matchSummary: match.experience_summary || match.role_alignment_summary,
+        screeningData: fields.screeningData ? JSON.parse(fields.screeningData as string) : undefined,
       },
     });
 
@@ -126,7 +128,13 @@ export const POST = async (request: Request) => {
       }
     > = [];
     try {
-      const followUps = await generateFollowUps({ matchSummary: match });
+      const followUps = await generateFollowUps({
+        matchSummary: {
+          ...match,
+          instruction: "Identify ONE key skill or experience gap in the CV related to the JD and ask an insightful question to address it. Keep it to exactly 1 question."
+        },
+        count: 1
+      });
       const records = await prisma.$transaction(
         followUps.follow_up_questions.map((item) =>
           prisma.followUpQuestion.create({
@@ -175,7 +183,7 @@ export const POST = async (request: Request) => {
         recommendedQuestions: followupRecords,
       }),
     );
-  } catch (error) {
+  } catch (error: any) {
     logger.error("Failed to submit application", {
       error: serializeError(error),
       request: {
@@ -184,7 +192,12 @@ export const POST = async (request: Request) => {
         fileName,
       },
     });
-    return withCors(new NextResponse("Failed to submit application", { status: 500 }));
+
+    if (error.name === "ZodError" || error.issues) {
+      return withCors(new NextResponse(JSON.stringify({ error: "Validation failed", details: error.issues }), { status: 400 }));
+    }
+
+    return withCors(new NextResponse(JSON.stringify({ error: "Failed to submit application", details: error.message }), { status: 500 }));
   }
 };
 
