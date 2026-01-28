@@ -27,24 +27,44 @@ export const scoreMatch = async ({
   cvText,
   companyKnowledge,
   videoTranscripts,
+  linkedinUrl,
+  screeningAnswers,
 }: {
   jobDescription: string;
   cvText: string;
   companyKnowledge: string;
   videoTranscripts?: string[];
+  linkedinUrl?: string;
+  screeningAnswers?: string;
 }): Promise<MatchScoreResult> => {
   const prompt = await loadPrompt("cv-job-matching.md");
-  
-  const additionalContext = videoTranscripts && videoTranscripts.length > 0
-    ? `\n\nADDITIONAL CONTEXT - Video Interview Responses:\n${videoTranscripts.map((t, i) => `Response ${i + 1}:\n${t}`).join("\n\n")}\n\nWhen scoring, consider both the CV content AND the candidate's video responses. Video responses provide additional evidence of skills, communication ability, and cultural fit.`
-    : "";
-  
+
+  let additionalContext = "";
+
+  if (videoTranscripts && videoTranscripts.length > 0) {
+    additionalContext += `\n\nADDITIONAL CONTEXT - Video Interview Responses:\n${videoTranscripts.map((t, i) => `Response ${i + 1}:\n${t}`).join("\n\n")}`;
+  }
+
+  if (linkedinUrl) {
+    additionalContext += `\n\nADDITIONAL CONTEXT - LinkedIn Profile:\nURL: ${linkedinUrl}\n(Use this contexts if useful, e.g. for verifying seniority or recent roles not on CV)`;
+  }
+
+  if (screeningAnswers) {
+    additionalContext += `\n\nADDITIONAL CONTEXT - Screening Questions & Answers:\n${screeningAnswers}`;
+  }
+
+  if (additionalContext) {
+    additionalContext += `\n\nWhen scoring, consider the CV content along with ALL additional context provided (Video responses, LinkedIn, Screening answers). These provide critical evidence of skills, communication ability, and cultural fit.`;
+  }
+
   const userContent = JSON.stringify(
     {
       job_description: jobDescription,
       cv_text: cvText,
       company_knowledge: companyKnowledge,
       video_responses: videoTranscripts || [],
+      linkedin_url: linkedinUrl,
+      screening_answers: screeningAnswers,
     },
     null,
     2,

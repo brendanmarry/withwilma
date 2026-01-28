@@ -375,11 +375,32 @@ const processVideoAnswer = async ({
           });
           const companyKnowledge = knowledgeDocs.map((doc) => doc.textContent).join("\n\n");
 
+          let screeningAnswers = "";
+          if (candidate.screeningData) {
+            try {
+              const data = typeof candidate.screeningData === 'string'
+                ? JSON.parse(candidate.screeningData)
+                : candidate.screeningData;
+
+              // Assuming screeningData is a key-value pair or array of objects. 
+              // If it's a simple object:
+              if (typeof data === 'object' && data !== null) {
+                screeningAnswers = Object.entries(data)
+                  .map(([k, v]) => `Q: ${k}\nA: ${v}`)
+                  .join("\n\n");
+              }
+            } catch (e) {
+              logger.warn("Failed to parse screening data for scoring", { candidateId: candidate.id });
+            }
+          }
+
           const updatedMatch = await scoreMatch({
             jobDescription: candidate.job.description,
             cvText,
             companyKnowledge,
             videoTranscripts: allVideoTranscripts,
+            linkedinUrl: candidate.linkedin || undefined,
+            screeningAnswers: screeningAnswers || undefined,
           });
 
           await prisma.candidate.update({

@@ -84,7 +84,7 @@ const Navigation = () => {
                 </Link>
                 <button
                   onClick={() => logout()}
-                  className="text-sm font-medium text-red-600 hover:text-red-700"
+                  className="inline-flex items-center gap-2 rounded-full bg-black px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-gray-800"
                 >
                   Logout
                 </button>

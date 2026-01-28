@@ -205,21 +205,20 @@ export default function AllCandidatesPage() {
                                         </div>
                                     </div>
                                     <div className="flex gap-2 text-sm">
-                                        {candidate.videos && candidate.videos.length > 0 && (
-                                            <Button variant="outline" size="sm" className="bg-white hover:bg-purple-50 hover:text-purple-700 border-gray-300" asChild>
-                                                <Link href={`/employer/candidates/${candidate.id}`}>
-                                                    <PlayCircle className="w-4 h-4 mr-2" />
-                                                    Watch Video
-                                                </Link>
-                                            </Button>
-                                        )}
                                         <Button
                                             variant="outline"
                                             size="sm"
-                                            className="border-gray-300 text-gray-700 hover:text-red-600 hover:border-red-200 hover:bg-red-50"
+                                            className="bg-white hover:bg-purple-50 hover:text-purple-700 border-gray-300"
                                             onClick={() => router.push(`/employer/candidates/${candidate.id}`)}
                                         >
-                                            View Details
+                                            {candidate.videos && candidate.videos.length > 0 ? (
+                                                <>
+                                                    <PlayCircle className="w-4 h-4 mr-2" />
+                                                    Review Application
+                                                </>
+                                            ) : (
+                                                "View Application"
+                                            )}
                                         </Button>
                                     </div>
                                 </div>

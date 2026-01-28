@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { login } from "@/lib/auth-api";
+import { useAuth } from "@/context/auth-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,6 +13,7 @@ import Link from "next/link";
 
 export default function LoginPage() {
     const router = useRouter();
+    const { login } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -24,12 +25,12 @@ export default function LoginPage() {
         setError(null);
 
         try {
+            // Context login handles state update and redirection
             const result = await login(email, password);
-            if (result.success) {
-                router.push("/employer/home");
-            } else {
+            if (!result.success) {
                 setError(result.error || "Login failed");
             }
+            // success redirect handled by context
         } catch (err: any) {
             console.error("Login error", err);
             setError(err.message || "An unexpected error occurred");

@@ -49,7 +49,7 @@ export function DeleteJobDialog({ isOpen, onClose, onConfirm, jobTitle }: Delete
                         Cancel
                     </Button>
                     <Button
-                        variant="destructive"
+                        variant="default"
                         onClick={handleConfirm}
                         disabled={loading}
                         className="bg-red-600 hover:bg-red-700 text-white gap-2"
