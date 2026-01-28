@@ -165,6 +165,23 @@ export async function getCandidate(id: string): Promise<Candidate> {
   return response.json();
 }
 
+export async function deleteCandidate(id: string): Promise<void> {
+  const response = await fetch(buildUrl(`/api/candidates/${id}`), {
+    method: "DELETE",
+  });
+  if (!response.ok) throw new Error(`Delete candidate failed: ${response.status}`);
+}
+
+export async function updateCandidateStatus(id: string, status: string): Promise<Candidate> {
+  const response = await fetch(buildUrl(`/api/candidates/${id}`), {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ status }),
+  });
+  if (!response.ok) throw new Error(`Update status failed: ${response.status}`);
+  return response.json();
+}
+
 export async function updateJob(id: string, data: Partial<Job>): Promise<Job> {
   const response = await fetch(buildUrl(`/api/jobs/${id}`), {
     method: "PATCH",

@@ -10,13 +10,14 @@ import {
     PlayCircle,
     Search,
     Filter,
-    Loader2
+    Loader2,
+    Trash2
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Section from "@/components/ui/Section";
-import { getCandidates, getJobs } from "@/lib/api";
+import { getCandidates, getJobs, deleteCandidate } from "@/lib/api";
 import { Candidate, Job } from "@/lib/types";
 import { useAuth } from "@/context/auth-context";
 
@@ -219,6 +220,25 @@ export default function AllCandidatesPage() {
                                             ) : (
                                                 "View Application"
                                             )}
+                                        </Button>
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="text-gray-400 hover:text-red-600 hover:bg-red-50"
+                                            onClick={async (e) => {
+                                                e.stopPropagation();
+                                                if (confirm("Delete this application?")) {
+                                                    try {
+                                                        await deleteCandidate(candidate.id);
+                                                        setCandidates(prev => prev.filter(c => c.id !== candidate.id));
+                                                    } catch (err) {
+                                                        alert("Failed to delete");
+                                                    }
+                                                }
+                                            }}
+                                            title="Delete Application"
+                                        >
+                                            <Trash2 className="w-4 h-4" />
                                         </Button>
                                     </div>
                                 </div>

@@ -2,24 +2,42 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Mail, Linkedin, Calendar, PlayCircle, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Mail, Linkedin, Calendar, PlayCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Section from "@/components/ui/Section";
-import { getCandidate } from "@/lib/api";
+import { getCandidate, deleteCandidate, updateCandidateStatus, getCandidates } from "@/lib/api";
 import { Candidate } from "@/lib/types";
 
 export default function CandidatePage(props: { params: Promise<{ candidateId: string }> }) {
     const params = React.use(props.params);
     const router = useRouter();
     const [candidate, setCandidate] = useState<Candidate | null>(null);
+    const [nextCandidateId, setNextCandidateId] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [processing, setProcessing] = useState(false);
 
     useEffect(() => {
-        async function loadCandidate() {
+        async function loadCandidateData() {
+            setLoading(true);
             try {
                 const data = await getCandidate(params.candidateId);
                 setCandidate(data);
+
+                // Fetch all candidates to find the next one
+                // Optimisation: We could pass the list or next ID via query params, but fetching is safer for consistency
+                if (data.jobId) {
+                    const allCandidatesRes = await getCandidates(data.jobId);
+                    if (allCandidatesRes.items) {
+                        const sorted = allCandidatesRes.items; // Backend sorts by createdAt desc
+                        const currentIndex = sorted.findIndex(c => c.id === params.candidateId);
+                        if (currentIndex !== -1 && currentIndex < sorted.length - 1) {
+                            setNextCandidateId(sorted[currentIndex + 1].id);
+                        } else {
+                            setNextCandidateId(null);
+                        }
+                    }
+                }
             } catch (err) {
                 console.error("Failed to load candidate", err);
                 setError("Failed to load candidate details.");
@@ -27,8 +45,38 @@ export default function CandidatePage(props: { params: Promise<{ candidateId: st
                 setLoading(false);
             }
         }
-        loadCandidate();
+        loadCandidateData();
     }, [params.candidateId]);
+
+    const handleDelete = async () => {
+        if (!confirm("Are you sure you want to delete this application? This action cannot be undone.")) return;
+        setProcessing(true);
+        try {
+            await deleteCandidate(params.candidateId);
+            router.push("/employer/candidates");
+        } catch (err) {
+            alert("Failed to delete candidate");
+            setProcessing(false);
+        }
+    };
+
+    const handleStatusUpdate = async (status: string) => {
+        setProcessing(true);
+        try {
+            const updated = await updateCandidateStatus(params.candidateId, status);
+            setCandidate(updated);
+        } catch (err) {
+            alert("Failed to update status");
+        } finally {
+            setProcessing(false);
+        }
+    };
+
+    const handleNext = () => {
+        if (nextCandidateId) {
+            router.push(`/employer/candidates/${nextCandidateId}`);
+        }
+    };
 
     if (loading) {
         return (
@@ -59,15 +107,37 @@ export default function CandidatePage(props: { params: Promise<{ candidateId: st
             {/* Header */}
             <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
                 <Section padding="none" className="py-4">
-                    <div className="flex items-center gap-4">
-                        <Button variant="ghost" size="sm" onClick={() => router.back()} className="text-gray-500 hover:text-gray-900">
-                            <ArrowLeft className="w-5 h-5" />
-                        </Button>
-                        <div>
-                            <h1 className="text-xl font-bold text-gray-900">{candidate.name}</h1>
-                            <p className="text-sm text-gray-500">
-                                Applied for <span className="font-medium text-purple-600">{(candidate as any).job?.title || "Unknown Role"}</span>
-                            </p>
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <Button variant="ghost" size="sm" onClick={() => router.back()} className="text-gray-500 hover:text-gray-900">
+                                <ArrowLeft className="w-5 h-5" />
+                            </Button>
+                            <div>
+                                <h1 className="text-xl font-bold text-gray-900">{candidate.name}</h1>
+                                <p className="text-sm text-gray-500">
+                                    Applied for <span className="font-medium text-purple-600">{(candidate as any).job?.title || "Unknown Role"}</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            {nextCandidateId && (
+                                <Button
+                                    variant="outline"
+                                    onClick={handleNext}
+                                    className="hidden sm:flex"
+                                    title="Go to next candidate"
+                                >
+                                    Next Candidate <ArrowRight className="ml-2 w-4 h-4" />
+                                </Button>
+                            )}
+                            <Button
+                                size="sm"
+                                onClick={handleDelete}
+                                disabled={processing}
+                                className="bg-red-600 hover:bg-red-700 text-white"
+                            >
+                                Delete
+                            </Button>
                         </div>
                     </div>
                 </Section>
@@ -99,6 +169,34 @@ export default function CandidatePage(props: { params: Promise<{ candidateId: st
                                     <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-600 capitalize">
                                         {candidate.status || "New"}
                                     </span>
+                                </div>
+
+                                <div className="mt-6 flex flex-col w-full gap-2">
+                                    <Button
+                                        className="w-full bg-purple-600 hover:bg-purple-700"
+                                        onClick={() => handleStatusUpdate("interview")}
+                                        disabled={processing || candidate.status === "interview"}
+                                    >
+                                        Move to Interview
+                                    </Button>
+                                    <Button
+                                        variant="outline"
+                                        className="w-full text-red-600 border-red-200 hover:bg-red-50"
+                                        onClick={() => handleStatusUpdate("rejected")}
+                                        disabled={processing || candidate.status === "rejected"}
+                                    >
+                                        Reject Application
+                                    </Button>
+                                    {candidate.status !== "shortlisted" && candidate.status !== "interview" && candidate.status !== "rejected" && (
+                                        <Button
+                                            variant="secondary"
+                                            className="w-full"
+                                            onClick={() => handleStatusUpdate("shortlisted")}
+                                            disabled={processing}
+                                        >
+                                            Shortlist
+                                        </Button>
+                                    )}
                                 </div>
                             </div>
 

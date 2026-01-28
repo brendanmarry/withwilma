@@ -128,6 +128,7 @@ model Candidate {
   matchStrengths      Json?
   matchGaps           Json?
   matchSummary        String?
+  status              String             @default("new")
   createdAt           DateTime           @default(now())
   reviewedAt          DateTime?
   job                 Job                @relation(fields: [jobId], references: [id], onDelete: Cascade)

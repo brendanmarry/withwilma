@@ -65,7 +65,7 @@ export interface Candidate {
   summary?: string
   linkedinPhotoUrl?: string
   videos?: VideoAnswer[]
-  status?: "new" | "reviewed" | "shortlisted" | "rejected"
+  status?: "new" | "reviewed" | "shortlisted" | "rejected" | "interview"
   createdAt?: string
 }
 

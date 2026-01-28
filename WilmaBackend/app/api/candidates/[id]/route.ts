@@ -74,3 +74,61 @@ export async function GET(
         return new NextResponse("Internal Server Error", { status: 500 });
     }
 }
+
+export async function DELETE(
+    request: NextRequest,
+    context: { params: Promise<{ id: string }> }
+) {
+    const { id } = await context.params;
+    const organisation = await getOrganisationFromRequest(request);
+
+    if (!organisation) {
+        return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    try {
+        await prisma.candidate.delete({
+            where: {
+                id,
+                job: { organisationId: organisation.id }
+            }
+        });
+
+        return new NextResponse(null, { status: 204 });
+    } catch (error) {
+        console.error("Failed to delete candidate", error);
+        return new NextResponse("Internal Server Error", { status: 500 });
+    }
+}
+
+export async function PATCH(
+    request: NextRequest,
+    context: { params: Promise<{ id: string }> }
+) {
+    const { id } = await context.params;
+    const organisation = await getOrganisationFromRequest(request);
+
+    if (!organisation) {
+        return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    try {
+        const body = await request.json();
+        const { status } = body;
+
+        const candidate = await prisma.candidate.update({
+            where: {
+                id,
+                job: { organisationId: organisation.id }
+            },
+            data: {
+                status
+            }
+        });
+
+        return NextResponse.json(candidate);
+    } catch (error) {
+        console.error("Failed to update candidate", error);
+        return new NextResponse("Internal Server Error", { status: 500 });
+    }
+}

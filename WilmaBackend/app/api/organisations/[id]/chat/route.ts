@@ -7,8 +7,8 @@ const chatSchema = z.object({
     message: z.string(),
 });
 
-export const POST = async (request: NextRequest, { params }: { params: { id: string } }) => {
-    const { id: organisationId } = params;
+export const POST = async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+    const { id: organisationId } = await params;
 
     try {
         const { message } = chatSchema.parse(await request.json());
