@@ -53,7 +53,19 @@ export async function GET(
             return new NextResponse("Candidate not found", { status: 404 });
         }
 
-        // Sign video URLs
+        // Sign video URLs and CV URL
+        if (candidate.cvUrl && candidate.cvUrl.startsWith("s3://")) {
+            try {
+                const { key } = parseS3Url(candidate.cvUrl);
+                // Force appropriate content type (usually pdf) or let browser detect
+                // Use localhost:9000 for local dev
+                const signedUrl = await getDownloadUrl(key, 3600, undefined, "http://localhost:9000");
+                candidate.cvUrl = signedUrl;
+            } catch (e) {
+                console.error(`Failed to sign CV URL for ${candidate.id}`, e);
+            }
+        }
+
         await Promise.all(candidate.videos.map(async (video) => {
             if (video.videoUrl && video.videoUrl.startsWith("s3://")) {
                 try {

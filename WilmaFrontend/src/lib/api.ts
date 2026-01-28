@@ -152,7 +152,12 @@ export async function getJobCandidates(jobId: string): Promise<Candidate[]> {
 export async function getCandidates(jobId?: string, organisationId?: string): Promise<{ items: Candidate[] }> {
   const url = new URL(buildUrl("/api/candidates"));
   if (jobId) url.searchParams.set("jobId", jobId);
-  if (organisationId) url.searchParams.set("organisationId", organisationId);
+
+  if (organisationId) {
+    url.searchParams.set("organisationId", organisationId);
+  } else if (ORGANISATION_ID) {
+    url.searchParams.set("organisationId", ORGANISATION_ID);
+  }
 
   const response = await fetch(url.toString(), { cache: "no-store" });
   if (!response.ok) throw new Error(`Failed to load all candidates: ${response.status}`);

@@ -61,11 +61,15 @@ export interface Candidate {
   name: string
   email: string
   linkedin?: string
+  cvUrl?: string; // Signed URL or direct link
   matchScore?: number
+  matchStrengths?: string[]
+  matchGaps?: string[]
+  screeningData?: Record<string, string>
   summary?: string
   linkedinPhotoUrl?: string
   videos?: VideoAnswer[]
-  status?: "new" | "reviewed" | "shortlisted" | "rejected" | "interview"
+  status?: "new" | "reviewed" | "shortlisted" | "rejected" | "interview" | "withdrawn"
   createdAt?: string
 }
 
