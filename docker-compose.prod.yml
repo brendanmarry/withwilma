@@ -14,6 +14,19 @@ services:
     networks:
       - wilma-network
 
+  adminer:
+    image: adminer
+    container_name: wilma-adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    rules:
+      - allow: 0.0.0.0/0
+    networks:
+      - wilma-network
+
   minio:
     image: minio/minio:latest
     container_name: wilma-minio
