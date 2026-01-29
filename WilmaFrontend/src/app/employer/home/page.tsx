@@ -169,7 +169,15 @@ export default function HomePage() {
                             <div className="flex flex-col gap-3">
                                 {user?.organisation?.slug && (
                                     <Button asChild className="w-full bg-black hover:bg-gray-800 text-white font-semibold py-6 rounded-xl transition-all shadow-lg group">
-                                        <a href={`http://${user.organisation.slug}.localhost:3000`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
+                                        <a
+                                            href={typeof window !== 'undefined'
+                                                ? `${window.location.protocol}//${user.organisation.slug}.${window.location.host.split('.').slice(-2).join('.')}`
+                                                : `http://${user.organisation.slug}.withwilma.com`
+                                            }
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center justify-center"
+                                        >
                                             Preview Site
                                             <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                                         </a>
