@@ -126,6 +126,7 @@ export async function getJobs(organisationId?: string, tenantSlug?: string, wilm
     const response = await fetch(url.toString(), {
       cache: "no-store",
       headers,
+      credentials: "include",
       next: { revalidate: 0 } // Add Next.js specific revalidation 
     });
     if (!response.ok) throw new Error(`Failed to load jobs: ${response.status}`);
@@ -138,13 +139,19 @@ export async function getJobs(organisationId?: string, tenantSlug?: string, wilm
 }
 
 export async function getJob(id: string): Promise<Job> {
-  const response = await fetch(buildUrl(`/api/jobs/${id}`), { cache: "no-store" });
+  const response = await fetch(buildUrl(`/api/jobs/${id}`), {
+    cache: "no-store",
+    credentials: "include"
+  });
   if (!response.ok) throw new Error(`Failed to load job: ${response.status}`);
   return response.json();
 }
 
 export async function getJobCandidates(jobId: string): Promise<Candidate[]> {
-  const response = await fetch(buildUrl(`/api/jobs/${jobId}/candidates`), { cache: "no-store" });
+  const response = await fetch(buildUrl(`/api/jobs/${jobId}/candidates`), {
+    cache: "no-store",
+    credentials: "include"
+  });
   if (!response.ok) throw new Error(`Failed to load candidates: ${response.status}`);
   return response.json();
 }
@@ -159,13 +166,20 @@ export async function getCandidates(jobId?: string, organisationId?: string): Pr
     url.searchParams.set("organisationId", ORGANISATION_ID);
   }
 
-  const response = await fetch(url.toString(), { cache: "no-store" });
+
+  const response = await fetch(url.toString(), {
+    cache: "no-store",
+    credentials: "include"
+  });
   if (!response.ok) throw new Error(`Failed to load all candidates: ${response.status}`);
   return response.json();
 }
 
 export async function getCandidate(id: string): Promise<Candidate> {
-  const response = await fetch(buildUrl(`/api/candidates/${id}`), { cache: "no-store" });
+  const response = await fetch(buildUrl(`/api/candidates/${id}`), {
+    cache: "no-store",
+    credentials: "include"
+  });
   if (!response.ok) throw new Error(`Failed to load candidate: ${response.status}`);
   return response.json();
 }
@@ -173,6 +187,7 @@ export async function getCandidate(id: string): Promise<Candidate> {
 export async function deleteCandidate(id: string): Promise<void> {
   const response = await fetch(buildUrl(`/api/candidates/${id}`), {
     method: "DELETE",
+    credentials: "include",
   });
   if (!response.ok) throw new Error(`Delete candidate failed: ${response.status}`);
 }
@@ -181,6 +196,7 @@ export async function updateCandidateStatus(id: string, status: string): Promise
   const response = await fetch(buildUrl(`/api/candidates/${id}`), {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify({ status }),
   });
   if (!response.ok) throw new Error(`Update status failed: ${response.status}`);
@@ -191,6 +207,7 @@ export async function updateJob(id: string, data: Partial<Job>): Promise<Job> {
   const response = await fetch(buildUrl(`/api/jobs/${id}`), {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify(data),
   });
   if (!response.ok) throw new Error(`Update job failed: ${response.status}`);
@@ -200,6 +217,7 @@ export async function updateJob(id: string, data: Partial<Job>): Promise<Job> {
 export async function deleteJob(id: string): Promise<void> {
   const response = await fetch(buildUrl(`/api/jobs/${id}`), {
     method: "DELETE",
+    credentials: "include",
   });
   if (!response.ok) throw new Error(`Delete job failed: ${response.status}`);
 }
@@ -207,7 +225,10 @@ export async function deleteJob(id: string): Promise<void> {
 export async function getOrganisationBySlug(slug: string) {
   const url = new URL(buildUrl("/api/organisations/lookup"));
   url.searchParams.set("slug", slug);
-  const response = await fetch(url.toString(), { cache: "no-store" });
+  const response = await fetch(url.toString(), {
+    cache: "no-store",
+    credentials: "include"
+  });
   if (!response.ok) return null;
   return response.json();
 }
@@ -216,6 +237,7 @@ export async function createJob(data: any) {
   const response = await fetch(buildUrl("/api/jobs"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify(data),
   });
   if (!response.ok) throw new Error(`Create job failed: ${response.status}`);
@@ -225,6 +247,7 @@ export async function createJob(data: any) {
 export async function getOrganisations() {
   const response = await fetch(buildUrl("/api/organisations/public"), {
     cache: "no-store",
+    credentials: "include",
   });
   if (!response.ok) {
     throw new Error(`Failed to fetch organisations: ${response.statusText}`);
@@ -236,6 +259,7 @@ export async function askOrganisation(orgId: string, message: string): Promise<{
   const response = await fetch(buildUrl(`/api/organisations/${orgId}/chat`), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify({ message }),
   });
   if (!response.ok) throw new Error("Failed to get answer from Wilma");
@@ -248,6 +272,7 @@ export async function submitApplication(
   try {
     const response = await fetch(buildUrl("/api/application/submit"), {
       method: "POST",
+      credentials: "include",
       body: data,
     });
     if (!response.ok) {
@@ -280,6 +305,7 @@ export async function getFollowUpQuestions(applicationId: string): Promise<Follo
   try {
     const response = await fetch(buildUrl(`/api/application/${applicationId}/questions`), {
       cache: "no-store",
+      credentials: "include",
     });
     if (!response.ok) throw new Error(`Failed to load follow-up questions: ${response.status}`);
     return (await response.json()) as FollowUpQuestion[];
@@ -300,6 +326,7 @@ export async function uploadVideoAnswer(
 
   const response = await fetch(buildUrl(`/api/application/${applicationId}/upload-video`), {
     method: "POST",
+    credentials: "include",
     body: formData,
   });
 
@@ -319,6 +346,7 @@ export async function finalizeApplication(applicationId: string): Promise<{ stat
   try {
     const response = await fetch(buildUrl(`/api/application/${applicationId}/finalise`), {
       method: "POST",
+      credentials: "include",
     });
 
     if (!response.ok) throw new Error(`Finalise failed: ${response.status}`);
@@ -331,7 +359,10 @@ export async function finalizeApplication(applicationId: string): Promise<{ stat
 export async function getOrganisationProfile(organisationId: string): Promise<{ profile: OrganisationProfile; sources: any[] } | null> {
   const url = new URL(buildUrl("/api/knowledge/organisation-summary"));
   url.searchParams.set("organisationId", organisationId);
-  const response = await fetch(url.toString(), { cache: "no-store" });
+  const response = await fetch(url.toString(), {
+    cache: "no-store",
+    credentials: "include"
+  });
   if (!response.ok) return null;
   return response.json();
 }
@@ -339,7 +370,10 @@ export async function getOrganisationProfile(organisationId: string): Promise<{ 
 export async function getOrganisationKnowledge(organisationId: string): Promise<{ organisation: Organisation; faqs: any[]; documents: DocumentSummary[] } | null> {
   const url = new URL(buildUrl("/api/knowledge/faqs"));
   url.searchParams.set("organisationId", organisationId);
-  const response = await fetch(url.toString(), { cache: "no-store" });
+  const response = await fetch(url.toString(), {
+    cache: "no-store",
+    credentials: "include"
+  });
   if (!response.ok) return null;
   return response.json();
 }
@@ -348,6 +382,7 @@ export async function ingestWebsite(rootUrl: string): Promise<{ pagesProcessed: 
   const response = await fetch(buildUrl("/api/ingest/url"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify({ rootUrl, depth: 2 }),
   });
   if (!response.ok) throw new Error("Failed to start website analysis");
@@ -362,6 +397,7 @@ export async function sendCultureInterviewMessage(
   const response = await fetch(buildUrl("/api/knowledge/culture-interview"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify({ organisationId, history, currentProfile }),
   });
   if (!response.ok) throw new Error("Failed to send message");
@@ -372,6 +408,7 @@ export async function extractJobs(rootUrl: string, careersUrl?: string): Promise
   const response = await fetch(buildUrl("/api/jobs/fetch"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify({ rootUrl, careersUrl }),
   });
 
@@ -390,6 +427,7 @@ export async function updateOrganisation(organisationId: string, data: Partial<O
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include",
     body: JSON.stringify(data),
   });
 
@@ -409,6 +447,7 @@ export async function uploadJobFiles(rootUrl: string, files: File[]): Promise<{ 
 
   const response = await fetch(buildUrl("/api/jobs/upload"), {
     method: "POST",
+    credentials: "include",
     body: formData,
   });
 
