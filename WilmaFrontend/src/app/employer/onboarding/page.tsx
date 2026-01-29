@@ -27,6 +27,8 @@ export default function OnboardingPage() {
     const [isChatOpen, setIsChatOpen] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [domainSuffix, setDomainSuffix] = useState(".withwilma.com");
+    const [slugInput, setSlugInput] = useState("");
+    const [isSavingSlug, setIsSavingSlug] = useState(false);
 
     useEffect(() => {
         if (typeof window !== "undefined") {
@@ -44,6 +46,29 @@ export default function OnboardingPage() {
             }
         }
     }, []);
+
+    useEffect(() => {
+        if (user?.organisation?.slug) {
+            setSlugInput(user.organisation.slug);
+        }
+    }, [user]);
+
+    const handleSaveSlug = async () => {
+        if (!slugInput || !user?.organisationId) return;
+
+        setIsSavingSlug(true);
+        try {
+            await updateOrganisation(user.organisationId, { slug: slugInput });
+            // Ideally we'd update the user context locally, but for now a reload is safest
+            alert("Subdomain updated! Please allow a moment for changes to propagate.");
+            window.location.reload();
+        } catch (err) {
+            console.error(err);
+            alert("Failed to update subdomain. It might be taken.");
+        } finally {
+            setIsSavingSlug(false);
+        }
+    };
 
     const fetchData = async () => {
         if (!user?.organisationId) return;
@@ -190,24 +215,29 @@ export default function OnboardingPage() {
                                 <div className="flex gap-2 items-center">
                                     <span className="text-gray-500 font-medium">http://</span>
                                     <Input
-                                        defaultValue={user.organisation?.slug}
+                                        value={slugInput}
+                                        onChange={(e) => setSlugInput(e.target.value)}
                                         placeholder="your-company"
                                         className="font-mono"
-                                        onBlur={async (e) => {
-                                            const newSlug = e.target.value;
-                                            if (newSlug && newSlug !== user.organisation?.slug && user.organisationId) {
-                                                try {
-                                                    await updateOrganisation(user.organisationId, { slug: newSlug });
-                                                    alert("Subdomain updated! Please allow a moment for changes to propagate.");
-                                                    window.location.reload();
-                                                } catch (err) {
-                                                    console.error(err);
-                                                    alert("Failed to update subdomain. It might be taken.");
-                                                }
-                                            }
-                                        }}
                                     />
                                     <span className="text-gray-500 font-medium">{domainSuffix}</span>
+                                </div>
+                                <div className="flex justify-end">
+                                    <Button
+                                        onClick={handleSaveSlug}
+                                        disabled={isSavingSlug || slugInput === user.organisation?.slug}
+                                        size="sm"
+                                        className="bg-black text-white hover:bg-gray-800"
+                                    >
+                                        {isSavingSlug ? (
+                                            <>
+                                                <Loader2 className="mr-2 h-3 w-3 animate-spin" />
+                                                Saving...
+                                            </>
+                                        ) : (
+                                            "Save"
+                                        )}
+                                    </Button>
                                 </div>
                                 <p className="text-xs text-gray-500">
                                     This is the address where candidates will view your branded careers page.
