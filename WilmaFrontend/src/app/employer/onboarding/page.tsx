@@ -26,6 +26,24 @@ export default function OnboardingPage() {
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [isChatOpen, setIsChatOpen] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [domainSuffix, setDomainSuffix] = useState(".withwilma.com");
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const host = window.location.host;
+            // Handle localhost vs production
+            // app.withwilma.com -> .withwilma.com
+            // localhost:3000 -> .localhost:3000
+            // app.localhost:3000 -> .localhost:3000 (roughly)
+            const parts = host.split('.');
+            if (parts.length >= 2) {
+                const root = parts.slice(-2).join('.');
+                setDomainSuffix(`.${root}`);
+            } else if (host.includes("localhost")) {
+                setDomainSuffix(`.${host}`);
+            }
+        }
+    }, []);
 
     const fetchData = async () => {
         if (!user?.organisationId) return;
@@ -189,7 +207,7 @@ export default function OnboardingPage() {
                                             }
                                         }}
                                     />
-                                    <span className="text-gray-500 font-medium">.localhost:3000</span>
+                                    <span className="text-gray-500 font-medium">{domainSuffix}</span>
                                 </div>
                                 <p className="text-xs text-gray-500">
                                     This is the address where candidates will view your branded careers page.
