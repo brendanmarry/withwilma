@@ -87,6 +87,14 @@ export const POST = async (
       folder: `videos/${id}`,
     });
 
+    // Delete existing answer for this question if it exists to strictly enforce 1:1
+    await prisma.videoAnswer.deleteMany({
+      where: {
+        candidateId: followup.candidateId,
+        followupQuestionId: followup.id,
+      },
+    });
+
     const videoAnswer = await prisma.videoAnswer.create({
       data: {
         candidateId: followup.candidateId,

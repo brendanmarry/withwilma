@@ -49,6 +49,7 @@ export interface FollowUpQuestion {
 export interface VideoAnswer {
   id: string
   questionId: string
+  followupQuestionId: string
   videoUrl: string
   transcript?: string
   analysis?: any

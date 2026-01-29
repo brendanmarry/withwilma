@@ -275,12 +275,28 @@ export default function CandidatePage(props: { params: Promise<{ candidateId: st
                                     </span>
                                     Video Interview
                                 </h3>
-                                <div className="text-sm text-gray-500">
-                                    {candidate.videos?.length || 0} Responses
-                                </div>
+                                {(function () {
+                                    // Deduplicate videos: keep only the latest one per question
+                                    // Process in reverse to find the latest ones first if list is sorted asc, 
+                                    // or just use a map to overwrite.
+                                    const uniqueVideosMap = new Map();
+                                    // Assuming videos are ordered by createdAt ASC from backend (as seen in route.ts)
+                                    candidate.videos?.forEach(v => {
+                                        if (v.followupQuestionId) {
+                                            uniqueVideosMap.set(v.followupQuestionId, v);
+                                        }
+                                    });
+                                    const uniqueVideos = Array.from(uniqueVideosMap.values());
+
+                                    return (
+                                        <div className="text-sm text-gray-500">
+                                            {uniqueVideos.length} Responses
+                                        </div>
+                                    );
+                                })()}
                             </div>
 
-                            {!candidate.videos || candidate.videos.length === 0 ? (
+                            {(!candidate.videos || candidate.videos.length === 0) ? (
                                 <div className="bg-white rounded-2xl border border-dashed border-gray-200 p-12 text-center">
                                     <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
                                         <PlayCircle className="w-8 h-8 text-gray-300" />
@@ -290,38 +306,49 @@ export default function CandidatePage(props: { params: Promise<{ candidateId: st
                                 </div>
                             ) : (
                                 <div className="space-y-6">
-                                    {candidate.videos.map((video, index) => (
-                                        <div key={video.id || index} className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm transition-shadow hover:shadow-md">
-                                            {/* Question Header */}
-                                            <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/80 flex items-start gap-3">
-                                                <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 text-xs font-bold text-gray-600 mt-0.5">
-                                                    {index + 1}
-                                                </span>
-                                                <h4 className="font-medium text-gray-900 leading-snug">
-                                                    {video.followupQuestion?.question || `Question ${index + 1}`}
-                                                </h4>
-                                            </div>
+                                    {(function () {
+                                        // Logic repeated for rendering (or we could hoist this up in the component)
+                                        const uniqueVideosMap = new Map();
+                                        candidate.videos?.forEach(v => {
+                                            if (v.followupQuestionId) {
+                                                uniqueVideosMap.set(v.followupQuestionId, v);
+                                            }
+                                        });
+                                        const uniqueVideos = Array.from(uniqueVideosMap.values());
 
-                                            <div className="bg-black relative aspect-video group w-full">
-                                                <video
-                                                    src={video.videoUrl}
-                                                    controls
-                                                    className="w-full h-full object-contain"
-                                                    preload="metadata"
-                                                />
-                                            </div>
-                                            {video.analysis && (
-                                                <div className="bg-emerald-50/50 p-4 border-t border-gray-100">
-                                                    <h5 className="text-xs font-bold text-emerald-700 uppercase tracking-widest mb-2 flex items-center gap-2">
-                                                        <CheckCircle className="w-3 h-3" /> AI Insight
-                                                    </h5>
-                                                    <p className="text-sm text-gray-700">
-                                                        {typeof video.analysis === 'string' ? video.analysis : JSON.stringify(video.analysis)}
-                                                    </p>
+                                        return uniqueVideos.map((video, index) => (
+                                            <div key={video.id || index} className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm transition-shadow hover:shadow-md">
+                                                {/* Question Header */}
+                                                <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/80 flex items-start gap-3">
+                                                    <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-gray-200 text-xs font-bold text-gray-600 mt-0.5">
+                                                        {index + 1}
+                                                    </span>
+                                                    <h4 className="font-medium text-gray-900 leading-snug">
+                                                        {video.followupQuestion?.question || `Question ${index + 1}`}
+                                                    </h4>
                                                 </div>
-                                            )}
-                                        </div>
-                                    ))}
+
+                                                <div className="bg-black relative aspect-video group w-full">
+                                                    <video
+                                                        src={video.videoUrl}
+                                                        controls
+                                                        className="w-full h-full object-contain"
+                                                        preload="metadata"
+                                                    />
+                                                </div>
+                                                {video.analysis && (
+                                                    <div className="bg-emerald-50/50 p-4 border-t border-gray-100">
+                                                        <h5 className="text-xs font-bold text-emerald-700 uppercase tracking-widest mb-2 flex items-center gap-2">
+                                                            <CheckCircle className="w-3 h-3" /> AI Insight
+                                                        </h5>
+                                                        <p className="text-sm text-gray-700">
+                                                            {typeof video.analysis === 'string' ? video.analysis : JSON.stringify(video.analysis)}
+                                                        </p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))
+                                    })()}
                                 </div>
                             )}
                         </div>
