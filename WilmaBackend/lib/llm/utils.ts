@@ -37,25 +37,28 @@ export const callJsonLLM = async <T>({
     userContent,
   });
   try {
-    const response = await client.responses.create({
+    const response = await client.chat.completions.create({
       model,
       temperature,
-      input: [
+      messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userContent },
       ],
+      response_format: { type: "json_object" },
     });
 
-    const rawOutput = response.output_text ?? "";
+    const rawOutput = response.choices[0]?.message?.content ?? "";
     const output = extractJsonPayload(rawOutput);
+
     logger.info("Received OpenAI JSON LLM response", {
       ...context,
-      outputText: rawOutput,
       usage: response.usage,
       responseId: response.id,
     });
+
     const parsed = schema.safeParse(JSON.parse(output));
     if (!parsed.success) {
+      logger.warn("JSON Parse specific error", { rawOutput, error: parsed.error });
       throw new LLMJsonError("Failed to parse LLM JSON", parsed.error);
     }
     return parsed.data;
