@@ -59,7 +59,9 @@ export async function GET(
                 const { key } = parseS3Url(candidate.cvUrl);
                 // Force appropriate content type (usually pdf) or let browser detect
                 // Use localhost:9000 for local dev
-                const signedUrl = await getDownloadUrl(key, 3600, undefined, "http://localhost:9000");
+                // Use the configured S3_ENDPOINT for signing the URL
+                const signedUrl = await getDownloadUrl(key, 3600);
+                candidate.cvUrl = signedUrl;
                 candidate.cvUrl = signedUrl;
             } catch (e) {
                 console.error(`Failed to sign CV URL for ${candidate.id}`, e);
@@ -72,7 +74,9 @@ export async function GET(
                     const { key } = parseS3Url(video.videoUrl);
                     // Force webm content type for playback, as uploads might be blobs without type
                     // Use localhost:9000 to sign the URL so it matches the browser's access point
-                    const signedUrl = await getDownloadUrl(key, 600, "video/webm", "http://localhost:9000");
+                    // Use the configured S3_ENDPOINT for signing the URL
+                    const signedUrl = await getDownloadUrl(key, 600, "video/webm");
+                    video.videoUrl = signedUrl;
                     video.videoUrl = signedUrl;
                 } catch (e) {
                     console.error(`Failed to sign video URL for ${video.id}`, e);

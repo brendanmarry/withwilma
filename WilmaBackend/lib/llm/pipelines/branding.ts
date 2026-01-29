@@ -22,7 +22,7 @@ export const extractBrandingFromHtml = async (
             systemPrompt,
             userContent,
             schema: brandingSchema,
-            model: "gpt-4.1-mini", // Fast model is sufficient for extraction
+            model: "gpt-4o-mini", // Fast model is sufficient for extraction
         });
 
         // Simple post-processing to ensure absolute URLs

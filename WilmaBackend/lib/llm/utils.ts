@@ -2,7 +2,7 @@ import { z } from "zod";
 import { getOpenAIClient } from "@/lib/llm/client";
 import { logger, serializeError } from "@/lib/logger";
 
-const DEFAULT_MODEL = "gpt-4.1-mini";
+const DEFAULT_MODEL = "gpt-4o-mini";
 
 type JsonSchema<T> = z.ZodType<T>;
 
