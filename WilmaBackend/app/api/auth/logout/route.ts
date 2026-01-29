@@ -4,7 +4,11 @@ import { cookies } from "next/headers";
 export async function POST() {
     try {
         const cookieStore = await cookies();
-        cookieStore.delete("wilma-admin-token");
+        cookieStore.delete({
+            name: "wilma-admin-token",
+            path: "/",
+            domain: process.env.NODE_ENV === "production" ? ".withwilma.com" : undefined,
+        });
 
         return NextResponse.json({ success: true });
     } catch (error) {

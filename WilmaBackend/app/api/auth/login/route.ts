@@ -55,6 +55,7 @@ export async function POST(req: NextRequest) {
             secure: process.env.NODE_ENV === "production",
             maxAge: 60 * 60 * 24, // 24 hours
             path: "/",
+            domain: process.env.NODE_ENV === "production" ? ".withwilma.com" : undefined,
         });
 
         return NextResponse.json({ success: true, user: { email: user.email, name: user.name, role: user.role } });

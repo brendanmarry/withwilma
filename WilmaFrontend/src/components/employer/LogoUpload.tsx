@@ -56,9 +56,12 @@ export function LogoUpload({ currentLogoUrl, onLogoChange }: LogoUploadProps) {
         formData.append("file", file);
 
         try {
-            const response = await fetch("/api/upload", {
+            // Use the backend API URL
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.withwilma.com";
+            const response = await fetch(`${apiUrl}/api/upload`, {
                 method: "POST",
                 body: formData,
+                credentials: "include", // Important for shared cookies
             });
 
             if (!response.ok) throw new Error("Upload failed");
