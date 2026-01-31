@@ -51,20 +51,7 @@ const FALLBACK_JOBS: Job[] = [
   },
 ];
 
-const FALLBACK_QUESTIONS: FollowUpQuestion[] = [
-  {
-    id: "question-1",
-    question: "Describe a project where you improved a recruitment or hiring workflow.",
-    reason: "Evaluate candidate experience with process optimisation.",
-    competencyTargeted: "Operational Excellence",
-  },
-  {
-    id: "question-2",
-    question: "How do you stay informed about emerging AI trends that could benefit our organisation?",
-    reason: "Assess curiosity and knowledge depth about AI.",
-    competencyTargeted: "Strategic Thinking",
-  },
-];
+const FALLBACK_QUESTIONS: FollowUpQuestion[] = [];
 
 const INTERNAL_API_URL =
   process.env.INTERNAL_API_URL ??

@@ -3,7 +3,7 @@ import { prisma } from "@/lib/db";
 import { corsOptionsResponse, withCors } from "@/app/api/_utils/cors";
 
 export const GET = async (
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) => {
 
@@ -12,8 +12,8 @@ export const GET = async (
     where: { candidateId: id },
     orderBy: { createdAt: "asc" },
   });
-  return withCors(NextResponse.json(followups));
+  return withCors(NextResponse.json(followups), request);
 };
 
-export const OPTIONS = () => corsOptionsResponse();
+export const OPTIONS = async (request: NextRequest) => corsOptionsResponse(request);
 
