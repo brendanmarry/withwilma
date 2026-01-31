@@ -7,21 +7,8 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-wilma}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-wilma}
       POSTGRES_DB: ${POSTGRES_DB:-wilma}
-    ports:
-      - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-    networks:
-      - wilma-network
-
-  adminer:
-    image: adminer
-    container_name: wilma-adminer
-    restart: always
-    ports:
-      - "8081:8080"
-    depends_on:
-      - postgres
     networks:
       - wilma-network
 
@@ -33,19 +20,16 @@ services:
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER:-wilma}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-wilma-secret}
-    ports:
-      - "9000:9000"
-      - "9001:9001"
     volumes:
       - minio-data:/data
     networks:
       - wilma-network
 
-  backend:
+  core:
     build:
-      context: ./WilmaBackend
+      context: ./WilmaCore
       dockerfile: Dockerfile
-    container_name: wilma-backend
+    container_name: wilma-core
     restart: unless-stopped
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-wilma}:${POSTGRES_PASSWORD:-wilma}@postgres:5432/${POSTGRES_DB:-wilma}
@@ -62,50 +46,26 @@ services:
       S3_FORCE_PATH_STYLE: "true"
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
+      NEXT_PUBLIC_API_URL: https://app.withwilma.com/api
+      NEXT_PUBLIC_CANDIDATE_APP_URL: https://app.withwilma.com
+      NEXT_PUBLIC_EMPLOYER_APP_URL: https://app.withwilma.com/employer/login
       NODE_ENV: production
     extra_hosts:
       - "minio.withwilma.com:host-gateway"
-    ports:
-      - "3001:3001"
     depends_on:
       - postgres
       - minio
     networks:
       - wilma-network
 
-  frontend:
+  marketing:
     build:
-      context: ./WilmaFrontend
+      context: ./WilmaMarketing
       dockerfile: Dockerfile
-      args:
-        NEXT_PUBLIC_API_URL: https://api.withwilma.com
-    container_name: wilma-frontend
+    container_name: wilma-marketing
     restart: unless-stopped
     environment:
-      NEXT_PUBLIC_API_URL: https://api.withwilma.com
       NODE_ENV: production
-    ports:
-      - "3000:3000"
-    depends_on:
-      - backend
-    networks:
-      - wilma-network
-
-  website:
-    build:
-      context: ./WilmaWebsite
-      dockerfile: Dockerfile
-      args:
-        NEXT_PUBLIC_CANDIDATE_APP_URL: https://app.withwilma.com
-        NEXT_PUBLIC_EMPLOYER_APP_URL: https://app.withwilma.com/employer/login
-    container_name: wilma-website
-    restart: unless-stopped
-    environment:
-      NEXT_PUBLIC_CANDIDATE_APP_URL: https://app.withwilma.com
-      NEXT_PUBLIC_EMPLOYER_APP_URL: https://app.withwilma.com/employer/login
-      NODE_ENV: production
-    ports:
-      - "3002:3002"
     networks:
       - wilma-network
 
@@ -120,9 +80,8 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt
     restart: unless-stopped
     depends_on:
-      - website
-      - frontend
-      - backend
+      - marketing
+      - core
     networks:
       - wilma-network
 

@@ -1,0 +1,45 @@
+<svg width="800" height="1024" viewBox="0 0 800 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="hairGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#432371"/>
+      <stop offset="100%" stop-color="#8238C4"/>
+    </linearGradient>
+    <linearGradient id="skinGradient" x1="30%" y1="0%" x2="70%" y2="100%">
+      <stop offset="0%" stop-color="#FFDBCC"/>
+      <stop offset="100%" stop-color="#F0BCA5"/>
+    </linearGradient>
+    <linearGradient id="dressGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#B799FF"/>
+      <stop offset="100%" stop-color="#6E34D5"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="1024" fill="url(#hairGradient)" />
+
+  <ellipse cx="400" cy="540" rx="220" ry="310" fill="url(#dressGradient)" opacity="0.9" />
+  <ellipse cx="400" cy="340" rx="210" ry="240" fill="url(#hairGradient)" />
+
+  <ellipse cx="400" cy="340" rx="170" ry="200" fill="url(#skinGradient)" />
+
+  <path d="M235 320 C260 260, 290 230, 400 220 C510 230, 540 260, 565 320 C540 300, 460 290, 400 290 C340 290, 260 300, 235 320Z" fill="#FF9BB5" opacity="0.4" />
+
+  <ellipse cx="320" cy="320" rx="38" ry="44" fill="#fff" />
+  <ellipse cx="480" cy="320" rx="38" ry="44" fill="#fff" />
+  <circle cx="320" cy="330" r="18" fill="#2A1B3D" />
+  <circle cx="480" cy="330" r="18" fill="#2A1B3D" />
+  <circle cx="315" cy="325" r="6" fill="#fff" opacity="0.8" />
+  <circle cx="475" cy="325" r="6" fill="#fff" opacity="0.8" />
+
+  <path d="M320 400 Q400 420 480 400" stroke="#D77FA1" stroke-width="10" stroke-linecap="round" fill="none" />
+
+  <ellipse cx="400" cy="440" rx="90" ry="100" fill="#FFCFB3" opacity="0.85" />
+
+  <path d="M220 300 Q280 180 400 160 Q520 180 580 300" fill="url(#hairGradient)" />
+
+  <path d="M280 220 Q340 140 400 130 Q460 140 520 220 Q470 190 400 190 Q330 190 280 220Z" fill="#541980" />
+
+  <ellipse cx="400" cy="180" rx="80" ry="60" fill="#F4CBBE" opacity="0.65" />
+
+  <path d="M320 460 Q400 520 480 460" stroke="#8C3A8C" stroke-width="14" stroke-linecap="round" fill="none" opacity="0.35" />
+</svg>
+
