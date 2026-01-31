@@ -176,7 +176,29 @@ export const POST = async (request: Request) => {
       }));
     }
 
-// ... (imports)
+    return withCors(
+      NextResponse.json({
+        applicationId: candidate.id,
+        matchScore: candidate.matchScore,
+        recommendedQuestions: followupRecords,
+      }),
+      request
+    );
+  } catch (error: any) {
+    logger.error("Failed to submit application", {
+      error: serializeError(error),
+      request: {
+        jobId,
+        candidateEmail,
+        fileName,
+      },
+    });
 
+    if (error.name === "ZodError" || error.issues) {
+      return withCors(new NextResponse(JSON.stringify({ error: "Validation failed", details: error.issues }), { status: 400 }), request);
+    }
 
-
+    return withCors(new NextResponse(JSON.stringify({ error: "Failed to submit application", details: error.message }), { status: 500 }), request);
+  }
+};
+```
