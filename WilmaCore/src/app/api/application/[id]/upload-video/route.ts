@@ -64,7 +64,7 @@ export const POST = async (
     }
 
     if (!(video instanceof File)) {
-      return withCors(new NextResponse("Video file is required", { status: 400 }));
+      return withCors(new NextResponse("Video file is required", { status: 400 }), request);
     }
 
     const parsed = followupQuestionSchema.parse({ questionId });
@@ -75,50 +75,10 @@ export const POST = async (
     });
 
     if (!followup) {
-      return withCors(new NextResponse("Follow-up question not found", { status: 404 }));
+      return withCors(new NextResponse("Follow-up question not found", { status: 404 }), request);
     }
 
-    const buffer = Buffer.from(await video.arrayBuffer());
-
-    const videoUrl = await uploadBuffer({
-      fileName: video.name,
-      contentType: video.type,
-      buffer,
-      folder: `videos/${id}`,
-    });
-
-    // Delete existing answer for this question if it exists to strictly enforce 1:1
-    await prisma.videoAnswer.deleteMany({
-      where: {
-        candidateId: followup.candidateId,
-        followupQuestionId: followup.id,
-      },
-    });
-
-    const videoAnswer = await prisma.videoAnswer.create({
-      data: {
-        candidateId: followup.candidateId,
-        followupQuestionId: followup.id,
-        videoUrl,
-      },
-    });
-
-    void processVideoAnswer({
-      buffer,
-      fileName: video.name,
-      mimeType: video.type,
-      followupId: followup.id,
-      candidateId: followup.candidateId,
-      videoUrl,
-      videoAnswerId: videoAnswer.id,
-    }).catch((processError) => {
-      logger.error("Background video processing failed", {
-        error: serializeError(processError),
-        candidateId: followup.candidateId,
-        questionId: followup.id,
-        videoAnswerId: videoAnswer.id,
-      });
-    });
+    // ... (lines 81-121)
 
     return withCors(
       NextResponse.json(
@@ -128,6 +88,7 @@ export const POST = async (
         },
         { status: 202 },
       ),
+      request
     );
   } catch (error) {
     logger.error("Failed to upload follow-up video", {
@@ -137,11 +98,11 @@ export const POST = async (
         questionId: questionIdValue,
       },
     });
-    return withCors(new NextResponse("Failed to upload video", { status: 500 }));
+    return withCors(new NextResponse("Failed to upload video", { status: 500 }), request);
   }
 };
 
-export const OPTIONS = () => corsOptionsResponse();
+export const OPTIONS = async (request: NextRequest) => corsOptionsResponse(request);
 
 type ProcessVideoArgs = {
   buffer: Buffer;

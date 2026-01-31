@@ -7,7 +7,7 @@ export const GET = async (request: NextRequest) => {
     const slug = searchParams.get("slug");
 
     if (!slug) {
-        return withCors(new NextResponse("Slug required", { status: 400 }));
+        return withCors(new NextResponse("Slug required", { status: 400 }), request);
     }
 
     const organisation = await prisma.organisation.findUnique({
@@ -22,10 +22,10 @@ export const GET = async (request: NextRequest) => {
     });
 
     if (!organisation) {
-        return withCors(new NextResponse("Organisation not found", { status: 404 }));
+        return withCors(new NextResponse("Organisation not found", { status: 404 }), request);
     }
 
-    return withCors(NextResponse.json(organisation));
+    return withCors(NextResponse.json(organisation), request);
 };
 
-export const OPTIONS = () => withCors(new NextResponse(null, { status: 204 }));
+export const OPTIONS = async (request: NextRequest) => withCors(new NextResponse(null, { status: 204 }), request);
