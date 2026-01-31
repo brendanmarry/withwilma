@@ -34,9 +34,12 @@ export function middleware(request: NextRequest) {
 
     // If we have a subdomain and it's not reserved, treat it as a tenant
     if (subdomain && !reservedSubdomains.includes(subdomain)) {
-        // Strict Tenant Isolation: Block access to /employer routes on tenant subdomains
+        // Strict Tenant Isolation: Redirect /employer routes to the main app domain to avoid confusion
         if (url.pathname.startsWith("/employer")) {
-            return NextResponse.rewrite(new URL("/404", request.url));
+            const protocol = request.nextUrl.protocol;
+            const targetHost = isLocalhost ? "app.localhost:3000" : "app.withwilma.com";
+            const targetUrl = new URL(url.pathname, `${protocol}//${targetHost}`);
+            return NextResponse.redirect(targetUrl);
         }
 
         // Clone headers to add x-tenant-id
