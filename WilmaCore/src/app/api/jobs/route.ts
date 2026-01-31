@@ -12,7 +12,23 @@ export const GET = async (request: NextRequest) => {
     return withCors(NextResponse.json([]), request);
   }
 
-  // ... (lines 15-32)
+  const organisationId = organisation.id;
+  const searchParams = request.nextUrl.searchParams;
+
+  const wilmaEnabledParam = searchParams.get("wilmaEnabled");
+  const wilmaEnabled = wilmaEnabledParam !== null ? wilmaEnabledParam === "true" : undefined;
+  const statusParam = searchParams.get("status");
+  const status =
+    statusParam && (statusParam === "open" || statusParam === "closed") ? statusParam : undefined;
+
+  const jobs = await prisma.job.findMany({
+    where: {
+      organisationId,
+      status,
+      wilmaEnabled,
+    },
+    orderBy: { createdAt: "desc" },
+  });
 
   return withCors(NextResponse.json(jobs), request);
 };
@@ -83,4 +99,3 @@ export const POST = async (request: NextRequest) => {
 };
 
 export const OPTIONS = async (request: NextRequest) => corsOptionsResponse(request);
-
