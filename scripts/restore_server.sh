@@ -20,7 +20,7 @@ else
 fi
 
 mkdir -p /home/deploy/.ssh
-echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBsP0Xz4y9QNe5mjKHMHgml5RViYz3J3aQJoA9yjrl69 brendan@aurigin.ai" >> /home/deploy/.ssh/authorized_keys
+echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBsP0Xz4y9QNe5mjKHMHgml5RViYz3J3aQJoA9yjrl69 wilma-deploy" >> /home/deploy/.ssh/authorized_keys
 chown -R deploy:deploy /home/deploy/.ssh
 chmod 600 /home/deploy/.ssh/authorized_keys
 
