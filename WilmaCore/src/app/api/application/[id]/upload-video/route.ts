@@ -370,81 +370,82 @@ const processVideoAnswer = async ({
           });
         }
 
+        const allVideoTranscripts = [
           ...candidate.videos.map((v: any) => v.transcript).filter((t: any): t is string => !!t),
-  transcriptText || summary?.clean_transcript || "",
+          transcriptText || summary?.clean_transcript || "",
         ].filter((t) => t.length > 0);
 
-if (allVideoTranscripts.length > 0 && cvText) {
-  const knowledgeDocs = await prisma.document.findMany({
-    where: { organisationId: candidate.job.organisationId },
-    orderBy: { createdAt: "desc" },
-    take: 10,
-  });
-  const companyKnowledge = knowledgeDocs.map((doc) => doc.textContent).join("\n\n");
+        if (allVideoTranscripts.length > 0 && cvText) {
+          const knowledgeDocs = await prisma.document.findMany({
+            where: { organisationId: candidate.job.organisationId },
+            orderBy: { createdAt: "desc" },
+            take: 10,
+          });
+          const companyKnowledge = knowledgeDocs.map((doc) => doc.textContent).join("\n\n");
 
-  let screeningAnswers = "";
-  if (candidate.screeningData) {
-    try {
-      const data = typeof candidate.screeningData === 'string'
-        ? JSON.parse(candidate.screeningData)
-        : candidate.screeningData;
+          let screeningAnswers = "";
+          if (candidate.screeningData) {
+            try {
+              const data = typeof candidate.screeningData === 'string'
+                ? JSON.parse(candidate.screeningData)
+                : candidate.screeningData;
 
-      // Assuming screeningData is a key-value pair or array of objects. 
-      // If it's a simple object:
-      if (typeof data === 'object' && data !== null) {
-        screeningAnswers = Object.entries(data)
-          .map(([k, v]) => `Q: ${k}\nA: ${v}`)
-          .join("\n\n");
-      }
-    } catch (e) {
-      logger.warn("Failed to parse screening data for scoring", { candidateId: candidate.id });
-    }
-  }
+              // Assuming screeningData is a key-value pair or array of objects. 
+              // If it's a simple object:
+              if (typeof data === 'object' && data !== null) {
+                screeningAnswers = Object.entries(data)
+                  .map(([k, v]) => `Q: ${k}\nA: ${v}`)
+                  .join("\n\n");
+              }
+            } catch (e) {
+              logger.warn("Failed to parse screening data for scoring", { candidateId: candidate.id });
+            }
+          }
 
-  const updatedMatch = await scoreMatch({
-    jobDescription: candidate.job.description,
-    cvText,
-    companyKnowledge,
-    videoTranscripts: allVideoTranscripts,
-    linkedinUrl: candidate.linkedin || undefined,
-    screeningAnswers: screeningAnswers || undefined,
-  });
+          const updatedMatch = await scoreMatch({
+            jobDescription: candidate.job.description,
+            cvText,
+            companyKnowledge,
+            videoTranscripts: allVideoTranscripts,
+            linkedinUrl: candidate.linkedin || undefined,
+            screeningAnswers: screeningAnswers || undefined,
+          });
 
-  await prisma.candidate.update({
-    where: { id: candidate.id },
-    data: {
-      originalMatchScore: needsOriginalScore ? candidate.matchScore : candidate.originalMatchScore,
-      updatedMatchScore: Math.round(updatedMatch.match_score),
-      matchScore: Math.round(updatedMatch.match_score),
-      aiGeneratedDetected: candidate.aiGeneratedDetected || (aiDetectionResult?.isAiGenerated ?? false),
-      matchStrengths: updatedMatch.strengths,
-      matchGaps: updatedMatch.gaps,
-      matchSummary: updatedMatch.experience_summary || updatedMatch.role_alignment_summary,
-    },
-  });
-}
+          await prisma.candidate.update({
+            where: { id: candidate.id },
+            data: {
+              originalMatchScore: needsOriginalScore ? candidate.matchScore : candidate.originalMatchScore,
+              updatedMatchScore: Math.round(updatedMatch.match_score),
+              matchScore: Math.round(updatedMatch.match_score),
+              aiGeneratedDetected: candidate.aiGeneratedDetected || (aiDetectionResult?.isAiGenerated ?? false),
+              matchStrengths: updatedMatch.strengths,
+              matchGaps: updatedMatch.gaps,
+              matchSummary: updatedMatch.experience_summary || updatedMatch.role_alignment_summary,
+            },
+          });
+        }
       }
     } catch (scoreError) {
-  logger.error("Failed to recalculate match score", {
-    error: serializeError(scoreError),
-    candidateId: followup.candidateId,
-  });
-}
+      logger.error("Failed to recalculate match score", {
+        error: serializeError(scoreError),
+        candidateId: followup.candidateId,
+      });
+    }
 
-logger.info("Background video processing completed", {
-  candidateId,
-  questionId: followup.id,
-  videoAnswerId,
-  videoUrl,
-});
+    logger.info("Background video processing completed", {
+      candidateId,
+      questionId: followup.id,
+      videoAnswerId,
+      videoUrl,
+    });
   } catch (error) {
-  logger.error("Unhandled error during background video processing", {
-    error: serializeError(error),
-    followupId,
-    candidateId,
-    videoAnswerId,
-    videoUrl,
-  });
-}
+    logger.error("Unhandled error during background video processing", {
+      error: serializeError(error),
+      followupId,
+      candidateId,
+      videoAnswerId,
+      videoUrl,
+    });
+  }
 };
 
