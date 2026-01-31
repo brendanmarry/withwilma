@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { withCors, corsOptionsResponse } from "@/app/api/_utils/cors";
 import { findUserByEmail, verifyUserPassword } from "@/lib/users";
 import { createAdminToken } from "@/lib/auth";
 import { cookies } from "next/headers";

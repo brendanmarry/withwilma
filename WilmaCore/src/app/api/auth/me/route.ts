@@ -1,13 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server"; // Updated import to include NextRequest
 import { getAdminTokenFromRequest } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { findUserByEmail } from "@/lib/users";
+import { withCors, corsOptionsResponse } from "@/app/api/_utils/cors";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
     try {
         const payload = await getAdminTokenFromRequest();
         if (!payload) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return withCors(NextResponse.json({ error: "Unauthorized" }, { status: 401 }), req);
         }
 
         const user = await prisma.user.findUnique({
@@ -16,10 +16,10 @@ export async function GET() {
         });
 
         if (!user) {
-            return NextResponse.json({ error: "User not found" }, { status: 404 });
+            return withCors(NextResponse.json({ error: "User not found" }, { status: 404 }), req);
         }
 
-        return NextResponse.json({
+        return withCors(NextResponse.json({
             user: {
                 id: user.id,
                 email: user.email,
@@ -28,12 +28,16 @@ export async function GET() {
                 organisationId: user.organisationId,
                 organisation: user.organisation,
             },
-        });
+        }), req);
     } catch (error) {
         console.error("Me endpoint error:", error);
-        return NextResponse.json(
+        return withCors(NextResponse.json(
             { error: "Internal server error" },
             { status: 500 }
-        );
+        ), req);
     }
 }
+
+export const OPTIONS = async (req: NextRequest) => {
+    return corsOptionsResponse(req);
+};
