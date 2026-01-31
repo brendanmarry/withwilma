@@ -34,6 +34,11 @@ export function middleware(request: NextRequest) {
 
     // If we have a subdomain and it's not reserved, treat it as a tenant
     if (subdomain && !reservedSubdomains.includes(subdomain)) {
+        // Strict Tenant Isolation: Block access to /employer routes on tenant subdomains
+        if (url.pathname.startsWith("/employer")) {
+            return NextResponse.rewrite(new URL("/404", request.url));
+        }
+
         // Clone headers to add x-tenant-id
         const requestHeaders = new Headers(request.headers);
         requestHeaders.set("x-tenant-id", subdomain);
