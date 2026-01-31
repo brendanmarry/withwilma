@@ -62,6 +62,9 @@ services:
     build:
       context: ./WilmaMarketing
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_CANDIDATE_APP_URL: https://app.withwilma.com
+        NEXT_PUBLIC_EMPLOYER_APP_URL: https://app.withwilma.com/employer/login
     container_name: wilma-marketing
     restart: unless-stopped
     environment:
