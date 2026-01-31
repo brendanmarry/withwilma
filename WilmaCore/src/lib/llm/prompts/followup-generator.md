@@ -16,7 +16,7 @@ You MUST:
 - Avoid sensitive topics (protected characteristics)
 - Avoid salary expectations
 
-Output Format
+Output Format. You MUST return Valid JSON.
 ```
 {
   "follow_up_questions": [
