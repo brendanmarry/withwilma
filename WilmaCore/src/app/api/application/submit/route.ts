@@ -201,4 +201,4 @@ export const POST = async (request: Request) => {
     return withCors(new NextResponse(JSON.stringify({ error: "Failed to submit application", details: error.message }), { status: 500 }), request);
   }
 };
-};
+
