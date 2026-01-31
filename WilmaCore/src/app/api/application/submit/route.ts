@@ -176,46 +176,7 @@ export const POST = async (request: Request) => {
       }));
     }
 
-    // ... (imports)
+// ... (imports)
 
-    export const POST = async (request: Request) => {
-      // ... (logic)
 
-      if (!(file instanceof File)) {
-        return withCors(new NextResponse("CV file is required", { status: 400 }), request);
-      }
-
-      // ...
-
-      if (!job) {
-        return withCors(new NextResponse("Job not found", { status: 404 }), request);
-      }
-
-      // ...
-
-      return withCors(
-        NextResponse.json({
-          applicationId: candidate.id,
-          matchScore: candidate.matchScore,
-          recommendedQuestions: followupRecords,
-        }),
-        request
-      );
-    } catch (error: any) {
-      logger.error("Failed to submit application", {
-        error: serializeError(error),
-        request: {
-          jobId,
-          candidateEmail,
-          fileName,
-        },
-      });
-
-      if (error.name === "ZodError" || error.issues) {
-        return withCors(new NextResponse(JSON.stringify({ error: "Validation failed", details: error.issues }), { status: 400 }), request);
-      }
-
-      return withCors(new NextResponse(JSON.stringify({ error: "Failed to submit application", details: error.message }), { status: 500 }), request);
-    }
-  };
 

@@ -78,7 +78,47 @@ export const POST = async (
       return withCors(new NextResponse("Follow-up question not found", { status: 404 }), request);
     }
 
-    // ... (lines 81-121)
+    const buffer = Buffer.from(await video.arrayBuffer());
+
+    const videoUrl = await uploadBuffer({
+      fileName: video.name,
+      contentType: video.type,
+      buffer,
+      folder: `videos/${id}`,
+    });
+
+    // Delete existing answer for this question if it exists to strictly enforce 1:1
+    await prisma.videoAnswer.deleteMany({
+      where: {
+        candidateId: followup.candidateId,
+        followupQuestionId: followup.id,
+      },
+    });
+
+    const videoAnswer = await prisma.videoAnswer.create({
+      data: {
+        candidateId: followup.candidateId,
+        followupQuestionId: followup.id,
+        videoUrl,
+      },
+    });
+
+    void processVideoAnswer({
+      buffer,
+      fileName: video.name,
+      mimeType: video.type,
+      followupId: followup.id,
+      candidateId: followup.candidateId,
+      videoUrl,
+      videoAnswerId: videoAnswer.id,
+    }).catch((processError) => {
+      logger.error("Background video processing failed", {
+        error: serializeError(processError),
+        candidateId: followup.candidateId,
+        questionId: followup.id,
+        videoAnswerId: videoAnswer.id,
+      });
+    });
 
     return withCors(
       NextResponse.json(
