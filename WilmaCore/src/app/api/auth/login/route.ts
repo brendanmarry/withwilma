@@ -58,12 +58,16 @@ export async function POST(req: NextRequest) {
             domain: process.env.NODE_ENV === "production" ? ".withwilma.com" : undefined,
         });
 
-        return NextResponse.json({ success: true, user: { email: user.email, name: user.name, role: user.role } });
+        return withCors(NextResponse.json({ success: true, user: { email: user.email, name: user.name, role: user.role } }), req);
     } catch (error) {
         console.error("Login error:", error);
-        return NextResponse.json(
+        return withCors(NextResponse.json(
             { error: "Internal server error" },
             { status: 500 }
-        );
+        ), req);
     }
 }
+
+export const OPTIONS = async (req: NextRequest) => {
+    return corsOptionsResponse(req);
+};
