@@ -9,6 +9,7 @@ import { validateJobDescription } from "@/lib/llm/pipelines/job_validation";
 import { prisma } from "@/lib/db";
 import { logger, serializeError } from "@/lib/logger";
 import { indexJobDescription } from "@/lib/vector/retriever";
+import { corsOptionsResponse, withCors } from "@/app/api/_utils/cors";
 
 const uploadSchema = z.object({
   rootUrl: z.string().url(),
@@ -28,7 +29,7 @@ const detectType = (fileName: string, mimeType: string | undefined): IngestSourc
 export const POST = async (request: Request) => {
   const admin = await getAdminTokenFromRequest();
   if (!admin) {
-    return new NextResponse("Unauthorized", { status: 401 });
+    return withCors(new NextResponse("Unauthorized", { status: 401 }), request);
   }
 
   let rootUrl: string | null = null;
@@ -44,7 +45,7 @@ export const POST = async (request: Request) => {
     });
 
     if (!payload.success) {
-      return new NextResponse("Invalid upload payload", { status: 400 });
+      return withCors(new NextResponse("Invalid upload payload", { status: 400 }), request);
     }
 
     rootUrl = payload.data.rootUrl;
@@ -60,13 +61,13 @@ export const POST = async (request: Request) => {
         },
       });
       if (!job) {
-        return new NextResponse("Job not found for organisation", { status: 404 });
+        return withCors(new NextResponse("Job not found for organisation", { status: 404 }), request);
       }
     }
 
     const files = formData.getAll("files");
     if (!files.length) {
-      return new NextResponse("No files uploaded", { status: 400 });
+      return withCors(new NextResponse("No files uploaded", { status: 400 }), request);
     }
 
     const preparedItems = await Promise.all(
@@ -311,12 +312,15 @@ export const POST = async (request: Request) => {
       }
     }
 
-    return NextResponse.json(
-      {
-        uploaded: documents.length,
-        createdJobs,
-      },
-      { status: 201 },
+    return withCors(
+      NextResponse.json(
+        {
+          uploaded: documents.length,
+          createdJobs,
+        },
+        { status: 201 },
+      ),
+      request
     );
   } catch (error) {
     logger.error("Failed to upload job documents", {
@@ -327,7 +331,8 @@ export const POST = async (request: Request) => {
         fileNames,
       },
     });
-    return new NextResponse("Failed to upload job documents", { status: 500 });
+    return withCors(new NextResponse("Failed to upload job documents", { status: 500 }), request);
   }
 };
 
+export const OPTIONS = async (request: Request) => corsOptionsResponse(request);
