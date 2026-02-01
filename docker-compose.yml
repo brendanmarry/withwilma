@@ -56,21 +56,54 @@ services:
       - postgres
       - minio
 
-  frontend:
-    image: node:20
-    container_name: wilma-frontend-local
-    working_dir: /app
-    volumes:
-      - ./WilmaFrontend:/app
-      - /app/node_modules
-    command: sh -c "npm install && npm run dev"
+  wilma-core:
+    build:
+      context: ./WilmaCore
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:3000/api
+        NEXT_PUBLIC_API_BASE_URL: http://localhost:3001
+    container_name: wilma-core-local
+    restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:3000
-      INTERNAL_API_URL: http://backend:3000
+      DATABASE_URL: postgresql://wilma:wilma@postgres:5432/wilma
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:3001
+      NEXT_PUBLIC_OPENAI_REALTIME_MODEL: gpt-4o-realtime-preview-2024-12-17
+      NEXT_PUBLIC_OPENAI_REALTIME_URL: wss://api.openai.com/v1/realtime
+      # S3/Minio Configuration
+      MINIO_ENDPOINT: minio
+      MINIO_PORT: 9000
+      MINIO_ACCESS_KEY: wilma
+      MINIO_SECRET_KEY: wilma-secret
+      MINIO_BUCKET: wilma-local
+      S3_BUCKET: wilma-local
+      S3_REGION: us-east-1
+      S3_ACCESS_KEY_ID: wilma
+      S3_SECRET_ACCESS_KEY: wilma-secret
+      S3_ENDPOINT: http://minio:9000
+      S3_FORCE_PATH_STYLE: "true"
+      ADMIN_JWT_SECRET: super-secret-jwt-key
     depends_on:
-      - backend
+      - postgres
+      - minio
+
+  #   frontend:
+  #     image: node:20
+  #     container_name: wilma-frontend-local
+  #     working_dir: /app
+  #     volumes:
+  #       - ./WilmaFrontend:/app
+  #       - /app/node_modules
+  #     command: sh -c "npm install && npm run dev"
+  #     ports:
+  #       - "3000:3000"
+  #     environment:
+  #       NEXT_PUBLIC_API_URL: http://localhost:3000
+  #       INTERNAL_API_URL: http://backend:3000
+  #     depends_on:
+  #       - backend
 
   website:
     image: node:20

@@ -7,6 +7,8 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-wilma}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-wilma}
       POSTGRES_DB: ${POSTGRES_DB:-wilma}
+    ports:
+      - "127.0.0.1:5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
