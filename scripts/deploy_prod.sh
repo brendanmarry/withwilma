@@ -29,7 +29,7 @@ docker compose -f docker-compose.prod.yml up -d
 # 5. Run Database Migrations
 echo "📦 Running Database Migrations..."
 # Explicitly use the version that matches package.json to avoid version drift
-docker compose -f docker-compose.prod.yml exec -T wilma-core npx prisma@6.19.0 migrate deploy
+docker compose -f docker-compose.prod.yml exec -T core npx prisma@6.19.0 migrate deploy
 
 # 6. Cleanup
 echo "🧹 Cleaning up unused resources..."
