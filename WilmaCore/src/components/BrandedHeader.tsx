@@ -14,10 +14,8 @@ interface BrandedHeaderProps {
 export function BrandedHeader({ tenant, branding, backLink = "/", backLabel = "Back to roles" }: BrandedHeaderProps) {
     // Fallback branding if not provided directly
     const primaryColor = branding?.primaryColor || tenant?.branding?.primaryColor || "#000000";
-    // @ts-ignore
-    const secondaryColor = branding?.secondaryColor || tenant?.branding?.secondaryColor || "#ffffff";
     const logoUrl = branding?.logoUrl || tenant?.branding?.logoUrl;
-    const name = "BABU'S"; // Hardcoded for now based on request, or derive from tenant.name
+    const name = branding?.name || tenant?.name || "Wilma";
 
     return (
         <header
@@ -38,7 +36,7 @@ export function BrandedHeader({ tenant, branding, backLink = "/", backLabel = "B
 
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
                 {logoUrl ? (
-                    <img src={logoUrl} alt={name} className="h-8 md:h-10 object-contain brightness-0 invert" />
+                    <img src={logoUrl} alt={name} className="h-8 md:h-10 object-contain" />
                 ) : (
                     <span
                         className="text-2xl md:text-3xl font-black tracking-tighter uppercase select-none text-white"

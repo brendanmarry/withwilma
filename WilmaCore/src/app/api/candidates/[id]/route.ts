@@ -103,12 +103,16 @@ export async function DELETE(
     }
 
     try {
-        await prisma.candidate.delete({
+        const deleted = await prisma.candidate.deleteMany({
             where: {
                 id,
                 job: { organisationId: organisation.id }
             }
         });
+
+        if (deleted.count === 0) {
+            return new NextResponse("Candidate not found or unauthorized", { status: 404 });
+        }
 
         return new NextResponse(null, { status: 204 });
     } catch (error) {

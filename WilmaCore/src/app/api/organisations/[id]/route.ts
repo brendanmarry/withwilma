@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getAdminTokenFromRequest } from "@/lib/auth";
+import { parseS3Url, getDownloadUrl } from "@/lib/storage";
 
 export async function PATCH(
     request: NextRequest,
@@ -33,6 +34,18 @@ export async function PATCH(
             where: { id },
             data,
         });
+
+        // Sign logo URL if it exists
+        const updatedBranding = updated.branding as any;
+        if (updatedBranding?.logoUrl?.startsWith("s3://")) {
+            try {
+                const { key } = parseS3Url(updatedBranding.logoUrl);
+                const signedUrl = await getDownloadUrl(key, 3600);
+                updatedBranding.logoUrl = signedUrl;
+            } catch (e) {
+                console.error("Failed to sign logo URL", e);
+            }
+        }
 
         return NextResponse.json(updated);
     } catch (error: any) {
@@ -70,6 +83,18 @@ export async function GET(
 
         if (!organisation) {
             return new NextResponse("Not Found", { status: 404 });
+        }
+
+        // Sign logo URL if it's an S3 URL
+        const branding = organisation.branding as any;
+        if (branding?.logoUrl?.startsWith("s3://")) {
+            try {
+                const { key } = parseS3Url(branding.logoUrl);
+                const signedUrl = await getDownloadUrl(key, 3600);
+                branding.logoUrl = signedUrl;
+            } catch (e) {
+                console.error("Failed to sign logo URL", e);
+            }
         }
 
         return NextResponse.json(organisation);

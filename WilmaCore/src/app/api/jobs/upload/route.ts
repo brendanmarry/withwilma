@@ -77,9 +77,11 @@ export const POST = async (request: Request) => {
         }
         const arrayBuffer = await entry.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
+        const type = detectType(entry.name, entry.type);
         return {
-          type: detectType(entry.name, entry.type),
+          type,
           buffer,
+          content: type === "text" ? buffer.toString("utf-8") : undefined,
           mimeType: entry.type,
           metadata: {
             originalName: entry.name,

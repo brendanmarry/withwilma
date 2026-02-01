@@ -27,15 +27,18 @@ export default async function ApplyPage({ params }: ApplyPageProps) {
         // @ts-ignore
         "--brand-primary": branding.primaryColor,
         "--brand-secondary": branding.secondaryColor || branding.primaryColor, // fallback
-        fontFamily: `'Outfit', sans-serif`,
-      }}
+        fontFamily: branding.fontFamily || `'Outfit', sans-serif`,
+      } as React.CSSProperties}
     >
       <style dangerouslySetInnerHTML={{
         __html: `
           @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+          @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100..900&display=swap');
           
           body {
               background-color: #FAF8F2;
+              font-family: ${branding.fontFamily || `'Outfit', sans-serif`};
           }
       `}} />
       <BrandedHeader branding={branding} backLink={`/apply/${jobId}`} backLabel="Back to Job" />

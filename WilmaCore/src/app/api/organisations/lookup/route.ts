@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { withCors } from "@/app/api/_utils/cors";
+import { parseS3Url, getDownloadUrl } from "@/lib/storage";
 
 export const GET = async (request: NextRequest) => {
     const searchParams = request.nextUrl.searchParams;
@@ -23,6 +24,18 @@ export const GET = async (request: NextRequest) => {
 
     if (!organisation) {
         return withCors(new NextResponse("Organisation not found", { status: 404 }), request);
+    }
+
+    // Sign logo URL if it's an S3 URL
+    const branding = organisation.branding as any;
+    if (branding?.logoUrl?.startsWith("s3://")) {
+        try {
+            const { key } = parseS3Url(branding.logoUrl);
+            const signedUrl = await getDownloadUrl(key, 3600);
+            branding.logoUrl = signedUrl;
+        } catch (e) {
+            console.error("Failed to sign logo URL", e);
+        }
     }
 
     return withCors(NextResponse.json(organisation), request);

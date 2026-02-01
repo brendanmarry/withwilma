@@ -89,6 +89,8 @@ export interface Organisation {
   };
   branding?: {
     primaryColor?: string;
+    secondaryColor?: string;
+    fontFamily?: string;
     logoUrl?: string;
   };
 }
