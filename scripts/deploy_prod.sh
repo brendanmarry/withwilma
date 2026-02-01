@@ -20,7 +20,7 @@ git pull origin main
 # 3. Build containers
 # We explicitly use the PROD compose file to avoid building/starting local containers
 echo "🏗️  Building Production Containers..."
-docker compose -f docker-compose.prod.yml build wilma-core wilma-marketing
+docker compose -f docker-compose.prod.yml build core marketing
 
 # 4. Start/Restart Services
 echo "🔄 Restarting Services..."
