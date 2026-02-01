@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"; // Updated import to in
 import { getAdminTokenFromRequest } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { withCors, corsOptionsResponse } from "@/app/api/_utils/cors";
+import { parseS3Url, getDownloadUrl } from "@/lib/storage";
 
 export async function GET(req: NextRequest) {
     try {
@@ -19,6 +20,18 @@ export async function GET(req: NextRequest) {
             return withCors(NextResponse.json({ error: "User not found" }, { status: 404 }), req);
         }
 
+        // Sign logo URL if it exists
+        const org = user.organisation as any;
+        if (org?.branding?.logoUrl?.startsWith("s3://")) {
+            try {
+                const { key } = parseS3Url(org.branding.logoUrl);
+                const signedUrl = await getDownloadUrl(key, 3600);
+                org.branding.logoUrl = signedUrl;
+            } catch (e) {
+                console.error("Failed to sign logo URL in me endpoint", e);
+            }
+        }
+
         return withCors(NextResponse.json({
             user: {
                 id: user.id,
@@ -26,7 +39,7 @@ export async function GET(req: NextRequest) {
                 name: user.name,
                 role: user.role,
                 organisationId: user.organisationId,
-                organisation: user.organisation,
+                organisation: org,
             },
         }), req);
     } catch (error) {

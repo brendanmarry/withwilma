@@ -6,17 +6,10 @@ import { callJsonLLM } from "@/lib/llm/utils";
 export const layoutSectionSchema = z.object({
     type: z.enum(["header", "text", "list", "key_value"]),
     title: z.string().optional().describe("Title of the section to display, e.g. 'Responsibilities'"),
-    dataKey: z.enum([
-        "summary",
-        "responsibilities",
-        "requirements",
-        "nice_to_have",
-        "description",
-        "location",
-        "employment_type",
-        "department"
-    ]).optional().describe("The key in the normalized data to bind to this section"),
+    dataKey: z.string().optional().describe("The key in the normalized data to bind to this section"),
     staticContent: z.string().optional().describe("Static text content if not bound to data"),
+    content: z.any().optional().describe("Raw content returned by LLM if it doesn't fit dataKey model"),
+    items: z.array(z.string()).optional().describe("List items if type is list and dataKey is missing"),
     style: z.enum(["standard", "bullet", "numbered", "pill", "centered"]).optional().default("standard")
 });
 

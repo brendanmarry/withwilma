@@ -68,7 +68,7 @@ export default async function Home() {
           <div className="pt-12">
             <p className="text-sm text-gray-400">
               Applying for a job? Visit the{" "}
-              <a href="http://localhost:3002" className="text-purple-600 hover:underline">
+              <a href="https://withwilma.com" className="text-purple-600 hover:underline">
                 Main Website
               </a>{" "}
               to learn more.

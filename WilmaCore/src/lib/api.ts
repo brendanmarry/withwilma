@@ -81,7 +81,8 @@ export async function getBranding(job?: Job | null, host?: string) {
     }
   }
 
-  return tenant?.branding || (job as any)?.organisation?.branding || DEFAULT_BRANDING;
+  const orgBranding = tenant?.branding || (job as any)?.organisation?.branding || {};
+  return { ...DEFAULT_BRANDING, ...orgBranding };
 }
 
 
