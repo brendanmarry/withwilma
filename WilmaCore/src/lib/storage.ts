@@ -124,7 +124,7 @@ export const getDownloadUrl = async (
   responseContentType?: string,
   publicEndpoint?: string,
 ): Promise<string> => {
-  const client = getClient(publicEndpoint);
+  const client = getClient(publicEndpoint ?? env().S3_PUBLIC_ENDPOINT);
   const command = new GetObjectCommand({
     Bucket: env().S3_BUCKET,
     Key: key,
