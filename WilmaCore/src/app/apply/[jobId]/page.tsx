@@ -193,8 +193,7 @@ export default async function JobPage({ params }: JobPageProps) {
 
                     <div className="pt-16 mt-16 border-t border-slate-200/60">
                         <Link
-                            href={(job.normalizedJson as any)?.apply_url || `/apply/${job.id}/apply`}
-                            target={(job.normalizedJson as any)?.apply_url ? "_blank" : undefined}
+                            href={`/apply/${job.id}/apply`}
                             className="w-full md:w-auto bg-black hover:bg-slate-800 hover:scale-[1.02] active:scale-[0.98] text-white rounded-2xl uppercase tracking-widest font-black px-12 h-14 inline-flex items-center justify-center transition-all shadow-2xl"
                             style={{ backgroundColor: branding.primaryColor }}
                         >
