@@ -94,7 +94,7 @@ export const POST = async (request: Request) => {
     const knowledgeDocs = await prisma.document.findMany({
       where: { organisationId: job.organisationId },
       orderBy: { createdAt: "desc" },
-      take: 10,
+      take: 3,
     });
     const companyKnowledge = knowledgeDocs.map((doc) => doc.textContent).join("\n\n");
 

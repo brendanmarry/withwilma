@@ -11,6 +11,10 @@ You MUST:
   - CV summary
   - Job description
   - Missing skills or unclear areas
+  - Candidate motivation (inferred)
+- Questions should naturally probe:
+  - Motivation: "Why this role/company in particular?"
+  - Timing: "Why is now the right time for this move?"
 - Ask questions that help clarify the candidate's qualifications
 - Questions should require 20-second video answers
 - Avoid sensitive topics (protected characteristics)
