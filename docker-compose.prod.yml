@@ -22,6 +22,7 @@ services:
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER:-wilma}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-wilma-secret}
+      MINIO_API_CORS_ALLOW_ORIGIN: "*"
     volumes:
       - minio-data:/data
     networks:
