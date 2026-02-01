@@ -3,7 +3,14 @@ import { join } from "path";
 
 const cache = new Map<string, string>();
 
-const promptsDir = join(process.cwd(), "lib", "llm", "prompts");
+import { existsSync } from "fs";
+
+// Docker container copies prompts to /lib/llm/prompts
+// Local development keeps them at /src/lib/llm/prompts
+const prodPath = join(process.cwd(), "lib", "llm", "prompts");
+const devPath = join(process.cwd(), "src", "lib", "llm", "prompts");
+
+const promptsDir = existsSync(prodPath) ? prodPath : devPath;
 
 export const loadPrompt = async (fileName: string): Promise<string> => {
   if (cache.has(fileName)) {

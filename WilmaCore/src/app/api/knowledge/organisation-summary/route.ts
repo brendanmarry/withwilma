@@ -103,6 +103,21 @@ export const GET = async (request: NextRequest) => {
     createdAt: doc.createdAt,
   }));
 
+  // CACHE CHECK: If profile exists in DB, return it immediately
+  if (organisation.profile) {
+    return NextResponse.json({
+      profile: {
+        ...(organisation.profile as object),
+        sourceCount: sources.length,
+      },
+      sources: sources.map((source) => ({
+        id: source.id,
+        label: source.label,
+        createdAt: source.createdAt,
+      })),
+    });
+  }
+
   const systemPrompt = await loadPrompt("organisation-summary.md");
   const userContent = JSON.stringify(
     {
@@ -128,6 +143,13 @@ export const GET = async (request: NextRequest) => {
       schema: organisationProfileSchema,
     });
     const profile = normaliseProfile(result);
+
+    // UPDATE DB: Save the generated profile for future use
+    await prisma.organisation.update({
+      where: { id: organisation.id },
+      data: { profile: profile as any },
+    });
+
     return NextResponse.json({
       profile: {
         ...profile,

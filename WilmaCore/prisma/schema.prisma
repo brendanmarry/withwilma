@@ -31,6 +31,7 @@ model Organisation {
   branding        Json?            // { primaryColor: string, logoUrl: string }
   careersPageUrl  String?
   jobParsingConfig Json?           // Custom prompt instructions or schema mapping
+  profile         Json?            // AI-generated profile (overview, history, etc.)
 }
 
 enum IngestionStatus {

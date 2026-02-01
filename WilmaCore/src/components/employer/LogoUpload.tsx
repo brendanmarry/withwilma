@@ -58,7 +58,8 @@ export function LogoUpload({ currentLogoUrl, onLogoChange }: LogoUploadProps) {
         try {
             // Use the backend API URL
             const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.withwilma.com";
-            const response = await fetch(`${apiUrl}/api/upload`, {
+            // NEXT_PUBLIC_API_URL includes /api, so we just append /upload
+            const response = await fetch(`${apiUrl}/upload`, {
                 method: "POST",
                 body: formData,
                 credentials: "include", // Important for shared cookies
