@@ -133,6 +133,21 @@ export const getDownloadUrl = async (
   return getSignedUrl(client, command, { expiresIn: expiresInSeconds });
 };
 
+export const getPublicUrl = (key: string): string => {
+  const publicEndpoint = env().S3_PUBLIC_ENDPOINT;
+  const bucket = env().S3_BUCKET;
+  if (!publicEndpoint) {
+    throw new Error("S3_PUBLIC_ENDPOINT is not configured");
+  }
+  // Remove bucket from key if it's already there (defensive)
+  const cleanKey = key.replace(new RegExp(`^${bucket}/`), "");
+
+  if (publicEndpoint.includes(bucket)) {
+    return `${publicEndpoint}/${cleanKey}`;
+  }
+  return `${publicEndpoint}/${bucket}/${cleanKey}`;
+};
+
 export const parseS3Url = (url: string): { bucket: string; key: string } => {
   const s3Regex = /^s3:\/\/([^/]+)\/(.+)$/;
   const match = s3Regex.exec(url);

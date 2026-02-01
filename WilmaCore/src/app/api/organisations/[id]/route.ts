@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getAdminTokenFromRequest } from "@/lib/auth";
-import { parseS3Url, getDownloadUrl } from "@/lib/storage";
+import { parseS3Url, getPublicUrl } from "@/lib/storage";
 
 export async function PATCH(
     request: NextRequest,
@@ -40,10 +40,10 @@ export async function PATCH(
         if (updatedBranding?.logoUrl?.startsWith("s3://")) {
             try {
                 const { key } = parseS3Url(updatedBranding.logoUrl);
-                const signedUrl = await getDownloadUrl(key, 3600);
-                updatedBranding.logoUrl = signedUrl;
+                const publicUrl = getPublicUrl(key);
+                updatedBranding.logoUrl = publicUrl;
             } catch (e) {
-                console.error("Failed to sign logo URL", e);
+                console.error("Failed to generate public logo URL", e);
             }
         }
 
@@ -90,10 +90,10 @@ export async function GET(
         if (branding?.logoUrl?.startsWith("s3://")) {
             try {
                 const { key } = parseS3Url(branding.logoUrl);
-                const signedUrl = await getDownloadUrl(key, 3600);
-                branding.logoUrl = signedUrl;
+                const publicUrl = getPublicUrl(key);
+                branding.logoUrl = publicUrl;
             } catch (e) {
-                console.error("Failed to sign logo URL", e);
+                console.error("Failed to generate public logo URL", e);
             }
         }
 

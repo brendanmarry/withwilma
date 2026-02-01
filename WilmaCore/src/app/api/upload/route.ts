@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAdminTokenFromRequest } from "@/lib/auth";
-import { uploadBuffer, parseS3Url, getDownloadUrl } from "@/lib/storage";
+import { uploadBuffer, parseS3Url, getPublicUrl } from "@/lib/storage";
 import { logger, serializeError } from "@/lib/logger";
 import { corsOptionsResponse, withCors } from "@/app/api/_utils/cors";
 
@@ -29,11 +29,11 @@ export const POST = async (request: Request) => {
             folder: "logos",
         });
 
-        // Sign the URL for immediate frontend use
+        // Return public URL (no expiration)
         const { key } = parseS3Url(s3Url);
-        const signedUrl = await getDownloadUrl(key, 3600);
+        const publicUrl = getPublicUrl(key);
 
-        return withCors(NextResponse.json({ url: signedUrl, s3Url }), request);
+        return withCors(NextResponse.json({ url: publicUrl, s3Url }), request);
 
     } catch (error) {
         logger.error("Failed to upload logo", {

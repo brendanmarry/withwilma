@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { withCors } from "@/app/api/_utils/cors";
-import { parseS3Url, getDownloadUrl } from "@/lib/storage";
+import { parseS3Url, getPublicUrl } from "@/lib/storage";
 
 export const GET = async (request: NextRequest) => {
     const searchParams = request.nextUrl.searchParams;
@@ -31,10 +31,10 @@ export const GET = async (request: NextRequest) => {
     if (branding?.logoUrl?.startsWith("s3://")) {
         try {
             const { key } = parseS3Url(branding.logoUrl);
-            const signedUrl = await getDownloadUrl(key, 3600);
-            branding.logoUrl = signedUrl;
+            const publicUrl = getPublicUrl(key);
+            branding.logoUrl = publicUrl;
         } catch (e) {
-            console.error("Failed to sign logo URL", e);
+            console.error("Failed to generate public logo URL", e);
         }
     }
 
