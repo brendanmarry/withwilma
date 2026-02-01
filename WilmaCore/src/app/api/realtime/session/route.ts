@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createRealtimeSession } from "@/lib/realtime";
 import { corsOptionsResponse, withCors } from "@/app/api/_utils/cors";
 
-export const OPTIONS = () => corsOptionsResponse();
+export const OPTIONS = (request: NextRequest) => corsOptionsResponse(request);
 
 export async function POST(request: NextRequest) {
   let payload: Record<string, unknown> = {};
@@ -24,11 +24,13 @@ export async function POST(request: NextRequest) {
           "Cache-Control": "no-store",
         },
       }),
+      request,
     );
   } catch (error) {
     console.error("Realtime session request error", error);
     return withCors(
       NextResponse.json({ error: "Unexpected error creating realtime session" }, { status: 500 }),
+      request,
     );
   }
 }

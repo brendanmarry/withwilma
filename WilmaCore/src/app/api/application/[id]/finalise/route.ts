@@ -3,7 +3,7 @@ import { prisma } from "@/lib/db";
 import { corsOptionsResponse, withCors } from "@/app/api/_utils/cors";
 
 export const POST = async (
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) => {
 
@@ -17,7 +17,7 @@ export const POST = async (
     },
   });
   if (!candidate) {
-    return withCors(new NextResponse("Candidate not found", { status: 404 }));
+    return withCors(new NextResponse("Candidate not found", { status: 404 }), request);
   }
 
   await prisma.candidate.update({
@@ -27,8 +27,8 @@ export const POST = async (
     },
   });
 
-  return withCors(NextResponse.json(candidate));
+  return withCors(NextResponse.json(candidate), request);
 };
 
-export const OPTIONS = () => corsOptionsResponse();
+export const OPTIONS = (request: NextRequest) => corsOptionsResponse(request);
 

@@ -9,7 +9,7 @@ import { generateFollowUps } from "@/lib/llm/pipelines/followups";
 import { logger, serializeError } from "@/lib/logger";
 import { corsOptionsResponse, withCors } from "@/app/api/_utils/cors";
 
-export const OPTIONS = () => corsOptionsResponse();
+export const OPTIONS = (request: Request) => corsOptionsResponse(request);
 
 const FALLBACK_FOLLOW_UPS = [
   {
@@ -57,7 +57,7 @@ export const POST = async (request: Request) => {
     const formData = await request.formData();
     const file = formData.get("cv");
     if (!(file instanceof File)) {
-      return withCors(new NextResponse("CV file is required", { status: 400 }));
+      return withCors(new NextResponse("CV file is required", { status: 400 }), request);
     }
 
     const fields = applicationSubmitSchema.parse({
@@ -78,7 +78,7 @@ export const POST = async (request: Request) => {
     });
 
     if (!job) {
-      return withCors(new NextResponse("Job not found", { status: 404 }));
+      return withCors(new NextResponse("Job not found", { status: 404 }), request);
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
