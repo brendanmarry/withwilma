@@ -35,4 +35,8 @@ docker compose -f docker-compose.prod.yml exec -T core npx prisma@6.19.0 migrate
 echo "🧹 Cleaning up unused resources..."
 docker image prune -f
 
+
+echo "🔄 Reloading Nginx Configuration..."
+docker compose restart nginx
+
 echo "✅ Deployment Complete! Visit https://app.withwilma.com"
