@@ -2,12 +2,12 @@ import Link, { type LinkProps } from "next/link";
 import { type AnchorHTMLAttributes, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-type ButtonVariant = "primary" | "secondary" | "ghost" | "link";
+type ButtonVariant = "primary" | "secondary" | "ghost" | "link" | "outline";
 type ButtonSize = "sm" | "md" | "lg";
 
 interface ButtonLinkProps
   extends Omit<LinkProps, "href">,
-    Pick<AnchorHTMLAttributes<HTMLAnchorElement>, "target" | "rel"> {
+  Pick<AnchorHTMLAttributes<HTMLAnchorElement>, "target" | "rel"> {
   href: string;
   children: ReactNode;
   className?: string;
@@ -26,6 +26,8 @@ const variantClasses: Record<ButtonVariant, string> = {
   ghost:
     "bg-transparent text-brand-600 hover:bg-brand-500/10",
   link: "bg-transparent text-brand-500 hover:text-brand-600 underline-offset-4",
+  outline:
+    "bg-transparent text-white border border-white/40 hover:border-white hover:bg-white/10",
 };
 
 const sizeClasses: Record<ButtonSize, string> = {

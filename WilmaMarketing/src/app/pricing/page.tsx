@@ -11,9 +11,9 @@ const plans = [
     name: "Growth",
     price: "$2,400",
     cadence: "per month",
-    description: "For in-house teams scaling across 3-5 core roles with AI interviews and scoring.",
+    description: "For in-house teams scaling across 3-5 core roles with Tailored Discovery Dialogues.",
     highlights: [
-      "AI voice + video interviews",
+      "Voice, video + chat Discovery Dialogues",
       "Candidate scoring with bias guardrails",
       "Recruiter co-pilot workspace",
       "3 live roles included",
@@ -104,7 +104,7 @@ export default function PricingPage() {
               align="center"
               eyebrow="pricing that scales"
               title="Choose the withWilma plan that fits your hiring velocity"
-              description="Every plan includes AI voice + video interviews, recruiter co-pilot, and candidate scoring. Add-on modules expand as your team grows."
+              description="Every plan includes Tailored Discovery Dialogues, recruiter co-pilot, and genuine skill scoring. Add-on modules expand as your team grows."
             />
           </FadeIn>
           <FadeIn delay={0.1} className="grid grid-cols-1 gap-8 lg:grid-cols-3">

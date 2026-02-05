@@ -17,7 +17,6 @@ export function Navigation() {
   const [open, setOpen] = useState(false);
   const navLinks: NavLink[] = [
     { href: "/", label: "Home" },
-    { href: "/features", label: "Features" },
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
   ];

@@ -8,18 +8,8 @@ const columns = [
     title: "Product",
     links: [
       { label: "Overview", href: "/#overview" },
-      { label: "Feature Deep Dive", href: "/features" },
       { label: "Pricing", href: "/pricing" },
       { label: "Employer Login", href: EMPLOYER_APP_URL },
-    ],
-  },
-  {
-    title: "Solutions",
-    links: [
-      { label: "AI Interviews", href: "/features#ai-interviews" },
-      { label: "Candidate Scoring", href: "/features#candidate-scoring" },
-      { label: "Knowledge Ingestion", href: "/features#knowledge" },
-      { label: "Recruiter Intelligence", href: "/features#recruiter" },
     ],
   },
   {

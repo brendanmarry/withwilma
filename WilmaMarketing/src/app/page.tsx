@@ -20,69 +20,57 @@ const heroStats = [
 const coreFeatures = [
   {
     icon: Brain,
-    title: "Conversational AI Interviews",
+    title: "Personalized Discovery Dialogues",
     description:
-      "Adaptive voice and video interviews that learn from every conversation and mirror your top performers.",
+      "Move beyond generic forms and AI-generated cover letters with adaptive conversations that reveal the human behind the application.",
   },
   {
     icon: Target,
-    title: "Precision Candidate Scoring",
+    title: "Filter the Slop",
     description:
-      "Multi-dimensional scoring across skills, experience, and culture fit with transparent rationale for recruiters.",
-  },
-  {
-    icon: Users2,
-    title: "Recruiter Intelligence Hub",
-    description:
-      "Crystal-clear dashboards that surface the right candidate at the right moment with AI-recommended next actions.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Enterprise-Grade Trust",
-    description:
-      "SOC2-ready architecture, configurable guardrails, and compliance across GDPR, EEOC, and global privacy standards.",
+      "AI-generated CVs are noisy. withWilma scores candidates based on real-time dialogue and genuine intent, not keyword-stuffed templates.",
   },
 ];
 
 const howItWorks = [
   {
     step: "01",
-    title: "Upload your knowledge & roles",
+    title: "Define your Team DNA",
     description:
-      "Sync job descriptions, interview scorecards, and tribal knowledge in minutes—no engineering lift required.",
+      "Instead of just keywords, we capture what makes your team tick. What kind of human actually succeeds in your specific culture?",
   },
   {
     step: "02",
-    title: "Launch AI-led experiences",
+    title: "Uncover Genuine Skills",
     description:
-      "Candidates meet withWilma across voice, video, and chat and improve their application by recording short answers to persoanlised questions. Then withWilma scores the candidate based on the job description and the interview answers, presenting this all to use to make informed selection decisions.",
+      "withWilma asks tailored, personal questions that evolve based on candidate responses—making it impossible to hide behind AI-generated fluff.",
   },
   {
     step: "03",
-    title: "Hire with total clarity",
+    title: "Hire the Human",
     description:
-      "Get ranked shortlists, bias alerts, and curated follow-ups that convert the best talent before competitors do.",
+      "Get a shortlist of candidates you actually want to meet. No more filtering through 500 identical 'ideal' CVs that were written by a bot.",
   },
 ];
 
 const testimonials = [
   {
     quote:
-      "We tripled our candidate throughput without adding headcount. Candidates are amazed that withWilma remembers context across interviews.",
+      "We were drowning in perfect-looking applications that were clearly AI-generated. withWilma finally helped us find the real people again.",
     author: "Lena Ortiz",
     role: "Head of Talent",
     company: "Aurora Capital",
   },
   {
     quote:
-      "Recruiters spend less time scheduling and more time closing. withWilma's interview insights give us a competitive advantage.",
+      "The degree of personal insight we get from the discovery dialogues is staggering. It's like having the first interview before the first interview.",
     author: "Marcus Chen",
     role: "Director of Recruiting",
     company: "Northwind Labs",
   },
   {
     quote:
-      "Our DEI council loves the bias safeguards. Every hiring manager gets rich insights, not just another dashboard.",
+      "Finally, a tool that values human nuance over keyword matching. Our hiring managers are actually excited to look at candidates again.",
     author: "Priya Desai",
     role: "Chief People Officer",
     company: "Summit Talent",
@@ -92,13 +80,13 @@ const testimonials = [
 const conciergeFeatures = [
   {
     icon: MessageCircle,
-    title: "Live Recruiter Co-Pilot",
-    description: "Shadow interviews, whisper prompts, and suggested follow-ups while withWilma handles the conversation.",
+    title: "Real-Time Skill Validation",
+    description: "Verify claims and probe for depth as candidates speak, cutting through the high-level generalities of modern applications.",
   },
   {
     icon: Sparkles,
-    title: "Always-On Candidate Concierge",
-    description: "Onboard, answer FAQs, and pre-close candidates with beautifully branded experiences tailored to your voice.",
+    title: "Human Fit Insights",
+    description: "Analyze tone, enthusiasm, and problem-solving styles to ensure they're a person who adds to your culture, not just a skill-set match.",
   },
 ];
 
@@ -108,74 +96,74 @@ export default function HomePage() {
     <>
       {/* Hero */}
       <Section padding="xl" background="gradient" id="overview">
-        <Container className="relative flex flex-col gap-16 lg:flex-row lg:items-center">
-          <div className="relative flex-1">
+        <Container className="relative">
+          <div className="flex flex-col gap-16 lg:flex-row lg:items-center">
+            <div className="relative flex-1">
+              <FadeIn delay={0.1} className="mt-6">
+                <h1 className="text-4xl font-semibold text-slate-900 sm:text-5xl md:text-6xl lg:text-7xl leading-tight">
+                  Cut through <span className="text-brand-500">AI Candidate Slop</span>. See the person behind the CV.
+                </h1>
+              </FadeIn>
 
-            <FadeIn delay={0.1} className="mt-6">
-              <h1 className="text-4xl font-semibold text-slate-900 sm:text-5xl md:text-6xl lg:text-7xl">
-                Hire brilliantly with <span className="text-brand-500">AI-powered</span> applications
-              </h1>
-            </FadeIn>
+              <FadeIn delay={0.2} className="mt-6 max-w-2xl text-lg text-slate-600 md:text-xl">
+                Traditional applications are buried in AI-generated fluff. withWilma uses tailored conversations to surface the genuine human talent you actually want to hire starting from the very first interaction.
+              </FadeIn>
 
-            <FadeIn delay={0.2} className="mt-6 max-w-2xl text-lg text-slate-600 md:text-xl">
-              withWilma surfaces the best candidate applications through every submission by conducting personalised conversations, that surface improved data to score candidates with radical clarity, and fast follow-ups that close top talent.
-            </FadeIn>
+              <FadeIn delay={0.3} className="mt-10 flex flex-wrap items-center gap-4">
+                <ButtonLink
+                  href={candidateAppUrl}
+                  size="lg"
+                  icon={<ArrowRight className="h-5 w-5" />}
+                  external
+                  className="group">
+                  Experience a Human Interview
+                </ButtonLink>
+                <ButtonLink href="/contact" variant="secondary" size="lg">
+                  Talk to our team
+                </ButtonLink>
+              </FadeIn>
+            </div>
 
-            <FadeIn delay={0.3} className="mt-10 flex flex-wrap items-center gap-4">
-              <ButtonLink
-                href={candidateAppUrl}
-                size="lg"
-                icon={<ArrowRight className="h-5 w-5" />}
-                external
-
-                className="group">
-                Launch a demo interview
-              </ButtonLink>
-              <ButtonLink href="/contact" variant="secondary" size="lg">
-                Talk to our team
-              </ButtonLink>
-            </FadeIn>
-
-            <FadeIn delay={0.35} className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3">
-              {heroStats.map((stat, index) => (
-                <StatCard key={stat.label} label={stat.label} value={stat.value} className={index === 0 ? "bg-brand-500 text-white" : ""} />
-              ))}
+            <FadeIn delay={0.25} className="relative flex-1">
+              <div className="relative overflow-hidden rounded-[2.5rem] border border-white/60 bg-white/80 p-8 shadow-2xl shadow-brand-500/15 backdrop-blur">
+                <div className="flex flex-col gap-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-brand-500">Personal Discovery</p>
+                      <p className="text-lg font-semibold text-slate-900">Validating the real candidate...</p>
+                    </div>
+                    <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-600">
+                      Live Dialogue
+                    </span>
+                  </div>
+                  <div className="space-y-4 text-sm text-slate-600">
+                    <p><strong>withWilma:</strong> Your CV mentions 'cross-functional leadership'. Tell me about a specific time you had to disagree with a technical lead and how you handled it.</p>
+                    <p><strong>Candidate:</strong> (Avoiding the scripted fluff...) "Actually, it was specifically about the Atlas Robotics launch..."</p>
+                    <p className="rounded-2xl bg-brand-500/10 p-4 text-brand-600">
+                      Insight: Genuine technical depth detected. Deviates from AI-standard response patterns.
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 text-xs text-slate-500">
+                    <div className="rounded-2xl border border-brand-100 bg-white/70 p-4">
+                      <p className="font-semibold text-slate-900">Human Fit</p>
+                      <p className="text-3xl font-semibold text-brand-500">A+</p>
+                      <p>High nuance and specific situational examples</p>
+                    </div>
+                    <div className="rounded-2xl border border-brand-100 bg-white/70 p-4">
+                      <p className="font-semibold text-slate-900">Recommendation</p>
+                      <p>Fast-track to technical interview. Bypasses keyword filter.</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="pointer-events-none absolute inset-0 rounded-[2.5rem] border border-brand-500/20" />
+              </div>
             </FadeIn>
           </div>
 
-          <FadeIn delay={0.25} className="relative flex-1">
-            <div className="relative overflow-hidden rounded-[2.5rem] border border-white/60 bg-white/80 p-8 shadow-2xl shadow-brand-500/15 backdrop-blur">
-              <div className="flex flex-col gap-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-brand-500">Live Interview</p>
-                    <p className="text-lg font-semibold text-slate-900">AI Recruiter: withWilma</p>
-                  </div>
-                  <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-600">
-                    Recording
-                  </span>
-                </div>
-                <div className="space-y-4 text-sm text-slate-600">
-                  <p><strong>withWilma:</strong> Walk me through your product launch that required cross-functional alignment.</p>
-                  <p><strong>Candidate:</strong> I led go-to-market for Atlas Robotics...</p>
-                  <p className="rounded-2xl bg-brand-500/10 p-4 text-brand-600">
-                    Insight: Coachability signals high. Suggest follow-up on stakeholder management.
-                  </p>
-                </div>
-                <div className="grid grid-cols-2 gap-4 text-xs text-slate-500">
-                  <div className="rounded-2xl border border-brand-100 bg-white/70 p-4">
-                    <p className="font-semibold text-slate-900">Fit Score</p>
-                    <p className="text-3xl font-semibold text-brand-500">92</p>
-                    <p>Top percentile for growth-stage SaaS roles</p>
-                  </div>
-                  <div className="rounded-2xl border border-brand-100 bg-white/70 p-4">
-                    <p className="font-semibold text-slate-900">Next Best Action</p>
-                    <p>Introduce hiring manager with tailored briefing deck</p>
-                  </div>
-                </div>
-              </div>
-              <div className="pointer-events-none absolute inset-0 rounded-[2.5rem] border border-brand-500/20" />
-            </div>
+          <FadeIn delay={0.35} className="mt-20 grid grid-cols-1 gap-6 sm:grid-cols-3">
+            {heroStats.map((stat, index) => (
+              <StatCard key={stat.label} label={stat.label} value={stat.value} className={index === 0 ? "bg-brand-500 text-white" : ""} />
+            ))}
           </FadeIn>
         </Container>
       </Section>
@@ -186,8 +174,8 @@ export default function HomePage() {
           <SectionHeading
             align="center"
             eyebrow="trusted by talent-first teams"
-            title="AI recruitment co-pilots for modern hiring orgs"
-            description="From scale-ups to global enterprises, teams trust withWilma to elevate every candidate conversation."
+            title="Finding the signals in a sea of AI noise"
+            description="From scale-ups to global enterprises, teams use withWilma to rediscover the joy of meeting real people."
           />
           <LogoCloud />
         </Container>
@@ -198,9 +186,9 @@ export default function HomePage() {
         <Container className="space-y-16">
           <SectionHeading
             align="center"
-            eyebrow="end-to-end intelligence"
-            title="Everything you need to deliver unforgettable candidate experiences"
-            description="withWilma fuses conversational AI, recruiter co-pilots, and adaptive scoring into one cohesive platform."
+            eyebrow="Real human response centric filtering"
+            title="Everything you need to find the real person behind the resume"
+            description="withWilma combines video conversations with intelligent questions to make sure you're hiring for personality, not just optics."
           />
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -218,9 +206,9 @@ export default function HomePage() {
         <Container className="space-y-16">
           <SectionHeading
             align="center"
-            eyebrow="Go live in days"
-            title="Launch AI-native recruiting without process chaos"
-            description="withWilma meets you where you are. No overhauls. No complicated change management."
+            eyebrow="Simple, Human, Effective"
+            title="Uncover the true candidate in minutes"
+            description="withWilma integrates into your existing workflow to replace endless CV scanning with meaningful discovery."
           />
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
@@ -238,9 +226,9 @@ export default function HomePage() {
         <Container className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
           <FadeIn className="space-y-6">
             <SectionHeading
-              eyebrow="always-on concierge"
-              title="Recruiters stay strategic while withWilma handles the heavy lifting"
-              description="Combine human intuition with AI orchestration. withWilma gives recruiters superpowers across every candidate touchpoint."
+              eyebrow="Strategic validation"
+              title="Stop playing detective with AI cover letters"
+              description="withWilma handles the initial probing so you can focus on the strategic decisions that build great teams."
             />
             <div className="space-y-6">
               {conciergeFeatures.map((feature) => (
@@ -260,15 +248,15 @@ export default function HomePage() {
             </div>
           </FadeIn>
           <FadeIn delay={0.1}>
-            <div className="relative overflow-hidden rounded-[2.5rem] border border-brand-100 bg-gradient-to-br from-brand-500/20 via-brand-500/5 to-white p-8 shadow-2xl shadow-brand-500/20">
+            <div className="relative overflow-hidden rounded-[2.5rem] border border-slate-800 bg-slate-900 p-8 shadow-2xl shadow-brand-500/20">
               <div className="space-y-6 text-white">
-                <p className="text-sm uppercase tracking-widest text-white/70">Recruiter co-pilot</p>
-                <p className="text-2xl font-semibold">Suggested follow-up briefing</p>
+                <p className="text-sm uppercase tracking-widest text-white/70">Human Insight Report</p>
+                <p className="text-2xl font-semibold">Genuine Depth Briefing</p>
                 <ul className="space-y-4 text-sm text-white/90">
-                  <li>• Candidate motivations mapped to offer levers</li>
-                  <li>• Bias guardrails flagged for next interview loop</li>
-                  <li>• Follow-up email drafted with voice-of-brand tone</li>
-                  <li>• Hiring manager briefing deck auto-generated</li>
+                  <li>• Specific, unscripted anecdotes flagged</li>
+                  <li>• Authentic problem-solving approach mapped</li>
+                  <li>• "AI-Slop" indicators: 0 detected</li>
+                  <li>• Ready for human-to-human interview</li>
                 </ul>
               </div>
               <div className="pointer-events-none absolute inset-0 rounded-[2.5rem] border border-white/20" />
@@ -282,8 +270,8 @@ export default function HomePage() {
         <Container className="space-y-12">
           <SectionHeading
             align="center"
-            eyebrow="people teams love wilma"
-            title="Designed with the world's most ambitious talent teams"
+            eyebrow="teams that value humans"
+            title="Built for the recruiters who care about the 'who', not just the 'what'"
           />
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             {testimonials.map((testimonial, index) => (
@@ -299,19 +287,19 @@ export default function HomePage() {
       <Section padding="xl" background="brand">
         <Container className="relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-white/10 via-white/5 to-brand-500/20 p-12 text-white shadow-2xl shadow-brand-500/30">
           <FadeIn className="mx-auto flex max-w-3xl flex-col items-center text-center">
-            <p className="text-sm uppercase tracking-[0.4em] text-white/70">experience wilma</p>
+            <p className="text-sm uppercase tracking-[0.4em] text-white/70">find the real you</p>
             <h2 className="mt-6 text-4xl font-semibold md:text-5xl">
-              Turn every candidate conversation into a hiring superpower
+              Stop filtering bots. Start hiring humans.
             </h2>
             <p className="mt-4 text-lg text-white/80">
-              Launch in days, scale globally, and close the talent your competitors are chasing. withWilma adapts to your workflows—no heavy lift required.
+              Cut through the noise and rediscover the talent buried in your inbox. withWilma brings the 'who' back to recruitment.
             </p>
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               <ButtonLink href={candidateAppUrl} size="lg" variant="secondary" external>
-                Start your 14-day pilot
+                Start your human-first pilot
               </ButtonLink>
-              <ButtonLink href="/contact" size="lg" variant="ghost">
-                Get a custom roadmap
+              <ButtonLink href="/contact" size="lg" variant="outline">
+                Get the truth about your pipeline
               </ButtonLink>
             </div>
           </FadeIn>

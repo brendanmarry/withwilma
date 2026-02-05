@@ -28,7 +28,7 @@ const backgroundMap: Record<SectionBackground, string> = {
   muted: "bg-neutral-100",
   brand: "bg-brand-500 text-white",
   gradient:
-    "bg-[linear-gradient(180deg,rgba(244,244,255,0.9)_0%,rgba(232,230,255,0.7)_50%,rgba(244,244,255,0.9)_100%)]",
+    "bg-[linear-gradient(180deg,rgba(240,244,255,0.9)_0%,rgba(225,233,255,0.7)_50%,rgba(240,244,255,0.9)_100%)]",
 };
 
 export function Section({

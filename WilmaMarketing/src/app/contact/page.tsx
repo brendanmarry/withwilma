@@ -29,28 +29,11 @@ export default function ContactPage() {
               align="center"
               eyebrow="let’s collaborate"
               title="Make your job application progress faster and more efficiently"
-              description="Share your hiring roadmap and we’ll blueprint a withWilma implementation that meets your team where they are."
+              description="Enable your team to get to know candidates for who they are, not just what they wrote on their resume."
             />
           </FadeIn>
-          <FadeIn delay={0.1} className="mx-auto grid max-w-6xl grid-cols-1 overflow-hidden rounded-3xl border border-brand-100 bg-white shadow-xl lg:grid-cols-2">
-            <div className="bg-gradient-to-br from-brand-500/10 via-white to-white p-8">
-              <h3 className="text-2xl font-semibold text-slate-900">What to expect</h3>
-              <ul className="mt-6 space-y-4 text-sm text-slate-600">
-                <li>
-                  <strong className="text-brand-500">Discovery call (30 min):</strong> Map your current stack, interview volume, and DEI priorities.
-                </li>
-                <li>
-                  <strong className="text-brand-500">Live withWilma tour:</strong> Experience AI-led interviews, scoring, and knowledge ingestion tailored to your roles.
-                </li>
-                <li>
-                  <strong className="text-brand-500">ROI & rollout plan:</strong> Receive a customized pilot roadmap, change management toolkit, and security documentation.
-                </li>
-              </ul>
-              <div className="mt-8 rounded-2xl border border-brand-100 bg-white/80 p-6 text-sm text-slate-600 shadow-sm">
-                <p className="font-semibold text-slate-900">Need help fast?</p>
-                <p className="mt-2">Email us at <a href="mailto:hello@trywilma.com" className="text-brand-500">hello@trywilma.com</a> or call +1 (332) 333-0198.</p>
-              </div>
-            </div>
+          <FadeIn delay={0.1} className="mx-auto grid max-w-6xl grid-cols-1 overflow-hidden rounded-3xl border border-brand-100 bg-white shadow-xl lg:grid-cols-1
+          ">
             <form className="flex flex-col gap-4 bg-white p-8">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <label className="flex flex-col gap-2 text-sm font-medium text-slate-700">
@@ -137,7 +120,7 @@ export default function ContactPage() {
                 type="submit"
                 className="mt-2 inline-flex items-center justify-center rounded-full bg-brand-500 px-6 py-3 text-base font-semibold text-white shadow-lg shadow-brand-500/30 transition hover:bg-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
               >
-                Request a roadmap
+                Request a call
               </button>
               <p className="text-xs text-slate-400">
                 By submitting, you agree to withWilma’s <a href="/privacy" className="text-brand-500">Privacy Policy</a> and consent to receiving product updates.
